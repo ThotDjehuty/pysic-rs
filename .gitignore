@@ -1,0 +1,24 @@
+# Rust
+/target
+
+# Python / PyO3
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Docs build
+docs/build/
+
+# OS
+.DS_Store
+
+# Local wheels
+wheels/
+dist/

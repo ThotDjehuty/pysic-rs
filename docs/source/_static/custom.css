@@ -1,0 +1,106 @@
+/* Pysic-rs custom styles — blue-purple theme */
+
+/* Sidebar brand color */
+.sidebar-brand-text {
+    color: #1e3a5f;
+    font-weight: 700;
+}
+
+/* Code blocks */
+div.highlight {
+    background-color: #f6f8ff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+}
+div.highlight pre {
+    background-color: #f6f8ff;
+}
+.highlight .hll {
+    background-color: #eef2ff;
+}
+
+/* Admonition boxes */
+.admonition {
+    border-left-width: 4px;
+    border-left-color: #1e3a5f;
+    border-radius: 0.375rem;
+}
+.admonition.note,
+.admonition.tip,
+.admonition.important {
+    background-color: #eef2ff;
+}
+
+/* API parameter names */
+.doc .sig-name {
+    color: #1e3a5f;
+}
+
+/* Tables */
+table.docutils {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+}
+table.docutils thead th {
+    background-color: #eef2ff;
+    color: #1e3a5f;
+}
+
+/* Links */
+a {
+    color: #2563eb;
+}
+a:hover {
+    color: #1e3a5f;
+}
+
+/* Announcement bar */
+.announcement {
+    background-color: #1e3a5f;
+}
+.announcement a {
+    color: #bfdbfe;
+}
+
+/* Grid cards used on the index page */
+div.grid-cards,
+.grid cards {
+    margin: 1.5rem 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .sidebar-brand-text {
+        color: #60a5fa;
+    }
+    .admonition {
+        border-left-color: #60a5fa;
+    }
+    .admonition.note,
+    .admonition.tip,
+    .admonition.important {
+        background-color: #1e293b;
+    }
+    .doc .sig-name {
+        color: #60a5fa;
+    }
+    div.highlight {
+        background-color: #0f172a;
+        border-color: #334155;
+    }
+    div.highlight pre {
+        background-color: #0f172a;
+    }
+    a {
+        color: #60a5fa;
+    }
+    a:hover {
+        color: #93c5fd;
+    }
+    table.docutils {
+        border-color: #334155;
+    }
+    table.docutils thead th {
+        background-color: #1e293b;
+        color: #bfdbfe;
+    }
+}
