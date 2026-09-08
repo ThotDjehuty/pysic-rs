@@ -1,15 +1,15 @@
 Example Notebooks
 =================
 
-All notebooks are **pre-executed** (kernel ``rhftlab``, mode synthétique —
-formules fermées / vérifications analytiques), validated end-to-end with
-**0 erreur** and **≥1 figure** per code cell. Each code cell is wrapped in the
-sandwich structure ``Théorème / Équation pivot / Démonstration`` (PRE) and
-``Résultat attendu / Lecture du graphique / Conclusion`` (POST).
+All notebooks are **pre-executed** (kernel ``rhftlab``, mode synthetic —
+closed-form formulas / analytic validations), validated end-to-end with
+**0 errors** and **≥1 figure** per code cell. Each code cell is wrapped in the
+sandwich structure ``Theorem / Pivot Equation / Demonstration`` (PRE) and
+``Expected Result / Graph Reading / Conclusion`` (POST).
 
 .. hint::
-   Les notebooks sont présentés ici via nbsphinx (rendu du notebook exécuté).
-   Pour les relancer localement :
+   Notebooks are rendered here via nbsphinx (executed notebook rendering).
+   To re-run locally:
 
    .. code-block:: bash
 
@@ -43,49 +43,49 @@ Catalogue
    :header-rows: 1
 
    * - Notebook
-     - Contenu
-     - Points vérifiés / CONSTAT
+     - Content
+     - Verified Points / CONSTAT
    * - ``00_quickstart_and_constants.ipynb``
-     - Panorama de l'API, constantes CODATA
-     - dict 15 constantes, écart < 1e-6
+     - API overview, CODATA constants
+     - 15 constants dict, error < 1e-6
    * - ``01_ode_solvers.ipynb``
      - RK4, backward Euler, leapfrog, RK45
-     - RK4 ordre 4 ; backward_Euler CONSTAT (itération de point fixe, h·λ·<1 strict) ;
-       leapfrog CONSTAT (2e demi-coup défectueux) ; rk45 stub None
+     - RK4 order 4; backward_euler CONSTAT (fixed-point iteration, h·λ<1 strict);
+       leapfrog CONSTAT (2nd half-kick defective); rk45 stub None
    * - ``02_pde_heat.ipynb``
-     - Chaleur 1D (Crank–Nicolson), 2D (ADI)
-     - Conservation, positivité, bornitude (masse non conservée en Dirichlet → assert adapté)
+     - Heat 1D (Crank–Nicolson), 2D (ADI)
+     - Conservation, positivity, boundedness (mass not conserved in Dirichlet → assert adapted)
    * - ``03_pde_wave.ipynb``
-     - Ondes FDTD 1D/2D
-     - Identiques à une référence numpy indépendante (écart 0.0) ; CFL ≤ 1/√2
+     - Wave FDTD 1D/2D
+     - Matches independent numpy reference (diff 0.0); CFL ≤ 1/√2
    * - ``04_pde_poisson.ipynb``
      - Poisson FFT 2D
-     - CONSTAT : rapport sol/u non constant (233–641)
+     - CONSTAT: sol/u ratio not constant (233–641)
    * - ``05_pde_quantum.ipynb``
-     - Schrödinger split-step, états propres, Dirac
-     - Norme conservée (1±1e-9) ; eigen CONSTAT (énergie décalées) ; Dirac CONSTAT (norme ×4/pas)
+     - Schrödinger split-step, eigenstates, Dirac
+     - Norm conserved (1±1e-9); eigen CONSTAT (energy shifted); Dirac CONSTAT (norm ×4/step)
    * - ``06_fourier_analysis.ipynb``
-     - FFT/IFFT, Parseval, dérivée spectrale, Welch
-     - Ordres pairs exacts ; ordre 1 ≈ 0 (CONSTAT) ; normalisation Welch documentée
+     - FFT/IFFT, Parseval, spectral derivative, Welch
+     - Even orders exact; order 1 ≈ 0 (CONSTAT); Welch normalization documented
    * - ``07_quantum_states.ipynb``
-     - Pauli/su(2), états nombre/cohérents, densité
-     - CONSTAT : σ_y nulle (parties imaginaires perdues) ; f_123 = 1 ; Poisson des états cohérents
+     - Pauli/su(2), Fock/coherent states, density
+     - CONSTAT: σ_y zero (imaginary parts lost); f_123 = 1; coherent state Poisson
    * - ``08_propagators.ipynb``
-     - Propagateur de Feynman, propagateur libre
-     - D = i/(p²−m²+iε) ; décroissance e^{-mr} et r⁻² (m=0)
+     - Feynman propagator, free propagator
+     - D = i/(p²−m²+iε); exponential decay e^{-mr} and r⁻² (m=0)
    * - ``09_gauge_theory.ipynb``
-     - Constantes su(3), action instanton
-     - CONSTAT su(3) : table non antisymétrique (f_147 = −1/2) ; instanton 8π²/g² exact
+     - su(3) structure constants, instanton action
+     - CONSTAT su(3): table not antisymmetric (f_147 = −1/2); instanton 8π²/g² exact
    * - ``10_topology.ipynb``
-     - Berry, Chern, enroulement, skyrmion
-     - γ=−π équateur ; chern = ΣF dk²/2π ; W entier ; skyrmion stub (CONSTAT)
+     - Berry, Chern, winding, skyrmion
+     - γ=−π equator; chern = ΣF dk²/2π; W integer; skyrmion stub (CONSTAT)
    * - ``11_general_relativity.ipynb``
      - Schwarzschild, Christoffel, Ricci/Einstein, ADM
-     - Métrique/Christoffel exactes ; CONSTAT selon la littérature : Ricci −2/r² en « vide » ;
-       contraintes ADM (convention 16πGρ)
+     - Metric/Christoffel exact; CONSTAT vs literature: Ricci −2/r² in "vacuum";
+       ADM constraints (16πGρ convention)
    * - ``12_classical_mechanics.ipynb``
-     - Rotations d'Euler, équations d'Euler, inertie
-     - Orthogonalité/det = 1 ; ω̇ axial nul ; tenseur d'inertie 3D exact
+     - Euler rotations, Euler equations, inertia
+     - Orthogonality/det = 1; ω̇ axial zero; 3D inertia tensor exact
    * - ``13_electromagnetism_casimir.ipynb``
-     - Green, Coulomb, Larmor, dipôle, Compton, Casimir, Polder
-     - Larmor/Compton/Casimir/Polder exacts ; dipôle CONSTAT (facteur 1/c² sur E/A, F/A conforme aux formules)
+     - Green, Coulomb, Larmor, dipole, Compton, Casimir, Polder
+     - Larmor/Compton/Casimir/Polder exact; dipole CONSTAT (1/c² factor on E/A, F/A matches formulas)
