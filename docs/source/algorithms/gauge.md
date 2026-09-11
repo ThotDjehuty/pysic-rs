@@ -21,11 +21,25 @@ $$
 [T^a, T^b] = i\, f^{abc} T^c
 $$
 
-The **SU(2) structure constants** are simply the Levi-Civita symbol (proven):
-$f^{abc} = \varepsilon^{abc}$.
+**Derivation of SU(2) structure constants:**
 
-The **SU(3) structure constants** in the Gell-Mann basis are partially antisymmetric; the
-standard non-zero entries (proven, closed-form):
+The SU(2) generators are $\sigma_a/2$ where $\sigma_a$ are the Pauli matrices. The commutation relation:
+
+$$
+[\sigma_a/2, \sigma_b/2] = \frac{1}{4}[\sigma_a, \sigma_b] = \frac{1}{4}(2i\varepsilon_{abc}\sigma_c) = i\varepsilon_{abc}(\sigma_c/2)
+$$
+
+Thus $f^{abc} = \varepsilon^{abc}$ (Levi-Civita symbol).
+
+**Derivation of SU(3) structure constants:**
+
+The Gell-Mann matrices $\lambda_a$ satisfy $[\lambda_a, \lambda_b] = 2i f^{abc}\lambda_c$. The structure constants are computed from the commutators:
+
+$$
+f^{abc} = \frac{1}{4i}\operatorname{tr}(\lambda_a[\lambda_b, \lambda_c])
+$$
+
+The standard non-zero entries (proven, closed-form):
 
 $$
 f^{123} = 1, \qquad f^{147}=f^{246}=f^{257}=f^{345}=\tfrac12, \qquad
@@ -43,6 +57,8 @@ $$
 D_\mu \phi = \partial_\mu\phi - ig\,A_\mu\phi
 $$
 
+**Derivation:** The covariant derivative ensures gauge covariance: $D_\mu\phi \to U(D_\mu\phi)$ under gauge transformations. The term $-igA_\mu\phi$ compensates for the inhomogeneous transformation of $\partial_\mu\phi$.
+
 **Gauge transformation** (proven — the fields transform as):
 
 $$
@@ -57,7 +73,13 @@ $$
 F_{\mu\nu}^a = \partial_\mu A_\nu^a - \partial_\nu A_\mu^a + g\, f^{abc} A_\mu^b A_\nu^c
 $$
 
-The extra $g f^{abc} A^b A^c$ term is what makes the theory *self-interacting* (gluon
+**Derivation:** The field strength is defined as $F_{\mu\nu} = \frac{i}{g}[D_\mu, D_\nu]$. Computing the commutator:
+
+$$
+[D_\mu, D_\nu]\phi = -igF_{\mu\nu}\phi
+$$
+
+Expanding gives the formula above. The extra $g f^{abc} A^b A^c$ term is what makes the theory *self-interacting* (gluon
 self-couplings, `W`/`Z` self-interactions) — the famous difference from electrodynamics.
 
 ### Yang–Mills Action
@@ -65,6 +87,8 @@ self-couplings, `W`/`Z` self-interactions) — the famous difference from electr
 $$
 S_{\text{YM}} = -\frac14 \int F^{a\mu\nu} F_{\mu\nu}^a\, d^4x
 $$
+
+**Derivation:** The Yang-Mills action is the simplest gauge-invariant local functional of $A_\mu$. Under infinitesimal gauge transformations $\delta A_\mu = D_\mu\omega$, the variation $\delta S_{\text{YM}} = 0$ (gauge invariance).
 
 Stationarity under arbitrary variations (proven) gives the **Yang–Mills equations of
 motion**:
@@ -84,6 +108,8 @@ $$
 S_{\text{inst}} = \frac{8\pi^2}{g^2}\,|k|
 $$
 
+**Derivation:** The topological charge is $Q = \frac{1}{32\pi^2}\int F_{\mu\nu}^a \tilde{F}^{a\mu\nu} d^4x$ where $\tilde{F}_{\mu\nu}^a = \frac{1}{2}\varepsilon_{\mu\nu\rho\sigma}F^{a\rho\sigma}$. Using the identity $F\tilde{F} = \partial_\mu K^\mu$ (Chern-Simons current), the integral becomes a boundary term that quantizes to $k \in \mathbb{Z}$.
+
 **Proven** by the Atiyah–Singer index theorem: `winding number = (1/32π²) ∫ F∧F` (see
 Topology).
 
@@ -91,17 +117,17 @@ Topology).
 
 ## Routines
 
-| Routine | Returns |
-|---------|---------|
-| `su2_structure_constants()` | $f^{abc} = \varepsilon^{abc}$ |
-| `su3_structure_constants()` | $f^{abc}$ (Gell-Mann basis) |
-| `structure_constants(algebra)` | "su2"/"su3" → $\{f^{abc}\}$ |
-| `gauge_connection(A, a, d)` | $A_\mu$ discretized |
-| `covariant_derivative(phi, A, g, x, h)` | $D_\mu\phi$ |
-| `field_strength(A, g, d)` | $F_{\mu\nu}^a$ |
-| `yang_mills_action(F, g_inv, dim, dx)` | $S_{\text{YM}}$ density |
-| `yang_mills_eom(F, A, g, dx, dim)` | $D_\mu F^{\mu\nu}$ residual |
-| `instanton_action(g)` | $8\pi^2/g^2$ |
+| Routine | Returns | Derivation |
+|---------|---------|------------|
+| `su2_structure_constants()` | $f^{abc} = \varepsilon^{abc}$ | Pauli matrix commutators |
+| `su3_structure_constants()` | $f^{abc}$ (Gell-Mann basis) | Gell-Mann matrix commutators |
+| `structure_constants(algebra)` | "su2"/"su3" → $\{f^{abc}\}$ | Lie algebra definition |
+| `gauge_connection(A, a, d)` | $A_\mu$ discretized | Gauge field on lattice |
+| `covariant_derivative(phi, A, g, x, h)` | $D_\mu\phi$ | Gauge covariance |
+| `field_strength(A, g, d)` | $F_{\mu\nu}^a$ | $[D_\mu, D_\nu]$ commutator |
+| `yang_mills_action(F, g_inv, dim, dx)` | $S_{\text{YM}}$ density | Gauge-invariant action |
+| `yang_mills_eom(F, A, g, dx, dim)` | $D_\mu F^{\mu\nu}$ residual | Euler-Lagrange equations |
+| `instanton_action(g)` | $8\pi^2/g^2$ | Topological quantization |
 
 ---
 

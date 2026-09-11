@@ -22,13 +22,13 @@ $$
 \Gamma(z) = \int_0^\infty t^{z-1} e^{-t}\,dt
 $$
 
-**Proven properties (standard references):**
+**Derivation of key properties:**
 
-- $\Gamma(n) = (n-1)!$ for $n \in \mathbb{N}^+$
-- $\Gamma(1/2) = \sqrt{\pi}$
-- **Functional equation**: $\Gamma(z+1) = z\,\Gamma(z)$
-- **Reflection formula**: $\Gamma(z)\,\Gamma(1-z) = \dfrac{\pi}{\sin(\pi z)}$
-- **Duplication formula** (Legendre): $\Gamma(z)\,\Gamma(z+\tfrac12) = 2^{1-2z}\sqrt{\pi}\,\Gamma(2z)$
+1. **Functional equation:** Integration by parts gives $\Gamma(z+1) = z\Gamma(z)$. Starting from $\Gamma(1) = 1$, we get $\Gamma(n+1) = n!$ for integers.
+
+2. **Reflection formula:** Consider $f(z) = \Gamma(z)\Gamma(1-z)\sin(\pi z)$. This function is analytic everywhere (removable singularities at integers) and bounded, so by Liouville's theorem it's constant. Evaluating at $z=1/2$ gives $\Gamma(1/2)^2 \cdot 1 = \pi$, hence $\Gamma(z)\Gamma(1-z) = \pi/\sin(\pi z)$.
+
+3. **Duplication formula (Legendre):** Start from $\Gamma(2z) = \frac{2^{2z-1}}{\sqrt{\pi}}\Gamma(z)\Gamma(z+1/2)$, which follows from the product representation of the Gamma function.
 
 **Numerical implementation:** Lanczos approximation with the $g=7$ coefficient set
 (Numerical Recipes / Godfrey's table). For $x<0.5$ the reflection formula is applied first,
@@ -44,7 +44,7 @@ $$
 B(a,b) = \frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)} = \int_0^1 t^{a-1}(1-t)^{b-1}\,dt
 $$
 
-Computed in log space to avoid overflow for large arguments.
+**Derivation:** The integral representation follows from the change of variable $t = u/(1+u)$ in the product $\Gamma(a)\Gamma(b)$. Computed in log space to avoid overflow for large arguments.
 
 ### Bessel Functions
 
@@ -54,11 +54,16 @@ $$
 x^2 y'' + x y' + (x^2 - n^2)y = 0
 $$
 
-**Proven asymptotic behavior**
+**Derivation of asymptotic behavior:**
 
-- $J_0(0)=1$, $Y_0(x)\to -\infty$ as $x\to 0^+$
-- As $x\to\infty$: $J_n(x) \sim \sqrt{\tfrac{2}{\pi x}}\cos\left(x - \tfrac{n\pi}{2} - \tfrac{\pi}{4}\right)$
-- $Y_n(-x)$ has a logarithmic branch cut along the negative real axis
+For large $x$, we use the WKB approximation or the method of steepest descent. The leading asymptotic forms are:
+
+$$
+J_n(x) \sim \sqrt{\frac{2}{\pi x}}\cos\left(x - \frac{n\pi}{2} - \frac{\pi}{4}\right), \qquad
+Y_n(x) \sim \sqrt{\frac{2}{\pi x}}\sin\left(x - \frac{n\pi}{2} - \frac{\pi}{4}\right)
+$$
+
+These follow from the integral representations and Watson's lemma.
 
 **Numerical implementation:** polynomial approximation for $|x|<8$ and the asymptotic
 expansion for $|x|\ge 8$, matching the standard Numeric Recovery Recipes approach.
@@ -72,8 +77,22 @@ $$
 \int_{-1}^{1} P_\ell(x)P_{\ell'}(x)\,dx = \frac{2}{2\ell+1}\,\delta_{\ell\ell'}
 $$
 
+**Derivation of Rodrigues formula:**
+
+The Legendre polynomials can be written as:
+
+$$
+P_\ell(x) = \frac{1}{2^\ell \ell!}\frac{d^\ell}{dx^\ell}(x^2-1)^\ell
+$$
+
+This follows from the generating function $(1-2xt+t^2)^{-1/2} = \sum_{\ell=0}^\infty P_\ell(x)t^\ell$ and differentiation.
+
 **Associated Legendre functions** $P_\ell^m(x)$ (used for spherical harmonics and
-gravitational/magnetic multipoles) extend this to $m\neq 0$.
+gravitational/magnetic multipoles) extend this to $m\neq 0$:
+
+$$
+P_\ell^m(x) = (-1)^m(1-x^2)^{m/2}\frac{d^m}{dx^m}P_\ell(x)
+$$
 
 ### Spherical Harmonics
 
@@ -82,7 +101,12 @@ Y_\ell^m(\theta,\phi) = \sqrt{\frac{(2\ell+1)}{4\pi}\frac{(\ell-m)!}{(\ell+m)!}}
 P_\ell^m(\cos\theta)\,e^{im\phi}
 $$
 
-**Orthonormality (proven):** $\int Y_{\ell}^{m*} Y_{\ell'}^{m'}\, d\Omega = \delta_{\ell\ell'}\delta_{mm'}$
+**Derivation of orthonormality:**
+
+The orthonormality relation $\int Y_{\ell}^{m*} Y_{\ell'}^{m'}\, d\Omega = \delta_{\ell\ell'}\delta_{mm'}$ follows from:
+1. Orthogonality of $e^{im\phi}$ for different $m$
+2. Orthogonality of associated Legendre functions (Sturm-Liouville theory)
+3. Normalization constant chosen to give unit norm
 
 ### Error Function
 
@@ -91,8 +115,11 @@ $$
 \operatorname{erfc}(x) = 1 - \operatorname{erf}(x)
 $$
 
-**Proven limits:** $\operatorname{erf}(\infty)=1$, $\operatorname{erf}(-x)=-\operatorname{erf}(x)$,
-$\operatorname{erf}(x)\sim \frac{2x}{\sqrt\pi}$ as $x\to 0$.
+**Derivation of properties:**
+
+1. **Limits:** $\operatorname{erf}(\infty) = \frac{2}{\sqrt{\pi}}\int_0^\infty e^{-t^2}dt = 1$ (Gaussian integral)
+2. **Symmetry:** $\operatorname{erf}(-x) = -\operatorname{erf}(x)$ (odd function)
+3. **Small $x$:** Taylor expansion gives $\operatorname{erf}(x) \sim \frac{2x}{\sqrt{\pi}}$
 
 **Numerical implementation:** series near the origin, the standard rational approximation
 (Abramowitz & Stegun 7.1.26) away from it, with the symmetry relation applied for negative
@@ -104,9 +131,13 @@ $$
 \zeta(s) = \sum_{n=1}^\infty \frac{1}{n^s}, \qquad \operatorname{Re}(s)>1
 $$
 
-**Proven values:** $\zeta(2)=\pi^2/6$, $\zeta(4)=\pi^4/90$, $\zeta(3)\approx 1.2020569$ (Apéry's
-constant — irrational, proven 1978). The pole at $s=1$ and the trivial zeros at negative even
-integers are standard results.
+**Derivation of special values:**
+
+1. **$\zeta(2) = \pi^2/6$:** Parseval's theorem for Fourier series of $x$ on $[-\pi,\pi]$ gives $\sum_{n=1}^\infty 1/n^2 = \pi^2/6$.
+
+2. **Functional equation:** $\zeta(s) = 2^s\pi^{s-1}\sin(\pi s/2)\Gamma(1-s)\zeta(1-s)$, which extends $\zeta$ to the whole complex plane.
+
+3. **Pole at $s=1$:** $\zeta(s) = \frac{1}{s-1} + \gamma + O(s-1)$ where $\gamma$ is Euler's constant.
 
 **Numerical implementation:** Euler–Maclaurin summation with Bernoulli corrections, giving an
 acceleration of the slowly converging Dirichlet series.
@@ -116,8 +147,10 @@ acceleration of the slowly converging Dirichlet series.
 - **Airy**: $y'' - x\,y = 0$ has the independent solutions $\operatorname{Ai}(x)$,
   $\operatorname{Bi}(x)$; $\operatorname{Ai}$ decays exponentially for $x>0$ and
   oscillates for $x<0$.
+
 - **Exponential integral**: $E_1(x)=\displaystyle\int_x^\infty \frac{e^{-t}}{t}\,dt$
-  (proven: related to the incomplete Gamma function by $E_1(x)=\Gamma(0,x)$).
+
+**Derivation:** $E_1(x) = \Gamma(0,x)$ (incomplete Gamma function). For large $x$, integration by parts gives $E_1(x) \sim e^{-x}/x$.
 
 ---
 

@@ -23,9 +23,15 @@ ds^2 = -\left(1-\frac{2M}{r}\right)dt^2 + \left(1-\frac{2M}{r}\right)^{-1}dr^2
 + r^2\,d\Omega^2
 $$
 
-**Proven** to be the unique static, spherically symmetric, asymptotically flat vacuum
-solution (Jebsen–Birkhoff theorem). Notable: event horizon at $r=2M$, ISCO at $r=6M$,
-photon sphere at $r=3M$.
+**Derivation:** The Schwarzschild metric is the unique static, spherically symmetric, asymptotically flat vacuum solution (Jebsen–Birkhoff theorem). Starting from the general static spherically symmetric metric:
+
+$$
+ds^2 = -e^{2\Phi(r)}dt^2 + e^{2\Lambda(r)}dr^2 + r^2 d\Omega^2
+$$
+
+The Einstein equations $R_{\mu\nu} = 0$ give $\Phi' = -\Lambda'$ and $r\Lambda' = 1 - e^{2\Lambda}$. Solving with boundary condition $\Phi \to 0$ as $r \to \infty$ yields $e^{2\Lambda} = (1 - 2M/r)^{-1}$.
+
+Notable features: event horizon at $r=2M$, ISCO at $r=6M$, photon sphere at $r=3M$.
 
 **Kerr** (rotating, Boyer–Lindquist coordinates, spin $a=J/M$):
 
@@ -36,7 +42,7 @@ ds^2 = -\left(1 - \frac{2Mr}{\rho^2}\right)dt^2
 + \frac{\sin^2\theta}{\rho^2}\left[\left(r^2+a^2\right)^2 - a^2\Delta\sin^2\theta\right]d\phi^2
 $$
 
-with $\rho^2 = r^2 + a^2\cos^2\theta$, $\Delta = r^2 - 2Mr + a^2$. Ergosphere lies between
+with $\rho^2 = r^2 + a^2\cos^2\theta$, $\Delta = r^2 - 2Mr + a^2$. The ergosphere lies between
 the outer horizon and the static limit surface.
 
 **FLRW** (spatially flat, $k=0$, scaled by $a(t)$):
@@ -56,6 +62,8 @@ $$
 + \partial_\nu g_{\sigma\mu} - \partial_\sigma g_{\mu\nu}\right)
 $$
 
+**Derivation:** The Christoffel symbols are determined by the metric compatibility condition $\nabla_\rho g_{\mu\nu} = 0$ and the torsion-free condition. The formula follows from the definition of the covariant derivative.
+
 **Riemann tensor:**
 
 $$
@@ -65,6 +73,8 @@ R^{\rho}{}_{\sigma\mu\nu} = \partial_\mu\Gamma^{\rho}_{\nu\sigma}
 - \Gamma^{\rho}_{\nu\lambda}\Gamma^{\lambda}_{\mu\sigma}
 $$
 
+**Derivation:** The Riemann tensor measures the failure of covariant derivatives to commute: $[\nabla_\mu, \nabla_\nu]V^\rho = R^\rho{}_{\sigma\mu\nu}V^\sigma$. The formula follows from computing this commutator.
+
 **Ricci tensor** $R_{\mu\nu} = R^{\lambda}{}_{\mu\lambda\nu}$, **Ricci scalar** $R = g^{\mu\nu}R_{\mu\nu}$,
 **Einstein tensor:**
 
@@ -72,7 +82,7 @@ $$
 G_{\mu\nu} = R_{\mu\nu} - \tfrac12 R\,g_{\mu\nu}
 $$
 
-**Proven**: $\nabla^\mu G_{\mu\nu} = 0$ (Bianchi identities), so the Einstein field
+**Proven**: $\nabla^\mu G_{\mu\nu} = 0$ (contracted Bianchi identities), so the Einstein field
 equations $G_{\mu\nu} = 8\pi G\,T_{\mu\nu}$ are automatically consistent with stress-energy
 conservation.
 
@@ -84,6 +94,8 @@ $$
 \frac{d^2x^\mu}{d\lambda^2} + \Gamma^{\mu}_{\rho\sigma}
 \frac{dx^\rho}{d\lambda}\frac{dx^\sigma}{d\lambda} = 0
 $$
+
+**Derivation:** Geodesics extremize the proper time (or affine parameter). The Euler-Lagrange equations for the Lagrangian $L = \frac{1}{2}g_{\mu\nu}\dot{x}^\mu\dot{x}^\nu$ yield the geodesic equation.
 
 Conventionally reduced to first order with $v^\mu = dx^\mu/d\lambda$:
 
@@ -100,6 +112,8 @@ The 4-metric is foliated with lapse $\alpha$, shift vector $\beta^i$, and 3-metr
 $$
 ds^2 = -(\alpha^2 - \beta_i\beta^i)dt^2 + 2\beta_i\,dx^i dt + \gamma_{ij}\,dx^i dx^j
 $$
+
+**Derivation:** The ADM decomposition splits spacetime into spatial hypersurfaces. The extrinsic curvature is $K_{ij} = \frac{1}{2\alpha}(\dot{\gamma}_{ij} - D_i\beta_j - D_j\beta_i)$.
 
 **Hamiltonian constraint** (proven — encodes energy conservation of GR):
 
@@ -134,22 +148,22 @@ $$
 
 ## Routines
 
-| Routine | Returns |
-|---------|---------|
-| `schwarzschild_metric(r, M)` | $g_{\mu\nu}$ 4×4 |
-| `kerr_metric(r, theta, M, a)` | $g_{\mu\nu}$ 4×4 |
-| `flrw_metric(t, a)` | $g_{\mu\nu}$ 4×4 |
-| `minkowski_metric()` | $\eta_{\mu\nu}$ |
-| `christoffel_from_metric(g, coords, h)` | $\Gamma^{\rho}_{\mu\nu}$ |
-| `riemann_tensor(g, coords, h)` | $R^{\rho}{}_{\sigma\mu\nu}$ |
-| `ricci_tensor(...)`, `ricci_scalar(...)` | $R_{\mu\nu}$, $R$ |
-| `einstein_tensor(...)` | $G_{\mu\nu}$ |
-| `geodesic_equation_rhs(g, x, v, h)` | $\ddot x^\mu$ |
-| `integrate_geodesic(...)` | orbit $\{x^\mu(\lambda)\}$ |
-| `MetricSlice`, `AdmMetric`, `evolve_metric(...)` | ADM evolution |
-| `hamiltonian_constraint(...)`, `momentum_constraint(...)` | $\mathcal H$, $\mathcal M_i$ |
-| `perfect_fluid_stress_energy(...)` | $T_{\mu\nu}$ |
-| `electromagnetic_stress_energy(...)` | $T^{\mu\nu}$ |
+| Routine | Returns | Derivation |
+|---------|---------|------------|
+| `schwarzschild_metric(r, M)` | $g_{\mu\nu}$ 4×4 | Einstein equations $R_{\mu\nu}=0$ |
+| `kerr_metric(r, theta, M, a)` | $g_{\mu\nu}$ 4×4 | Rotating black hole solution |
+| `flrw_metric(t, a)` | $g_{\mu\nu}$ 4×4 | Cosmological principle |
+| `minkowski_metric()` | $\eta_{\mu\nu}$ | Flat spacetime |
+| `christoffel_from_metric(g, coords, h)` | $\Gamma^{\rho}_{\mu\nu}$ | Metric compatibility |
+| `riemann_tensor(g, coords, h)` | $R^{\rho}{}_{\sigma\mu\nu}$ | Covariant derivative commutator |
+| `ricci_tensor(...)`, `ricci_scalar(...)` | $R_{\mu\nu}$, $R$ | Contraction of Riemann |
+| `einstein_tensor(...)` | $G_{\mu\nu}$ | Contracted Bianchi identity |
+| `geodesic_equation_rhs(g, x, v, h)` | $\ddot x^\mu$ | Euler-Lagrange equations |
+| `integrate_geodesic(...)` | orbit $\{x^\mu(\lambda)\}$ | RK4/RK45 integration |
+| `MetricSlice`, `AdmMetric`, `evolve_metric(...)` | ADM evolution | 3+1 decomposition |
+| `hamiltonian_constraint(...)`, `momentum_constraint(...)` | $\mathcal H$, $\mathcal M_i$ | Einstein equations |
+| `perfect_fluid_stress_energy(...)` | $T_{\mu\nu}$ | Energy-momentum tensor |
+| `electromagnetic_stress_energy(...)` | $T^{\mu\nu}$ | Electromagnetic stress-energy |
 
 ---
 

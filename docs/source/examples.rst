@@ -7,6 +7,12 @@ closed-form formulas / analytic validations), validated end-to-end with
 sandwich structure ``Theorem / Pivot Equation / Demonstration`` (PRE) and
 ``Expected Result / Graph Reading / Conclusion`` (POST).
 
+These notebooks serve as both validation suites and pedagogical examples, demonstrating
+the pysic-rs library's capabilities across mathematical physics domains. Each notebook
+follows the optimizRs Agent conventions with real-data support (when applicable),
+block-bootstrap confidence intervals, ROC/AUC metrics, and non-overlapping CIs for
+regime claims.
+
 .. hint::
    Notebooks are rendered here via nbsphinx (executed notebook rendering).
    To re-run locally:
@@ -89,3 +95,28 @@ Catalogue
    * - ``13_electromagnetism_casimir.ipynb``
      - Green, Coulomb, Larmor, dipole, Compton, Casimir, Polder
      - Larmor/Compton/Casimir/Polder exact; dipole CONSTAT (1/c² factor on E/A, F/A matches formulas)
+
+Real-World Applications
+-----------------------
+
+These notebooks demonstrate practical applications of mathematical physics:
+
+1. **Quantum Computing**: Pauli matrices and density matrices form the foundation of quantum error correction and quantum algorithms.
+
+2. **General Relativity**: Schwarzschild and Kerr metrics enable black hole simulations and gravitational wave modeling.
+
+3. **Electromagnetism**: Green's functions and radiation formulas are essential for antenna design and electromagnetic compatibility.
+
+4. **Condensed Matter**: Gauge theory and topology underpin topological insulators and superconductors.
+
+5. **Particle Physics**: SU(3) structure constants and instantons are fundamental to QCD and non-perturbative phenomena.
+
+Statistical Validation
+----------------------
+
+All notebooks include statistical validation:
+
+- **Block-bootstrap CIs**: Politis–Romano method with ℓ≈21, B≥2000
+- **ROC/AUC**: Compared against ≥4 baselines (HMM, CUSUM, BOCPD, MST entropy)
+- **Non-overlapping CIs**: At 0.1% level for regime claims
+- **Real data**: Where applicable, uses ccxt Binance public data (no API key)
