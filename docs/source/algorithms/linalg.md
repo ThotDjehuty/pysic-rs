@@ -1,99 +1,137 @@
 # Linear Algebra
 
-Pysic-rs implements the linear-algebra workhorse routines physics needs — direct factorizations,
+Pysic-rs implements the linear-algebra workhorse routines physics needs — direct factorisations,
 solvers, inverses, tensor operations, and differential-geometric helpers — using `ndarray` under
 the hood, with no external BLAS dependency for full reproducibility.
 
 > **Python binding status:** `inertia_tensor` is bound from Python; the rest of the suite is
 > Rust-exported. See the [API page](../api/linalg.md) for the authoritative surface.
-> Examples below show the Rust functions.
 
 ---
 
-## Mathematical Foundations
+## 1. Matrix Factorisations
 
-### Cholesky Decomposition
+### 1.1 Cholesky Decomposition
 
-Every symmetric positive-definite matrix $A \in \mathbb{R}^{n\times n}$ admits a unique lower
-triangular $L$ with positive diagonal such that:
-
-$$
-A = L L^{\mathsf T}
-$$
-
-**Algorithm** (in-place, proven stable for SPD matrices):
+**Theorem.** Every symmetric positive-definite (SPD) matrix $A\in\mathbb{R}^{n\times n}$
+admits a unique lower triangular $L$ with positive diagonal entries such that
 
 $$
-L_{ii} = \sqrt{A_{ii} - \sum_{k<i} L_{ik}^2}, \qquad
-L_{ji} = \frac{1}{L_{ii}}\left(A_{ji} - \sum_{k<i} L_{ik}L_{jk}\right)
+\boxed{A = LL^{\mathsf{T}}}
 $$
 
-**Cost:** $\tfrac13 n^3$ flops — half of LU's. Used directly for solving $Ax=b$ via forward
-and backward substitution (`solve_positive_definite`).
+*Proof.* The existence follows from induction on $n$. Write $A = \begin{pmatrix}a_{11}&\mathbf{b}^{\mathsf{T}}\\\mathbf{b}&C\end{pmatrix}$.
+Set $L_{11} = \sqrt{a_{11}}$, $\mathbf{l} = \mathbf{b}/L_{11}$. Then the $(2,2)$ block
+$C - \mathbf{l}\mathbf{l}^{\mathsf{T}}$ is still SPD (by the Schur complement), so
+recursion applies. Uniqueness: if $LL^{\mathsf{T}} = L'L'^{\mathsf{T}}$, then $L'^{-1}L$
+is orthogonal and lower triangular, hence diagonal with unit entries, so $L=L'$. $\square$
 
-### LU Decomposition with Partial Pivoting
-
-For a general square matrix $A$, LU with row pivoting produces:
-
-$$
-P A = L U
-$$
-
-where $L$ is unit lower triangular, $U$ upper triangular, $P$ a permutation matrix. Pivoting
-is *required* for stability of non-SPD systems (proven: Gaussian elimination without pivoting
-can be arbitrarily unstable).
-
-### Matrix Inverse (Gauss–Jordan)
-
-The solve-based inverse $A^{-1}$ is computed column by column using the LU factorization,
-which is numerically equivalent to (and more efficient than) the classic Gauss–Jordan
-elimination.
-
-### Determinant
+**Algorithm (in-place):**
 
 $$
-\det A = \operatorname{sign}(P)\prod_i u_{ii}
+L_{ii} = \sqrt{A_{ii}-\sum_{k<i}L_{ik}^2}, \qquad
+L_{ji} = \frac{1}{L_{ii}}\left(A_{ji}-\sum_{k<i}L_{ik}L_{jk}\right)
 $$
 
-from the LU factors. Row-swap sign handling is what makes this correct — a missing sign flip
-is the classic bug this implementation avoids.
+**Cost:** $\frac{1}{3}n^3$ flops — half of LU's.
 
-### Tensor Operations & the Metric
+### 1.2 LU Decomposition with Partial Pivoting
+
+**Theorem.** For a general square matrix $A$, there exist a unit lower triangular $L$,
+an upper triangular $U$, and a permutation matrix $P$ such that
+
+$$
+\boxed{PA = LU}
+$$
+
+*Proof.* Gaussian elimination with row pivoting (choosing the largest element in each
+column as pivot) is always possible for non-singular matrices. The elimination steps
+produce $L$, and the row swaps produce $P$. $\square$
+
+**Pivoting is required** for numerical stability: Gaussian elimination without pivoting
+can be arbitrarily unstable (the classic example is the Wilkinson matrix).
+
+### 1.3 Determinant from LU
+
+$$
+\det A = \operatorname{sign}(P)\prod_{i=1}^n u_{ii}
+$$
+
+where $\operatorname{sign}(P) = (-1)^s$ with $s$ the number of row swaps. This avoids
+the exponentially expensive Leibniz formula.
+
+### 1.4 Matrix Inverse
+
+The inverse $A^{-1}$ is computed column by column using the LU factorisation: solve
+$Ax_j = e_j$ for each standard basis vector $e_j$. This is numerically equivalent to
+Gauss–Jordan elimination but more efficient ($O(n^3)$ vs $O(n^3)$ with smaller constants).
+
+---
+
+## 2. Tensor Operations & the Metric
+
+### 2.1 Index Raising/Lowering
 
 Given the metric tensor $g_{\mu\nu}$ and its inverse $g^{\mu\nu}$ (as returned by the
-`general_relativity` module), indices are raised and lowered with:
+[General Relativity](general_relativity.md) module):
 
 $$
 V^\mu = g^{\mu\nu}V_\nu, \qquad V_\mu = g_{\mu\nu}V^\nu
 $$
 
-**Metric signature** is computed per Sylvester's law of inertia: count the eigenvalues of $g$
-(normalized per row) and return the $(p,q)$ pair — the sign pattern is invariant under
-congruence transformations.
+For a rank-2 tensor: $T^{\mu}{}_{\nu} = g^{\mu\lambda}T_{\lambda\nu}$, etc.
 
-### Lie Bracket (Vector Fields)
+### 2.2 Metric Signature
 
-The Lie bracket of two vector fields $X, Y$ on $\mathbb{R}^n$:
+The **signature** of a metric $g$ is the pair $(p,q)$ counting the positive and negative
+eigenvalues. By **Sylvester's law of inertia**, the signature is invariant under
+congruence transformations $g\to M^{\mathsf{T}}gM$.
 
-$$
-[X,Y] = X^j\partial_j Y - Y^j\partial_j X
-$$
-
-**Proven properties:** antisymmetry $[X,Y]=-[Y,X]$, bilinearity, and the Jacobi identity
-$[X,[Y,Z]]+[Y,[Z,X]]+[Z,[X,Y]]=0$. The derivatives are computed with central finite
-differences (see [Calculus](calculus.md)).
+**Algorithm:** compute the eigenvalues of $g$ (or, more efficiently, count sign changes in
+the leading principal minors — the `det_3x3` and `inverse_3x3` closed-form helpers are
+used for the common 3D and 4D cases).
 
 ---
 
-## Routines
+## 3. Vector Operations
+
+### 3.1 Cross Product
+
+In 3D:
+
+$$
+(\mathbf{v}\times\mathbf{w})_i = \varepsilon_{ijk}v_j w_k
+$$
+
+Implemented via the Levi-Civita symbol for $n=3$ only (no generalisation to other
+dimensions).
+
+### 3.2 Lie Bracket of Vector Fields
+
+For two vector fields $X,Y$ on $\mathbb{R}^n$:
+
+$$
+[X,Y]^i = X^j\partial_j Y^i - Y^j\partial_j X^i
+$$
+
+**Properties (proven):**
+- Antisymmetry: $[X,Y] = -[Y,X]$.
+- Bilinearity.
+- Jacobi identity: $[X,[Y,Z]] + [Y,[Z,X]] + [Z,[X,Y]] = 0$.
+
+Derivatives are computed with central finite differences (see [Calculus](calculus.md)).
+
+---
+
+## 4. Routines
 
 | Routine | Description |
 |---------|-------------|
-| `cholesky(A)` | SPD → lower triangular $L$, $A=LL^\top$ |
-| `solve_positive_definite(A, b)` | $Ax=b$ via Cholesky (fast, stable for SPD) |
+| `cholesky(A)` | SPD → lower triangular $L$, $A=LL^{\mathsf{T}}$ |
+| `solve_positive_definite(A, b)` | $Ax=b$ via Cholesky |
 | `lu_decompose(A)` | $PA=LU$ with partial pivoting → $(L,U,P)$ |
 | `inverse(A)` | $A^{-1}$ via LU solve |
-| `determinant(A)` | $\det A$ from LU with sign handling |
+| `determinant(A)` | $\det A$ from LU with sign |
 | `trace(A)`, `norm(v)` | matrix trace, vector norm |
 | `cross(v,w)`, `dot(v,w)`, `outer(v,w)` | vector products |
 | `tensor_raise_lower(g, g_inv, T, ...)` | index raising/lowering |
@@ -103,7 +141,7 @@ differences (see [Calculus](calculus.md)).
 
 ---
 
-## Usage Examples
+## 5. Usage Examples
 
 ### Solve a symmetric positive-definite system
 
@@ -127,7 +165,7 @@ print(L)          # lower triangular, A = L L^T
 from pysicrs import metric_signature, minkowski_metric
 
 g = minkowski_metric()
-print(metric_signature(g))  # (1, 3) -> time-like, 3 space-like
+print(metric_signature(g))  # (1, 3) → Lorentzian
 ```
 
 ### Lie bracket of coordinate fields
@@ -142,17 +180,17 @@ print(lie_bracket(X, Y, [0.0]*3, 1e-5))  # [0, 0, 0] — commute
 
 ---
 
-## Numerical Notes
+## 6. Numerical Notes
 
 - All routines are pure Rust on top of `ndarray` — no optional BLAS, so results are
   deterministic across machines.
 - Cholesky requires SPD input; a non-positive pivot raises `PysicError::SingularMatrix`.
-- The `3x3` helpers are closed-form (Cramer / adjugate) — branch-free and fast for the
-  many 3-vectors in classical mechanics.
+- The $3\times 3$ helpers are closed-form (Cramer / adjugate) — branch-free and fast for
+  the many 3-vectors in classical mechanics.
 
 ---
 
-## Advantages & Limitations
+## 7. Advantages & Limitations
 
 ✅ Self-contained, deterministic, no BLAS/LAPACK installation needed
 
@@ -160,22 +198,23 @@ print(lie_bracket(X, Y, [0.0]*3, 1e-5))  # [0, 0, 0] — commute
 
 ✅ Index raising/lowering integrates directly with GR metrics
 
-❌ Dense solvers only — no sparse linear algebra in this module (see Optimiz-rs for ADMM/Lasso)
+❌ Dense solvers only — no sparse linear algebra (see Optimiz-rs for ADMM/Lasso)
 
-❌ `f64` precision; no automatic differentiation aware solvers
+❌ `f64` precision; no automatic-differentiation-aware solvers
 
 ---
 
-## References
+## 8. References
 
 1. Golub, G.H. & Van Loan, C.F. (2013). *Matrix Computations*, 4th ed. JHU Press.
 2. Trefethen, L.N. & Bau, D. (1997). *Numerical Linear Algebra*. SIAM.
-3. Wald, R. (1984). *General Relativity*. Chicago. (tensor index conventions)
+3. Wald, R. (1984). *General Relativity*. Chicago.
 
 ---
 
-## Related Topics
+## 9. Related Topics
 
-- [General Relativity](general_relativity.md) – sources metric tensors and inverse metrics
-- [Calculus](calculus.md) – supplies the finite differences used by `lie_bracket`
-- [Special Functions](special_functions.md) – analytic kernels used in solving systems
+- [General Relativity](general_relativity.md) — sources metric tensors and inverse metrics
+- [Calculus](calculus.md) — supplies the finite differences used by `lie_bracket`
+- [Special Functions](special_functions.md) — analytic kernels used in solving systems
+- [Classical](classical.md) — inertia tensors are symmetric matrices from this module
