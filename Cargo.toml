@@ -26,7 +26,7 @@ name = "pysic"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-optimizr = { path = "../optimiz-rs", package = "optimiz-rs", default-features = false }
+optimizr = { version = "2.0.0", package = "optimiz-rs", default-features = false }
 pyo3 = { version = "0.22", features = ["extension-module", "abi3-py38"], optional = true }
 numpy = { version = "0.22", optional = true }
 ndarray = "0.15"
@@ -46,6 +46,9 @@ parallel = ["rayon"]
 [dev-dependencies]
 criterion = "0.5"
 approx = "0.5"
+
+[patch.crates-io]
+optimiz-rs = { path = "../optimiz-rs" }
 
 [profile.release]
 opt-level = 3
