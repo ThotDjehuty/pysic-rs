@@ -45,6 +45,8 @@ html_theme = 'furo'
 html_static_path = ['_static']
 html_title = 'Pysic-rs Documentation'
 html_short_title = 'Pysic-rs'
+html_logo = 'logo_pysicrs.png'
+html_favicon = 'logo_pysicrs.png'
 
 # Announcement bar (top panel) - Furo supports this via html_theme_options
 html_theme_options = {
