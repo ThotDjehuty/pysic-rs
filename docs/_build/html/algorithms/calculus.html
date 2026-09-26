@@ -1,0 +1,738 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="ODE Solvers" href="ode.html"><link rel="prev" title="Linear Algebra" href="linalg.html">
+        <link rel="prefetch" href="../_static/logo_pysicrs.png" as="image">
+
+    <link rel="shortcut icon" href="../_static/logo_pysicrs.png"><!-- Generated with Sphinx 7.4.7 and Furo 2025.12.19 -->
+        <title>Numerical Calculus - Pysic-rs Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a833a90c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  --color-brand-primary: #1e3a5f;
+  --color-brand-content: #1e3a5f;
+  --color-api-pre-background: #eef2ff;
+  --color-background-primary: #fefefe;
+  --color-background-secondary: #eef2ff;
+  --color-foreground-primary: #2d2d3a;
+  --color-foreground-secondary: #6b6b7a;
+  --color-foreground-muted: #9a9ab0;
+  --color-border: #c7d2fe;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #60a5fa;
+  --color-api-pre-background: #0f172a;
+  --color-background-primary: #0f172a;
+  --color-background-secondary: #1e293b;
+  --color-foreground-primary: #e8e8f0;
+  --color-foreground-secondary: #a0a0b8;
+  --color-foreground-muted: #707088;
+  --color-border: #334155;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #60a5fa;
+  --color-api-pre-background: #0f172a;
+  --color-background-primary: #0f172a;
+  --color-background-secondary: #1e293b;
+  --color-foreground-primary: #e8e8f0;
+  --color-foreground-secondary: #a0a0b8;
+  --color-foreground-muted: #707088;
+  --color-border: #334155;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+<div class="announcement">
+  <aside class="announcement-content">
+     🚀 <strong>Pysic-rs v0.1.0</strong> — Mathematical physics engine in Rust + Python • textbook-validated • <a href="changelog.html">View Changelog</a> • <a href="https://optimiz-rs.readthedocs.io/">Optimiz-rs Docs</a> • <a href="https://hfthot-lab.eu/thotbook-amenti.html">HFThot Research Lab</a> 
+  </aside>
+</div>
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Pysic-rs Documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/logo_pysicrs.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Pysic-rs Documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../examples.html">Example Notebooks</a><input aria-label="Toggle navigation of Example Notebooks" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/00_quickstart_and_constants.html">00 · Fundamental Constants and API Scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/01_ode_solvers.html">01 · ODE Integration: rk4_solve, backward_euler, leapfrog, rk45_solve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/02_pde_heat.html">02 · Heat Equation: Crank-Nicolson 1D and ADI 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/03_pde_wave.html">03 · Wave Equation: FDTD 1D and 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/04_pde_poisson.html">04 · Poisson Equation: poisson_fft_2d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/05_pde_quantum.html">05 · Schrödinger &amp; Dirac 1D: Split-Step Evolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/06_fourier_analysis.html">06 · Fourier Analysis: fft/ifft, spectral_derivative, welch_psd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/07_quantum_states.html">07 · Quantum States: Pauli Matrices/Structures, Fock &amp; Coherent States</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/08_propagators.html">08 · Quantum Propagators: Feynman and Free</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/09_gauge_theory.html">09 · Gauge Theory: su(3) Structure Constants and Instanton Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/10_topology.html">10 · Quantum Topology: Berry Phase, Chern Number, Winding Number</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/11_general_relativity.html">11 · General Relativity: Schwarzschild Metric, Christoffel, ADM Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/12_classical_mechanics.html">12 · Classical Mechanics: Rotations, Euler Equations, Inertia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/13_electromagnetism_casimir.html">13 · Electromagnetism: Radiation, Compton, Casimir Effect</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Algorithms</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="special_functions.html">Special Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">Linear Algebra</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Numerical Calculus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ode.html">ODE Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pde.html">PDE Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fourier.html">Fourier Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantum.html">Quantum Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="general_relativity.html">General Relativity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gauge.html">Gauge Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="classical.html">Classical Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topology.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="em.html">Electromagnetism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="casimir.html">Casimir Effect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/special_functions.html">API Reference: Special Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/linalg.html">API Reference: Linear Algebra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/calculus.html">API Reference: Numerical Calculus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/ode.html">API Reference: ODE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/pde.html">API Reference: PDE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/fourier.html">API Reference: Fourier Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/quantum.html">API Reference: Quantum Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/general_relativity.html">API Reference: General Relativity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/gauge.html">API Reference: Gauge Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/classical.html">API Reference: Classical Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/topology.html">API Reference: Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/em.html">API Reference: Electromagnetism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/casimir.html">API Reference: Casimir Effect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory/mathematical_foundations.html">Mathematical Foundations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/ThotDjehuty/pysic-rs/blob/main/docs/source/algorithms/calculus.md?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/ThotDjehuty/pysic-rs/edit/main/docs/source/algorithms/calculus.md" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section class="tex2jax_ignore mathjax_ignore" id="numerical-calculus">
+<h1>Numerical Calculus<a class="headerlink" href="#numerical-calculus" title="Link to this heading">¶</a></h1>
+<p>Pysic-rs provides the numerical differentiation, quadrature, and interpolation routines that
+underpin every other module — from gradient-based ODE/PDE work to the finite differences used
+in general relativity and gauge curvature.</p>
+<blockquote>
+<div><p><strong>Python binding status:</strong> the Numerical Calculus suite is Rust-exported; no Python
+bindings have landed yet. See the <a class="reference internal" href="../api/calculus.html"><span class="std std-doc">API page</span></a>.</p>
+</div></blockquote>
+<hr class="docutils" />
+<section id="numerical-differentiation">
+<h2>1. Numerical Differentiation<a class="headerlink" href="#numerical-differentiation" title="Link to this heading">¶</a></h2>
+<section id="central-differences">
+<h3>1.1 Central Differences<a class="headerlink" href="#central-differences" title="Link to this heading">¶</a></h3>
+<p>For a smooth function <span class="math notranslate nohighlight">\(f:\mathbb{R}^n\to\mathbb{R}\)</span>, the <strong>central difference</strong> approximation
+to the gradient is</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\boxed{\partial_i f(\mathbf{x}) = \frac{f(\mathbf{x}+h\mathbf{e}_i)-f(\mathbf{x}-h\mathbf{e}_i)}{2h} + \mathcal{O}(h^2)}
+\]</div>
+</div>
+<p><em>Proof.</em> Taylor expand: <span class="math notranslate nohighlight">\(f(\mathbf{x}+h\mathbf{e}_i) = f + h\partial_i f + \frac{h^2}{2}
+\partial_i^2 f + \frac{h^3}{6}\partial_i^3 f + \cdots\)</span>, and similarly for <span class="math notranslate nohighlight">\(f(\mathbf{x}
+-h\mathbf{e}_i)\)</span>. Subtract: the even terms cancel, the leading error is <span class="math notranslate nohighlight">\(\frac{h^2}{6}
+\partial_i^3 f\)</span>. <span class="math notranslate nohighlight">\(\square\)</span></p>
+<p>Central differences are always preferred over forward/backward: the error constant is half,
+and there is no directional bias.</p>
+</section>
+<section id="hessian-second-derivatives">
+<h3>1.2 Hessian (Second Derivatives)<a class="headerlink" href="#hessian-second-derivatives" title="Link to this heading">¶</a></h3>
+<p><strong>Diagonal:</strong></p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\frac{\partial^2 f}{\partial x_i^2} = \frac{f(\mathbf{x}+h\mathbf{e}_i)-2f(\mathbf{x})+f(\mathbf{x}-h\mathbf{e}_i)}{h^2} + \mathcal{O}(h^2)
+\]</div>
+</div>
+<p><strong>Off-diagonal:</strong></p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\frac{\partial^2 f}{\partial x_i\partial x_j} = \frac{f(\mathbf{x}+h(\mathbf{e}_i+\mathbf{e}_j))-f(\mathbf{x}+h\mathbf{e}_i-h\mathbf{e}_j)-f(\mathbf{x}-h\mathbf{e}_i+h\mathbf{e}_j)+f(\mathbf{x}-h(\mathbf{e}_i+\mathbf{e}_j))}{4h^2}
+\]</div>
+</div>
+</section>
+<section id="optimal-step-size">
+<h3>1.3 Optimal Step Size<a class="headerlink" href="#optimal-step-size" title="Link to this heading">¶</a></h3>
+<p>For double precision (<span class="math notranslate nohighlight">\(\epsilon_{\rm mach}\approx 10^{-16}\)</span>):</p>
+<ul class="simple">
+<li><p>First derivative: <span class="math notranslate nohighlight">\(h\approx\epsilon_{\rm mach}^{1/3}\sim 10^{-5}\)</span> (truncation <span class="math notranslate nohighlight">\(\sim h^2\)</span>,
+round-off <span class="math notranslate nohighlight">\(\sim \epsilon/h\)</span>; balance at <span class="math notranslate nohighlight">\(h\sim\epsilon^{1/3}\)</span>).</p></li>
+<li><p>Second derivative: <span class="math notranslate nohighlight">\(h\approx\epsilon_{\rm mach}^{1/4}\sim 10^{-4}\)</span>.</p></li>
+</ul>
+</section>
+<section id="jacobian">
+<h3>1.4 Jacobian<a class="headerlink" href="#jacobian" title="Link to this heading">¶</a></h3>
+<p>The Jacobian of <span class="math notranslate nohighlight">\(F:\mathbb{R}^n\to\mathbb{R}^m\)</span> is computed column by column:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+J_{ij} = \frac{\partial F_i}{\partial x_j} = \frac{F_i(\mathbf{x}+h\mathbf{e}_j)-F_i(\mathbf{x}-h\mathbf{e}_j)}{2h}
+\]</div>
+</div>
+<p>Cost: <span class="math notranslate nohighlight">\(2n\)</span> function evaluations (vs <span class="math notranslate nohighlight">\(n^2\)</span> for finite-difference Hessian).</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="quadrature-numerical-integration">
+<h2>2. Quadrature (Numerical Integration)<a class="headerlink" href="#quadrature-numerical-integration" title="Link to this heading">¶</a></h2>
+<section id="composite-trapezoid-rule">
+<h3>2.1 Composite Trapezoid Rule<a class="headerlink" href="#composite-trapezoid-rule" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\int_a^b f(x)\,dx \approx \frac{h}{2}\left(f_0 + 2\sum_{i=1}^{N-1}f_i + f_N\right), \qquad h = \frac{b-a}{N}
+\]</div>
+</div>
+<p><strong>Error:</strong> <span class="math notranslate nohighlight">\(\mathcal{O}(h^2)\)</span> (proven from the Euler–Maclaurin formula).</p>
+</section>
+<section id="simpsons-rule">
+<h3>2.2 Simpson’s Rule<a class="headerlink" href="#simpsons-rule" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\int_a^b f(x)\,dx \approx \frac{h}{3}\left(f_0 + 4\sum_{\text{odd}}f_i + 2\sum_{\text{even}}f_i + f_N\right)
+\]</div>
+</div>
+<p><strong>Error:</strong> <span class="math notranslate nohighlight">\(\mathcal{O}(h^4)\)</span> (proven — exact for polynomials of degree <span class="math notranslate nohighlight">\(\le 3\)</span>).
+Requires an <strong>even</strong> number of subintervals.</p>
+</section>
+<section id="gausslegendre-quadrature">
+<h3>2.3 Gauss–Legendre Quadrature<a class="headerlink" href="#gausslegendre-quadrature" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\int_{-1}^{1}f(x)\,dx \approx \sum_{i=1}^n w_i f(x_i)
+\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(x_i\)</span> are the roots of the Legendre polynomial <span class="math notranslate nohighlight">\(P_n(x)\)</span> and <span class="math notranslate nohighlight">\(w_i\)</span> are the
+Christoffel numbers.</p>
+<p><strong>Theorem (exactness).</strong> Gauss–Legendre with <span class="math notranslate nohighlight">\(n\)</span> points is exact for polynomials of degree
+<span class="math notranslate nohighlight">\(\le 2n-1\)</span>.</p>
+<p><em>Proof.</em> The <span class="math notranslate nohighlight">\(n\)</span>-point rule has <span class="math notranslate nohighlight">\(2n\)</span> free parameters (<span class="math notranslate nohighlight">\(n\)</span> nodes + <span class="math notranslate nohighlight">\(n\)</span> weights). Matching
+the moments <span class="math notranslate nohighlight">\(\int x^k\,dx\)</span> for <span class="math notranslate nohighlight">\(k=0,\ldots,2n-1\)</span> gives <span class="math notranslate nohighlight">\(2n\)</span> equations in <span class="math notranslate nohighlight">\(2n\)</span> unknowns,
+which has a unique solution. The nodes must be the roots of <span class="math notranslate nohighlight">\(P_n\)</span> (by the orthogonality
+of Legendre polynomials). <span class="math notranslate nohighlight">\(\square\)</span></p>
+</section>
+<section id="romberg-integration">
+<h3>2.4 Romberg Integration<a class="headerlink" href="#romberg-integration" title="Link to this heading">¶</a></h3>
+<p>Build the trapezoid table <span class="math notranslate nohighlight">\(R_{j,k}\)</span> and apply Richardson extrapolation:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+R_{j,k} = R_{j,k-1} + \frac{R_{j,k-1}-R_{j-1,k-1}}{4^k-1}
+\]</div>
+</div>
+<p>This eliminates error terms one order at a time, provably reaching <span class="math notranslate nohighlight">\(\mathcal{O}(h^{2k})\)</span>
+accuracy from the basic trapezoid rule.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="interpolation">
+<h2>3. Interpolation<a class="headerlink" href="#interpolation" title="Link to this heading">¶</a></h2>
+<section id="linear-interpolation">
+<h3>3.1 Linear Interpolation<a class="headerlink" href="#linear-interpolation" title="Link to this heading">¶</a></h3>
+<p>Between two points <span class="math notranslate nohighlight">\((x_i,y_i)\)</span> and <span class="math notranslate nohighlight">\((x_{i+1},y_{i+1})\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+y = y_i + \frac{y_{i+1}-y_i}{x_{i+1}-x_i}(x-x_i)
+\]</div>
+</div>
+<p>Error: <span class="math notranslate nohighlight">\(\mathcal{O}(h^2)\)</span> for smooth <span class="math notranslate nohighlight">\(f\)</span> (from the remainder of the Taylor expansion).</p>
+</section>
+<section id="natural-cubic-spline">
+<h3>3.2 Natural Cubic Spline<a class="headerlink" href="#natural-cubic-spline" title="Link to this heading">¶</a></h3>
+<p>The <strong>natural cubic spline</strong> is the unique <span class="math notranslate nohighlight">\(C^2\)</span> interpolant that minimises <span class="math notranslate nohighlight">\(\int_a^b
+(f''')^2\,dx\)</span> (the total curvature). It solves a tridiagonal system for the second
+derivatives <span class="math notranslate nohighlight">\(M_i = f''(x_i)\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+h_{i-1}M_{i-1} + 2(h_{i-1}+h_i)M_i + h_i M_{i+1} = 6\left(\frac{y_{i+1}-y_i}{h_i}-\frac{y_i-y_{i-1}}{h_{i-1}}\right)
+\]</div>
+</div>
+<p>with natural boundary conditions <span class="math notranslate nohighlight">\(M_0 = M_N = 0\)</span>.</p>
+<p><strong>Properties (proven):</strong></p>
+<ul class="simple">
+<li><p>Second-order accurate: <span class="math notranslate nohighlight">\(\|f-S\|_\infty = \mathcal{O}(h^2)\)</span> (for <span class="math notranslate nohighlight">\(f\in C^4\)</span>).</p></li>
+<li><p>The minimal-curvature property makes it the smoothest interpolant.</p></li>
+<li><p>Tridiagonal solve: <span class="math notranslate nohighlight">\(O(N)\)</span> operations.</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="routines">
+<h2>4. Routines<a class="headerlink" href="#routines" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Routine</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gradient(f,</span> <span class="pre">x,</span> <span class="pre">h)</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\nabla f\)</span> by central differences</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hessian(f,</span> <span class="pre">x,</span> <span class="pre">h)</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\partial^2 f/\partial x_i\partial x_j\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">jacobian(f,</span> <span class="pre">x,</span> <span class="pre">h)</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(J_{ij}=\partial f_i/\partial x_j\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">trapz(y,</span> <span class="pre">x)</span></code> / <code class="docutils literal notranslate"><span class="pre">simpson(y,</span> <span class="pre">x)</span></code></p></td>
+<td><p>composite quadrature</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gauss_legendre(f,</span> <span class="pre">a,</span> <span class="pre">b,</span> <span class="pre">n)</span></code></p></td>
+<td><p>high-order Gaussian quadrature</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">romberg(f,</span> <span class="pre">a,</span> <span class="pre">b,</span> <span class="pre">...)</span></code></p></td>
+<td><p>Richardson-accelerated trapezoid</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lerp(x0,</span> <span class="pre">x1,</span> <span class="pre">t)</span></code></p></td>
+<td><p>scalar interpolation</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">interp1d(x,</span> <span class="pre">y,</span> <span class="pre">x_query)</span></code></p></td>
+<td><p>piecewise linear</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">interp_cspline(x,</span> <span class="pre">y,</span> <span class="pre">x_query)</span></code></p></td>
+<td><p>natural cubic spline</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="usage-examples">
+<h2>5. Usage Examples<a class="headerlink" href="#usage-examples" title="Link to this heading">¶</a></h2>
+<section id="gradient-of-a-quadratic-form">
+<h3>Gradient of a quadratic form<a class="headerlink" href="#gradient-of-a-quadratic-form" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pysicrs</span><span class="w"> </span><span class="kn">import</span> <span class="n">gradient</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">gradient</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="mf">1e-5</span><span class="p">))</span>  <span class="c1"># ≈ [2.0, 12.0]</span>
+</pre></div>
+</div>
+</section>
+<section id="gausslegendre-for-a-well-behaved-integral">
+<h3>Gauss–Legendre for a well-behaved integral<a class="headerlink" href="#gausslegendre-for-a-well-behaved-integral" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pysicrs</span><span class="w"> </span><span class="kn">import</span> <span class="n">gauss_legendre</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="n">I</span> <span class="o">=</span> <span class="n">gauss_legendre</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;∫ sin = </span><span class="si">{</span><span class="n">I</span><span class="si">:</span><span class="s2">.12f</span><span class="si">}</span><span class="s2">  (exact 2.0)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="natural-cubic-spline-smoothing">
+<h3>Natural cubic spline smoothing<a class="headerlink" href="#natural-cubic-spline-smoothing" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pysicrs</span><span class="w"> </span><span class="kn">import</span> <span class="n">interp_cspline</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">interp_cspline</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">))</span>  <span class="c1"># ≈ 0.5</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="numerical-notes">
+<h2>6. Numerical Notes<a class="headerlink" href="#numerical-notes" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Central differences are used exclusively (forward differences have worse error constants).</p></li>
+<li><p>Simpson’s rule requires an even number of subintervals.</p></li>
+<li><p>Choose <span class="math notranslate nohighlight">\(h\)</span> per the round-off/truncation balance; defaults (<span class="math notranslate nohighlight">\(\sim 10^{-5}\)</span>) are good for
+first derivatives.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="advantages-limitations">
+<h2>7. Advantages &amp; Limitations<a class="headerlink" href="#advantages-limitations" title="Link to this heading">¶</a></h2>
+<p>✅ Well-understood <span class="math notranslate nohighlight">\(\mathcal{O}(h^k)\)</span> convergence for smooth integrands</p>
+<p>✅ Romberg gives near-machine-precision for analytic functions</p>
+<p>✅ Splines produce smooth, differentiable interpolants</p>
+<p>❌ High-order differentiation amplifies noise — not for noisy data</p>
+<p>❌ Grid-based quadrature is not adaptive (no built-in error control yet)</p>
+</section>
+<hr class="docutils" />
+<section id="references">
+<h2>8. References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Press, W. et al. (2007). <em>Numerical Recipes</em>, 3rd ed. Cambs.</p></li>
+<li><p>Stoer, J. &amp; Bulirsch, R. (2002). <em>Introduction to Numerical Analysis</em>, 3rd ed. Springer.</p></li>
+<li><p>Atkinson, K. (1989). <em>An Introduction to Numerical Analysis</em>, 2nd ed. Wiley.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="related-topics">
+<h2>9. Related Topics<a class="headerlink" href="#related-topics" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="ode.html"><span class="std std-doc">ODE</span></a> — integrators rely on these quadrature kernels</p></li>
+<li><p><a class="reference internal" href="general_relativity.html"><span class="std std-doc">General Relativity</span></a> — finite differences for Christoffel/Riemann</p></li>
+<li><p><a class="reference internal" href="linalg.html"><span class="std std-doc">Linear Algebra</span></a> — spline system solved with tridiagonal (non-pivoted LU)</p></li>
+<li><p><a class="reference internal" href="pde.html"><span class="std std-doc">PDE</span></a> — spatial discretisation uses these differences</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="ode.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">ODE Solvers</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="linalg.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Linear Algebra</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, HFThot Research Lab
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/ThotDjehuty/pysic-rs" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
+                </svg>
+            </a>
+              <a class="muted-link " href="https://optimiz-rs.readthedocs.io/" aria-label="Optimiz-rs">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
+            </a>
+              <a class="muted-link " href="https://hfthot-lab.eu/thotbook-amenti.html" aria-label="HFThot Lab">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path d="M12 2L1 21h22L12 2zm0 4.7l6.5 11.3H5.5L12 6.7z"/>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Numerical Calculus</a><ul>
+<li><a class="reference internal" href="#numerical-differentiation">1. Numerical Differentiation</a><ul>
+<li><a class="reference internal" href="#central-differences">1.1 Central Differences</a></li>
+<li><a class="reference internal" href="#hessian-second-derivatives">1.2 Hessian (Second Derivatives)</a></li>
+<li><a class="reference internal" href="#optimal-step-size">1.3 Optimal Step Size</a></li>
+<li><a class="reference internal" href="#jacobian">1.4 Jacobian</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#quadrature-numerical-integration">2. Quadrature (Numerical Integration)</a><ul>
+<li><a class="reference internal" href="#composite-trapezoid-rule">2.1 Composite Trapezoid Rule</a></li>
+<li><a class="reference internal" href="#simpsons-rule">2.2 Simpson’s Rule</a></li>
+<li><a class="reference internal" href="#gausslegendre-quadrature">2.3 Gauss–Legendre Quadrature</a></li>
+<li><a class="reference internal" href="#romberg-integration">2.4 Romberg Integration</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#interpolation">3. Interpolation</a><ul>
+<li><a class="reference internal" href="#linear-interpolation">3.1 Linear Interpolation</a></li>
+<li><a class="reference internal" href="#natural-cubic-spline">3.2 Natural Cubic Spline</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#routines">4. Routines</a></li>
+<li><a class="reference internal" href="#usage-examples">5. Usage Examples</a><ul>
+<li><a class="reference internal" href="#gradient-of-a-quadratic-form">Gradient of a quadratic form</a></li>
+<li><a class="reference internal" href="#gausslegendre-for-a-well-behaved-integral">Gauss–Legendre for a well-behaved integral</a></li>
+<li><a class="reference internal" href="#natural-cubic-spline-smoothing">Natural cubic spline smoothing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#numerical-notes">6. Numerical Notes</a></li>
+<li><a class="reference internal" href="#advantages-limitations">7. Advantages &amp; Limitations</a></li>
+<li><a class="reference internal" href="#references">8. References</a></li>
+<li><a class="reference internal" href="#related-topics">9. Related Topics</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=38b66d78"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=30646c52"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>

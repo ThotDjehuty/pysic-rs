@@ -5,15 +5,21 @@
 //! bound" note. Every entry point below is a thin wrapper; the numerics live in
 //! the core module.
 //!
-//! Scalar functions accept either a float or a sequence, so they can be called
-//! directly on a grid for plotting:
+//! All of them are elementwise: pass a float and get a float back, pass any
+//! sequence (list, tuple, NumPy array) and get a list back, so a function can
+//! be evaluated straight onto a plotting grid.
 //!
 //! ```python
 //! import numpy as np, pysicrs as ps
-//! x = np.linspace(0.1, 5, 400)
-//! y = ps.gamma(x.tolist())        # -> list[float]
+//! x = np.linspace(0.1, 25, 800)
+//! ps.bessel_j0(x)      # -> list[float]
+//! ps.bessel_j0(2.5)    # -> float
 //! ```
+//!
+//! Two-argument functions broadcast NumPy-style: either argument may be scalar,
+//! and two sequences must be the same length.
 
+use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 
 use crate::special_functions as sf;
@@ -40,139 +46,202 @@ pub fn register_python_functions(m: &Bound<'_, PyModule>) -> PyResult<()> {
     Ok(())
 }
 
-/// Accept a float or any sequence of floats, returning the same shape.
-fn map1(py: Python, arg: &Bound<'_, PyAny>, f: impl Fn(f64) -> f64) -> PyResult<PyObject> {
-    if let Ok(x) = arg.extract::<f64>() {
-        return Ok(f(x).into_py(py));
-    }
-    let xs: Vec<f64> = arg.extract()?;
-    let ys: Vec<f64> = xs.into_iter().map(&f).collect();
-    Ok(ys.into_py(py))
+/// A float argument that may also arrive as a sequence.
+enum Arg {
+    Scalar(f64),
+    Vector(Vec<f64>),
 }
 
-/// Gamma function Γ(x), via Lanczos approximation.
+impl Arg {
+    fn from(obj: &Bound<'_, PyAny>) -> PyResult<Self> {
+        if let Ok(x) = obj.extract::<f64>() {
+            return Ok(Arg::Scalar(x));
+        }
+        Ok(Arg::Vector(obj.extract()?))
+    }
+
+    fn len(&self) -> Option<usize> {
+        match self {
+            Arg::Scalar(_) => None,
+            Arg::Vector(v) => Some(v.len()),
+        }
+    }
+
+    fn at(&self, i: usize) -> f64 {
+        match self {
+            Arg::Scalar(x) => *x,
+            Arg::Vector(v) => v[i],
+        }
+    }
+}
+
+/// Apply `f` elementwise, preserving scalar-in / scalar-out.
+fn map1(py: Python, arg: &Bound<'_, PyAny>, f: impl Fn(f64) -> f64) -> PyResult<PyObject> {
+    match Arg::from(arg)? {
+        Arg::Scalar(x) => Ok(f(x).into_py(py)),
+        Arg::Vector(v) => {
+            let out: Vec<f64> = v.into_iter().map(&f).collect();
+            Ok(out.into_py(py))
+        }
+    }
+}
+
+/// Apply `f` elementwise over two arguments, broadcasting a scalar against a
+/// sequence. Two sequences must agree in length.
+fn map2(
+    py: Python,
+    a: &Bound<'_, PyAny>,
+    b: &Bound<'_, PyAny>,
+    f: impl Fn(f64, f64) -> f64,
+) -> PyResult<PyObject> {
+    let (a, b) = (Arg::from(a)?, Arg::from(b)?);
+    let n = match (a.len(), b.len()) {
+        (None, None) => return Ok(f(a.at(0), b.at(0)).into_py(py)),
+        (Some(n), None) | (None, Some(n)) => n,
+        (Some(n), Some(m)) if n == m => n,
+        (Some(n), Some(m)) => {
+            return Err(PyValueError::new_err(format!(
+                "length mismatch: {n} vs {m}"
+            )))
+        }
+    };
+    let out: Vec<f64> = (0..n).map(|i| f(a.at(i), b.at(i))).collect();
+    Ok(out.into_py(py))
+}
+
+/// Gamma function Γ(x), via the Lanczos approximation.
+///
+/// Poles at the non-positive integers; use `ln_gamma` for large arguments
+/// where Γ overflows.
 #[pyfunction]
-#[pyo3(name = "gamma_py", signature = (x))]
 fn gamma_py(py: Python, x: &Bound<'_, PyAny>) -> PyResult<PyObject> {
     map1(py, x, sf::gamma)
 }
 
-/// Natural logarithm of |Γ(x)|. Use for large arguments where Γ overflows.
+/// Natural logarithm of |Γ(x)|, finite where Γ itself overflows.
 #[pyfunction]
-#[pyo3(name = "ln_gamma_py", signature = (x))]
 fn ln_gamma_py(py: Python, x: &Bound<'_, PyAny>) -> PyResult<PyObject> {
     map1(py, x, sf::ln_gamma)
 }
 
 /// Beta function B(a, b) = Γ(a)Γ(b)/Γ(a+b).
+///
+/// Either argument may be a sequence; a scalar broadcasts against it.
 #[pyfunction]
-#[pyo3(name = "beta_py", signature = (a, b))]
-fn beta_py(a: f64, b: f64) -> PyResult<f64> {
-    Ok(sf::beta(a, b))
+fn beta_py(py: Python, a: &Bound<'_, PyAny>, b: &Bound<'_, PyAny>) -> PyResult<PyObject> {
+    map2(py, a, b, sf::beta)
 }
 
 /// Error function erf(x) = (2/√π)∫₀ˣ e^{-t²} dt.
 #[pyfunction]
-#[pyo3(name = "erf_py", signature = (x))]
 fn erf_py(py: Python, x: &Bound<'_, PyAny>) -> PyResult<PyObject> {
     map1(py, x, sf::erf)
 }
 
-/// Complementary error function erfc(x) = 1 - erf(x).
+/// Complementary error function erfc(x) = 1 − erf(x).
 #[pyfunction]
-#[pyo3(name = "erfc_py", signature = (x))]
 fn erfc_py(py: Python, x: &Bound<'_, PyAny>) -> PyResult<PyObject> {
     map1(py, x, sf::erfc)
 }
 
 /// Bessel function of the first kind, order 0.
 #[pyfunction]
-#[pyo3(name = "bessel_j0_py", signature = (x))]
 fn bessel_j0_py(py: Python, x: &Bound<'_, PyAny>) -> PyResult<PyObject> {
     map1(py, x, sf::bessel_j0)
 }
 
 /// Bessel function of the first kind, order 1.
 #[pyfunction]
-#[pyo3(name = "bessel_j1_py", signature = (x))]
 fn bessel_j1_py(py: Python, x: &Bound<'_, PyAny>) -> PyResult<PyObject> {
     map1(py, x, sf::bessel_j1)
 }
 
-/// Bessel function of the second kind, order 0. Singular at x = 0.
+/// Bessel function of the second kind, order 0. NaN for x ≤ 0.
 #[pyfunction]
-#[pyo3(name = "bessel_y0_py", signature = (x))]
 fn bessel_y0_py(py: Python, x: &Bound<'_, PyAny>) -> PyResult<PyObject> {
     map1(py, x, sf::bessel_y0)
 }
 
-/// Bessel function of the second kind, order 1. Singular at x = 0.
+/// Bessel function of the second kind, order 1. NaN for x ≤ 0.
 #[pyfunction]
-#[pyo3(name = "bessel_y1_py", signature = (x))]
 fn bessel_y1_py(py: Python, x: &Bound<'_, PyAny>) -> PyResult<PyObject> {
     map1(py, x, sf::bessel_y1)
 }
 
 /// Legendre polynomial P_l(x), by the stable upward recurrence.
 #[pyfunction]
-#[pyo3(name = "legendre_p_py", signature = (l, x))]
 fn legendre_p_py(py: Python, l: usize, x: &Bound<'_, PyAny>) -> PyResult<PyObject> {
     map1(py, x, |v| sf::legendre_p(l, v))
 }
 
 /// Associated Legendre function P_l^m(x).
 #[pyfunction]
-#[pyo3(name = "legendre_plm_py", signature = (l, m, x))]
 fn legendre_plm_py(py: Python, l: usize, m: i32, x: &Bound<'_, PyAny>) -> PyResult<PyObject> {
     map1(py, x, |v| sf::legendre_plm(l, m, v))
 }
 
-/// Spherical harmonic Y_l^m(θ, φ), returned as the pair (re, im).
+/// Spherical harmonic Y_l^m(θ, φ), returned as the pair `(re, im)`.
+///
+/// `theta` may be a sequence, in which case both halves of the pair are lists
+/// of the same length.
 #[pyfunction]
-#[pyo3(name = "spherical_harmonic_py", signature = (l, m, theta, phi))]
-fn spherical_harmonic_py(l: usize, m: i32, theta: f64, phi: f64) -> PyResult<(f64, f64)> {
-    let z = sf::spherical_harmonic(l, m, theta, phi);
-    Ok((z.re, z.im))
+fn spherical_harmonic_py(
+    py: Python,
+    l: usize,
+    m: i32,
+    theta: &Bound<'_, PyAny>,
+    phi: f64,
+) -> PyResult<PyObject> {
+    match Arg::from(theta)? {
+        Arg::Scalar(t) => {
+            let z = sf::spherical_harmonic(l, m, t, phi);
+            Ok((z.re, z.im).into_py(py))
+        }
+        Arg::Vector(ts) => {
+            let (re, im): (Vec<f64>, Vec<f64>) = ts
+                .into_iter()
+                .map(|t| {
+                    let z = sf::spherical_harmonic(l, m, t, phi);
+                    (z.re, z.im)
+                })
+                .unzip();
+            Ok((re, im).into_py(py))
+        }
+    }
 }
 
 /// Chebyshev polynomial of the first kind, T_n(x) = cos(n arccos x).
 #[pyfunction]
-#[pyo3(name = "chebyshev_t_py", signature = (n, x))]
 fn chebyshev_t_py(py: Python, n: usize, x: &Bound<'_, PyAny>) -> PyResult<PyObject> {
     map1(py, x, |v| sf::chebyshev_t(n, v))
 }
 
 /// Chebyshev polynomial of the second kind, U_n(x).
 #[pyfunction]
-#[pyo3(name = "chebyshev_u_py", signature = (n, x))]
 fn chebyshev_u_py(py: Python, n: usize, x: &Bound<'_, PyAny>) -> PyResult<PyObject> {
     map1(py, x, |v| sf::chebyshev_u(n, v))
 }
 
-/// Airy function Ai(x), the decaying solution of y'' = x y.
+/// Airy function Ai(x), the decaying solution of y″ = x y.
 #[pyfunction]
-#[pyo3(name = "airy_ai_py", signature = (x))]
 fn airy_ai_py(py: Python, x: &Bound<'_, PyAny>) -> PyResult<PyObject> {
     map1(py, x, sf::airy_ai)
 }
 
-/// Exponential integral E₁(x) = ∫₁^∞ e^{-xt}/t dt, for x > 0.
+/// Exponential integral E₁(x) = ∫₁^∞ e^{−xt}/t dt, for x > 0.
 #[pyfunction]
-#[pyo3(name = "expint_e1_py", signature = (x))]
 fn expint_e1_py(py: Python, x: &Bound<'_, PyAny>) -> PyResult<PyObject> {
     map1(py, x, sf::expint_e1)
 }
 
 /// Generalised exponential integral Eₙ(x).
 #[pyfunction]
-#[pyo3(name = "expint_en_py", signature = (n, x))]
 fn expint_en_py(py: Python, n: usize, x: &Bound<'_, PyAny>) -> PyResult<PyObject> {
     map1(py, x, |v| sf::expint_en(n, v))
 }
 
-/// Riemann zeta function ζ(s) on the real line.
+/// Riemann zeta function ζ(s) on the real line. Pole at s = 1.
 #[pyfunction]
-#[pyo3(name = "zeta_py", signature = (s))]
 fn zeta_py(py: Python, s: &Bound<'_, PyAny>) -> PyResult<PyObject> {
     map1(py, s, sf::zeta)
 }

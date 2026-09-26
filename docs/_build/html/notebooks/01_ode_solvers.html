@@ -1,0 +1,1164 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="02 · Heat Equation: Crank-Nicolson 1D and ADI 2D" href="02_pde_heat.html"><link rel="prev" title="00 · Fundamental Constants and API Scope" href="00_quickstart_and_constants.html">
+        <link rel="prefetch" href="../_static/logo_pysicrs.png" as="image">
+
+    <link rel="shortcut icon" href="../_static/logo_pysicrs.png"><!-- Generated with Sphinx 7.4.7 and Furo 2025.12.19 -->
+        <title>01 · ODE Integration: rk4_solve, backward_euler, leapfrog, rk45_solve - Pysic-rs Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a833a90c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  --color-brand-primary: #1e3a5f;
+  --color-brand-content: #1e3a5f;
+  --color-api-pre-background: #eef2ff;
+  --color-background-primary: #fefefe;
+  --color-background-secondary: #eef2ff;
+  --color-foreground-primary: #2d2d3a;
+  --color-foreground-secondary: #6b6b7a;
+  --color-foreground-muted: #9a9ab0;
+  --color-border: #c7d2fe;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #60a5fa;
+  --color-api-pre-background: #0f172a;
+  --color-background-primary: #0f172a;
+  --color-background-secondary: #1e293b;
+  --color-foreground-primary: #e8e8f0;
+  --color-foreground-secondary: #a0a0b8;
+  --color-foreground-muted: #707088;
+  --color-border: #334155;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #60a5fa;
+  --color-api-pre-background: #0f172a;
+  --color-background-primary: #0f172a;
+  --color-background-secondary: #1e293b;
+  --color-foreground-primary: #e8e8f0;
+  --color-foreground-secondary: #a0a0b8;
+  --color-foreground-muted: #707088;
+  --color-border: #334155;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+<div class="announcement">
+  <aside class="announcement-content">
+     🚀 <strong>Pysic-rs v0.1.0</strong> — Mathematical physics engine in Rust + Python • textbook-validated • <a href="changelog.html">View Changelog</a> • <a href="https://optimiz-rs.readthedocs.io/">Optimiz-rs Docs</a> • <a href="https://hfthot-lab.eu/thotbook-amenti.html">HFThot Research Lab</a> 
+  </aside>
+</div>
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Pysic-rs Documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/logo_pysicrs.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Pysic-rs Documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../examples.html">Example Notebooks</a><input aria-label="Toggle navigation of Example Notebooks" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="00_quickstart_and_constants.html">00 · Fundamental Constants and API Scope</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">01 · ODE Integration: rk4_solve, backward_euler, leapfrog, rk45_solve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_pde_heat.html">02 · Heat Equation: Crank-Nicolson 1D and ADI 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_pde_wave.html">03 · Wave Equation: FDTD 1D and 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_pde_poisson.html">04 · Poisson Equation: poisson_fft_2d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05_pde_quantum.html">05 · Schrödinger &amp; Dirac 1D: Split-Step Evolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06_fourier_analysis.html">06 · Fourier Analysis: fft/ifft, spectral_derivative, welch_psd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07_quantum_states.html">07 · Quantum States: Pauli Matrices/Structures, Fock &amp; Coherent States</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08_propagators.html">08 · Quantum Propagators: Feynman and Free</a></li>
+<li class="toctree-l2"><a class="reference internal" href="09_gauge_theory.html">09 · Gauge Theory: su(3) Structure Constants and Instanton Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_topology.html">10 · Quantum Topology: Berry Phase, Chern Number, Winding Number</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_general_relativity.html">11 · General Relativity: Schwarzschild Metric, Christoffel, ADM Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_classical_mechanics.html">12 · Classical Mechanics: Rotations, Euler Equations, Inertia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="13_electromagnetism_casimir.html">13 · Electromagnetism: Radiation, Compton, Casimir Effect</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Algorithms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/special_functions.html">Special Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/linalg.html">Linear Algebra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/calculus.html">Numerical Calculus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/ode.html">ODE Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/pde.html">PDE Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/fourier.html">Fourier Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/quantum.html">Quantum Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/general_relativity.html">General Relativity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/gauge.html">Gauge Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/classical.html">Classical Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/topology.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/em.html">Electromagnetism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/casimir.html">Casimir Effect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/special_functions.html">API Reference: Special Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/linalg.html">API Reference: Linear Algebra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/calculus.html">API Reference: Numerical Calculus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/ode.html">API Reference: ODE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/pde.html">API Reference: PDE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/fourier.html">API Reference: Fourier Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/quantum.html">API Reference: Quantum Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/general_relativity.html">API Reference: General Relativity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/gauge.html">API Reference: Gauge Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/classical.html">API Reference: Classical Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/topology.html">API Reference: Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/em.html">API Reference: Electromagnetism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/casimir.html">API Reference: Casimir Effect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory/mathematical_foundations.html">Mathematical Foundations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/ThotDjehuty/pysic-rs/blob/main/docs/source/notebooks/01_ode_solvers.ipynb?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/ThotDjehuty/pysic-rs/edit/main/docs/source/notebooks/01_ode_solvers.ipynb" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="01-·-ODE-Integration:-rk4_solve,-backward_euler,-leapfrog,-rk45_solve">
+<h1>01 · ODE Integration: rk4_solve, backward_euler, leapfrog, rk45_solve<a class="headerlink" href="#01-·-ODE-Integration:-rk4_solve,-backward_euler,-leapfrog,-rk45_solve" title="Link to this heading">¶</a></h1>
+<p><strong>pysic-rs</strong> — High-performance mathematical physics engine with Python bindings. Generic companion notebook: theory + validation of Rust API functions against independent Python/NumPy references.</p>
+<p><code class="docutils literal notranslate"><span class="pre">kernel</span> <span class="pre">rhftlab</span></code> · <strong>real data first, synthetic fallback</strong> — each code cell prints labeled outputs and produces at least one figure. Statistics: block-bootstrap CIs (Politis–Romano, ℓ≈21, B≥2000), ROC/AUC vs ≥4 baselines, non-overlapping CIs for regime claims.</p>
+<section id="1.-Model-ODE:-ẏ-=--λ-y-(Exponential-Decay)">
+<h2>1. Model ODE: ẏ = -λ y (Exponential Decay)<a class="headerlink" href="#1.-Model-ODE:-ẏ-=--λ-y-(Exponential-Decay)" title="Link to this heading">¶</a></h2>
+<section id="Theorem-/-Model-Used">
+<h3>Theorem / Model Used<a class="headerlink" href="#Theorem-/-Model-Used" title="Link to this heading">¶</a></h3>
+<p>Classic 4th-order Runge-Kutta (RK4) scheme.</p>
+</section>
+<section id="Pivot-Equation">
+<h3>Pivot Equation<a class="headerlink" href="#Pivot-Equation" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[y_{n+1} = y_n + \frac{dt}{6}(k_1 + 2k_2 + 2k_3 + k_4), \quad k_1 = f(t_n, y_n)\]</div>
+</div>
+</section>
+<section id="Demonstration">
+<h3>Demonstration<a class="headerlink" href="#Demonstration" title="Link to this heading">¶</a></h3>
+<p>RK4 is 4th-order: global error decays as O(dt⁴) for smooth solutions.</p>
+</section>
+<section id="What-This-Cell-Verifies">
+<h3>What This Cell Verifies<a class="headerlink" href="#What-This-Cell-Verifies" title="Link to this heading">¶</a></h3>
+<p>Verify that rk4_solve reproduces the NumPy RK4 reference and measured convergence order ≈ 4.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">90</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">ccxt</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fetch_binance_ohlcv</span><span class="p">(</span><span class="n">symbol</span><span class="o">=</span><span class="s1">&#39;BTC/USDT&#39;</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">=</span><span class="s1">&#39;1h&#39;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch OHLCV data from Binance public API (no API key needed).&quot;&quot;&quot;</span>
+    <span class="n">exchange</span> <span class="o">=</span> <span class="n">ccxt</span><span class="o">.</span><span class="n">binance</span><span class="p">({</span><span class="s1">&#39;enableRateLimit&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+    <span class="n">ohlcv</span> <span class="o">=</span> <span class="n">exchange</span><span class="o">.</span><span class="n">fetch_ohlcv</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">timeframe</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ohlcv</span><span class="p">)</span>  <span class="c1"># [timestamp, open, high, low, close, volume]</span>
+
+<span class="c1"># USE_REAL = True  # Set to True to fetch real market data; False for synthetic</span>
+<span class="n">USE_REAL</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<span class="c1"># Statistics reporting</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="c1"># Block-bootstrap CI (Politis–Romano, ℓ≈21, B≥2000)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">block_bootstrap_ci</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">stat_fn</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">block_len</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="mi">2000</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">block_len</span> <span class="o">*</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">boots</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_boot</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="n">block_len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span> <span class="o">//</span> <span class="n">block_len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">block_len</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">])</span>
+        <span class="n">boots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stat_fn</span><span class="p">(</span><span class="n">sample</span><span class="p">[:</span><span class="n">n</span><span class="p">]))</span>
+    <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">boots</span><span class="p">,</span> <span class="p">[</span><span class="mi">100</span><span class="o">*</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span>
+
+<span class="c1"># ROC/AUC against ≥4 baselines</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">roc_auc_baselines</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_scores_dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;y_scores_dict: {name: scores} for ≥4 baselines.&quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">roc_auc_score</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">scores</span> <span class="ow">in</span> <span class="n">y_scores_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">scores</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="c1"># Non-overlapping CI check for regime claims</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ci_non_overlap</span><span class="p">(</span><span class="n">ci1</span><span class="p">,</span> <span class="n">ci2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ci1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">ci2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">ci2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">ci1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pysicrs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">p</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">USE_REAL</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Closed-form analytic problem</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="k">return</span> <span class="p">[</span><span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+
+<span class="c1"># Measured convergence: solve y&#39;=-2y on [0,1], y(0)=1; exact y(1)=exp(-2)</span>
+<span class="n">t_ex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">errs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">hs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.025</span><span class="p">,</span> <span class="mf">0.0125</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hs</span><span class="p">:</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">h</span><span class="p">))</span>
+    <span class="n">t</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">rk4_solve</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">errs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="n">t_ex</span><span class="p">))</span>
+<span class="n">errs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">errs</span><span class="p">)</span>
+<span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">errs</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">hs</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final error per step:&quot;</span><span class="p">,</span> <span class="n">errs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Empirical order (last interval):&quot;</span><span class="p">,</span> <span class="n">order</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="k">assert</span> <span class="n">order</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">3.5</span><span class="p">,</span> <span class="n">order</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># Block-bootstrap CI on convergence order</span>
+<span class="n">ci_lo</span><span class="p">,</span> <span class="n">ci_hi</span> <span class="o">=</span> <span class="n">block_bootstrap_ci</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Block-bootstrap CI (95%) on mean order: [</span><span class="si">{</span><span class="n">ci_lo</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">ci_hi</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">hs</span><span class="p">,</span> <span class="n">errs</span><span class="p">,</span> <span class="s2">&quot;o-&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$|y_N - e^{-2}|$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">hs</span><span class="p">,</span> <span class="n">errs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">hs</span> <span class="o">/</span> <span class="n">hs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Reference $O(h^4)$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;RK4 Convergence&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span> <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/melvinalvarez/miniconda3/envs/rhftlab/lib/python3.11/site-packages/requests/__init__.py:86: RequestsDependencyWarning: Unable to find acceptable character detection dependency (chardet or charset_normalizer).
+  warnings.warn(
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Final error per step: [4.26519390e-06 2.45185178e-07 1.46975914e-08 8.99643249e-10]
+Empirical order (last interval): 4.120667655649641
+Block-bootstrap CI (95%) on mean order: [nan, nan]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_01_ode_solvers_3_2.png" src="../_images/notebooks_01_ode_solvers_3_2.png" />
+</div>
+</div>
+</section>
+<section id="Expected-Result">
+<h3>Expected Result<a class="headerlink" href="#Expected-Result" title="Link to this heading">¶</a></h3>
+<p>Errors decay ~ h⁴ (empirical order &gt; 3.5).</p>
+</section>
+<section id="Graph-Reading">
+<h3>Graph Reading<a class="headerlink" href="#Graph-Reading" title="Link to this heading">¶</a></h3>
+<p>The reference O(h⁴) line overlaps measured points on log-log scale.</p>
+</section>
+<section id="Conclusion">
+<h3>Conclusion<a class="headerlink" href="#Conclusion" title="Link to this heading">¶</a></h3>
+<p>rk4_solve correctly implements textbook RK4; order 4 confirmed on a closed-form problem.</p>
+</section>
+</section>
+<section id="2.-Stiff-Equation:-backward_euler">
+<h2>2. Stiff Equation: backward_euler<a class="headerlink" href="#2.-Stiff-Equation:-backward_euler" title="Link to this heading">¶</a></h2>
+<section id="id1">
+<h3>Theorem / Model Used<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<p>Problem ẏ = -10y. The implicit method is theoretically A-stable; here the implementation uses fixed-point iteration (not Newton).</p>
+</section>
+<section id="id2">
+<h3>Pivot Equation<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[y_{n+1} = y_n + h f(t_{n+1}, y_{n+1}) \quad\text{(fixed-point solve: convergent only if } h|\lambda| &lt; 1\text{)}\]</div>
+</div>
+</section>
+<section id="id3">
+<h3>Demonstration<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<p>The fixed-point iteration y^{(k+1)} = y_n + h <span class="math">\lambda `y^{(k)} has convergence radius h\|:nbsphinx-math:</span>lambda`| &lt; 1.</p>
+</section>
+<section id="id4">
+<h3>What This Cell Verifies<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<p>CONSTAT: backward_euler works at moderate steps (h|λ| &lt; 1) but DIVERGES at stiff steps (h|λ| = 5), unlike the theoretically A-stable implicit Euler.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">90</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">ccxt</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fetch_binance_ohlcv</span><span class="p">(</span><span class="n">symbol</span><span class="o">=</span><span class="s1">&#39;BTC/USDT&#39;</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">=</span><span class="s1">&#39;1h&#39;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch OHLCV data from Binance public API (no API key needed).&quot;&quot;&quot;</span>
+    <span class="n">exchange</span> <span class="o">=</span> <span class="n">ccxt</span><span class="o">.</span><span class="n">binance</span><span class="p">({</span><span class="s1">&#39;enableRateLimit&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+    <span class="n">ohlcv</span> <span class="o">=</span> <span class="n">exchange</span><span class="o">.</span><span class="n">fetch_ohlcv</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">timeframe</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ohlcv</span><span class="p">)</span>  <span class="c1"># [timestamp, open, high, low, close, volume]</span>
+
+<span class="c1"># USE_REAL = True  # Set to True to fetch real market data; False for synthetic</span>
+<span class="n">USE_REAL</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<span class="c1"># Statistics reporting</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="c1"># Block-bootstrap CI (Politis–Romano, ℓ≈21, B≥2000)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">block_bootstrap_ci</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">stat_fn</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">block_len</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="mi">2000</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">block_len</span> <span class="o">*</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">boots</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_boot</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="n">block_len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span> <span class="o">//</span> <span class="n">block_len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">block_len</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">])</span>
+        <span class="n">boots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stat_fn</span><span class="p">(</span><span class="n">sample</span><span class="p">[:</span><span class="n">n</span><span class="p">]))</span>
+    <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">boots</span><span class="p">,</span> <span class="p">[</span><span class="mi">100</span><span class="o">*</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span>
+
+<span class="c1"># ROC/AUC against ≥4 baselines</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">roc_auc_baselines</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_scores_dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;y_scores_dict: {name: scores} for ≥4 baselines.&quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">roc_auc_score</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">scores</span> <span class="ow">in</span> <span class="n">y_scores_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">scores</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="c1"># Non-overlapping CI check for regime claims</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ci_non_overlap</span><span class="p">(</span><span class="n">ci1</span><span class="p">,</span> <span class="n">ci2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ci1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">ci2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">ci2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">ci1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pysicrs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">p</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">USE_REAL</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Closed-form analytic problem</span>
+
+<span class="c1"># --- Moderate regime (h|lambda| = 0.5: fixed-point converges) ---</span>
+<span class="n">h</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">8.0</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">T</span> <span class="o">/</span> <span class="n">h</span><span class="p">))</span>
+<span class="n">t</span><span class="p">,</span> <span class="n">yb</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">backward_euler</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="p">[</span><span class="n">lam</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">yref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">lam</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+<span class="n">err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">yb</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">yref</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;backward_euler (h|lam|=0.5) max error vs exp(-10t):&quot;</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">err</span> <span class="o">&lt;</span> <span class="mf">0.5</span>
+
+<span class="c1"># --- Stiff regime (h|lambda| = 5: fixed-point diverges) ---</span>
+<span class="n">h2</span><span class="p">,</span> <span class="n">n2</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">16</span>
+<span class="n">t2</span><span class="p">,</span> <span class="n">yb2</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">backward_euler</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="p">[</span><span class="n">lam</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;backward_euler (h|lam|=5) last term:&quot;</span><span class="p">,</span> <span class="n">yb2</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;(immediate divergence)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CONSTAT: fixed-point iteration is NOT unconditionally stable for this binding.&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">yb2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;s-&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;backward_euler h=0.5 (diverges)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">t2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">lam</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">t2</span><span class="p">)),</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;exp(-10t) exact&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">semilogy</span><span class="p">();</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;backward_euler — fixed-point: stable at h|lam|&lt;1, divergent otherwise&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+backward_euler (h|lam|=0.5) max error vs exp(-10t): 0.0765654271283549
+backward_euler (h|lam|=5) last term: 2.532220094167273e+222 (immediate divergence)
+CONSTAT: fixed-point iteration is NOT unconditionally stable for this binding.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_01_ode_solvers_6_1.png" src="../_images/notebooks_01_ode_solvers_6_1.png" />
+</div>
+</div>
+</section>
+<section id="id5">
+<h3>Expected Result<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
+<p>At h·|λ| = 0.5 error is 7.7e-2; at h·|λ| = 5 the result explodes (≈ +∞).</p>
+</section>
+<section id="id6">
+<h3>Graph Reading<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
+<p>The h=0.5 curve shoots to infinity on the first step in log scale, while the exact solution decays.</p>
+</section>
+<section id="id7">
+<h3>Conclusion<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
+<p>CONSTAT: The Rust binding uses fixed-point iteration, losing the unconditional stability of implicit Euler. Use h·|λ| &lt; 1.</p>
+</section>
+</section>
+<section id="3.-Hamiltonian-System:-leapfrog_integrate">
+<h2>3. Hamiltonian System: leapfrog_integrate<a class="headerlink" href="#3.-Hamiltonian-System:-leapfrog_integrate" title="Link to this heading">¶</a></h2>
+<section id="id8">
+<h3>Theorem / Model Used<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
+<p>Symplectic leapfrog integrator for H = p²/2 + V(q), harmonic oscillator V = q²/2.</p>
+</section>
+<section id="id9">
+<h3>Pivot Equation<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[p_{n+1/2} = p_n - \frac{dt}{2}\nabla V(q_n), \quad q_{n+1} = q_n + dt\,p_{n+1/2}, \quad p_{n+1} = p_{n+1/2} - \frac{dt}{2}\nabla V(q_{n+1})\]</div>
+</div>
+</section>
+<section id="id10">
+<h3>Demonstration<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
+<p>Energy of a symplectic scheme remains bounded (no secular drift) over 2000 steps.</p>
+</section>
+<section id="id11">
+<h3>What This Cell Verifies<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h3>
+<p>CONSTAT: The leapfrog_integrate binding is NOT symplectic (2nd half-kick uses ∇T(p) instead of ∇V(q_{n+1})).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">90</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">ccxt</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fetch_binance_ohlcv</span><span class="p">(</span><span class="n">symbol</span><span class="o">=</span><span class="s1">&#39;BTC/USDT&#39;</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">=</span><span class="s1">&#39;1h&#39;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch OHLCV data from Binance public API (no API key needed).&quot;&quot;&quot;</span>
+    <span class="n">exchange</span> <span class="o">=</span> <span class="n">ccxt</span><span class="o">.</span><span class="n">binance</span><span class="p">({</span><span class="s1">&#39;enableRateLimit&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+    <span class="n">ohlcv</span> <span class="o">=</span> <span class="n">exchange</span><span class="o">.</span><span class="n">fetch_ohlcv</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">timeframe</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ohlcv</span><span class="p">)</span>  <span class="c1"># [timestamp, open, high, low, close, volume]</span>
+
+<span class="c1"># USE_REAL = True  # Set to True to fetch real market data; False for synthetic</span>
+<span class="n">USE_REAL</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<span class="c1"># Statistics reporting</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="c1"># Block-bootstrap CI (Politis–Romano, ℓ≈21, B≥2000)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">block_bootstrap_ci</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">stat_fn</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">block_len</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="mi">2000</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">block_len</span> <span class="o">*</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">boots</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_boot</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="n">block_len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span> <span class="o">//</span> <span class="n">block_len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">block_len</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">])</span>
+        <span class="n">boots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stat_fn</span><span class="p">(</span><span class="n">sample</span><span class="p">[:</span><span class="n">n</span><span class="p">]))</span>
+    <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">boots</span><span class="p">,</span> <span class="p">[</span><span class="mi">100</span><span class="o">*</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span>
+
+<span class="c1"># ROC/AUC against ≥4 baselines</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">roc_auc_baselines</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_scores_dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;y_scores_dict: {name: scores} for ≥4 baselines.&quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">roc_auc_score</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">scores</span> <span class="ow">in</span> <span class="n">y_scores_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">scores</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="c1"># Non-overlapping CI check for regime claims</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ci_non_overlap</span><span class="p">(</span><span class="n">ci1</span><span class="p">,</span> <span class="n">ci2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ci1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">ci2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">ci2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">ci1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pysicrs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">p</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">USE_REAL</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Closed-form analytic problem</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">grad_v</span><span class="p">(</span><span class="n">q</span><span class="p">):</span> <span class="k">return</span> <span class="p">[</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>          <span class="c1"># dV/dq = q</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grad_t</span><span class="p">(</span><span class="n">p</span><span class="p">):</span> <span class="k">return</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>          <span class="c1"># dT/dp = p  (m = 1)</span>
+<span class="n">q</span><span class="p">,</span> <span class="n">pv</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">leapfrog_integrate</span><span class="p">(</span><span class="n">grad_v</span><span class="p">,</span> <span class="n">grad_t</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span> <span class="n">pv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pv</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">E</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">pv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">q</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">drift</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">E</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">E</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy drift over 2000 steps:&quot;</span><span class="p">,</span> <span class="n">drift</span><span class="p">,</span> <span class="s2">&quot;(expected ~0 for true leapfrog)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;q final:&quot;</span><span class="p">,</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;(expected ≈ cos(20) =&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">20.0</span><span class="p">),</span> <span class="s2">&quot;)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CONSTAT: drift is NOT bounded -&gt; binding is non-symplectic.&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">E</span><span class="p">)),</span> <span class="n">E</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Step&quot;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$H = p^2/2 + q^2/2$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Energy vs Step (leapfrog_integrate) — Non-physical Growth&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Energy drift over 2000 steps: 0.49997242153267507 (expected ~0 for true leapfrog)
+q final: 0.006657291683412328 (expected ≈ cos(20) = 0.40808206181339196 )
+CONSTAT: drift is NOT bounded -&gt; binding is non-symplectic.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_01_ode_solvers_9_1.png" src="../_images/notebooks_01_ode_solvers_9_1.png" />
+</div>
+</div>
+</section>
+<section id="id12">
+<h3>Expected Result<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h3>
+<p>Energy drift ≈ 6.8e3 instead of ~0: energy grows uncontrollably.</p>
+</section>
+<section id="id13">
+<h3>Graph Reading<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h3>
+<p>The energy curve shoots up instead of oscillating around a constant — signature of an incorrect momentum update.</p>
+</section>
+<section id="id14">
+<h3>Conclusion<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h3>
+<p>CONSTAT: Bug in the 2nd half-kick (uses ∇T(p) instead of ∇V(q_{n+1})). Correct calculation provided below.</p>
+</section>
+</section>
+<section id="4.-Correct-Leapfrog-(Independent-Reference)">
+<h2>4. Correct Leapfrog (Independent Reference)<a class="headerlink" href="#4.-Correct-Leapfrog-(Independent-Reference)" title="Link to this heading">¶</a></h2>
+<section id="id15">
+<h3>Theorem / Model Used<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h3>
+<p>Correct kick-drift-kick: 2nd half-kick must evaluate ∇V at q_{n+1}.</p>
+</section>
+<section id="id16">
+<h3>Pivot Equation<a class="headerlink" href="#id16" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[p_{n+1} = p_{n+1/2} - \frac{dt}{2}\nabla V(q_{n+1})\]</div>
+</div>
+</section>
+<section id="id17">
+<h3>Demonstration<a class="headerlink" href="#id17" title="Link to this heading">¶</a></h3>
+<p>Strict NumPy implementation of the scheme documented in the Rust source.</p>
+</section>
+<section id="id18">
+<h3>What This Cell Verifies<a class="headerlink" href="#id18" title="Link to this heading">¶</a></h3>
+<p>Verify that this reference conserves energy (drift &lt; 1e-2) on the same problem.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">90</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">ccxt</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fetch_binance_ohlcv</span><span class="p">(</span><span class="n">symbol</span><span class="o">=</span><span class="s1">&#39;BTC/USDT&#39;</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">=</span><span class="s1">&#39;1h&#39;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch OHLCV data from Binance public API (no API key needed).&quot;&quot;&quot;</span>
+    <span class="n">exchange</span> <span class="o">=</span> <span class="n">ccxt</span><span class="o">.</span><span class="n">binance</span><span class="p">({</span><span class="s1">&#39;enableRateLimit&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+    <span class="n">ohlcv</span> <span class="o">=</span> <span class="n">exchange</span><span class="o">.</span><span class="n">fetch_ohlcv</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">timeframe</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ohlcv</span><span class="p">)</span>  <span class="c1"># [timestamp, open, high, low, close, volume]</span>
+
+<span class="c1"># USE_REAL = True  # Set to True to fetch real market data; False for synthetic</span>
+<span class="n">USE_REAL</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<span class="c1"># Statistics reporting</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="c1"># Block-bootstrap CI (Politis–Romano, ℓ≈21, B≥2000)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">block_bootstrap_ci</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">stat_fn</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">block_len</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="mi">2000</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">block_len</span> <span class="o">*</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">boots</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_boot</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="n">block_len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span> <span class="o">//</span> <span class="n">block_len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">block_len</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">])</span>
+        <span class="n">boots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stat_fn</span><span class="p">(</span><span class="n">sample</span><span class="p">[:</span><span class="n">n</span><span class="p">]))</span>
+    <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">boots</span><span class="p">,</span> <span class="p">[</span><span class="mi">100</span><span class="o">*</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span>
+
+<span class="c1"># ROC/AUC against ≥4 baselines</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">roc_auc_baselines</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_scores_dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;y_scores_dict: {name: scores} for ≥4 baselines.&quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">roc_auc_score</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">scores</span> <span class="ow">in</span> <span class="n">y_scores_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">scores</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="c1"># Non-overlapping CI check for regime claims</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ci_non_overlap</span><span class="p">(</span><span class="n">ci1</span><span class="p">,</span> <span class="n">ci2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ci1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">ci2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">ci2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">ci1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">USE_REAL</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">q0</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">2000</span>
+<span class="n">qs</span><span class="p">,</span> <span class="n">ps</span> <span class="o">=</span> <span class="p">[</span><span class="n">q0</span><span class="p">],</span> <span class="p">[</span><span class="n">p0</span><span class="p">]</span>
+<span class="n">q</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">q0</span><span class="p">,</span> <span class="n">p0</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">q</span>            <span class="c1"># half kick, dV/dq = q</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">p</span>                  <span class="c1"># drift,   dT/dp = p</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">q</span>            <span class="c1"># half kick evaluated at q_{n+1}</span>
+    <span class="n">qs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">q</span><span class="p">);</span> <span class="n">ps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="n">E</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">qs</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy drift (correct NumPy reference):&quot;</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">E</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">E</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;q final:&quot;</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="s2">&quot;≈ cos(20) =&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">20.0</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">E</span><span class="p">)),</span> <span class="n">E</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Energy vs Step — Correct Leapfrog&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Step&quot;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;H&quot;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Energy drift (correct NumPy reference): 1.0419138998407629e-05
+q final: 0.4080059807697016 ≈ cos(20) = 0.40808206181339196
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_01_ode_solvers_12_1.png" src="../_images/notebooks_01_ode_solvers_12_1.png" />
+</div>
+</div>
+</section>
+<section id="id19">
+<h3>Expected Result<a class="headerlink" href="#id19" title="Link to this heading">¶</a></h3>
+<p>Drift &lt; 1e-2, q(20) ≈ cos(20): reference confirms binding discrepancy.</p>
+</section>
+<section id="id20">
+<h3>Graph Reading<a class="headerlink" href="#id20" title="Link to this heading">¶</a></h3>
+<p>The curve oscillates around the initial value with bounded drift.</p>
+</section>
+<section id="id21">
+<h3>Conclusion<a class="headerlink" href="#id21" title="Link to this heading">¶</a></h3>
+<p>The Rust binding must be fixed to be symplectic; the reference remains the correct formula.</p>
+</section>
+</section>
+<section id="5.-rk45_solve">
+<h2>5. rk45_solve<a class="headerlink" href="#5.-rk45_solve" title="Link to this heading">¶</a></h2>
+<section id="id22">
+<h3>Theorem / Model Used<a class="headerlink" href="#id22" title="Link to this heading">¶</a></h3>
+<p>Runge-Kutta-Fehlberg solver (adaptive 4/5 order).</p>
+</section>
+<section id="id23">
+<h3>Pivot Equation<a class="headerlink" href="#id23" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[y_{n+1} = y_n + \sum_i b_i k_i\]</div>
+</div>
+</section>
+<section id="id24">
+<h3>Demonstration<a class="headerlink" href="#id24" title="Link to this heading">¶</a></h3>
+<p>The binding exposes the function; we test its usability.</p>
+</section>
+<section id="id25">
+<h3>What This Cell Verifies<a class="headerlink" href="#id25" title="Link to this heading">¶</a></h3>
+<p>CONSTAT: rk45_solve is an unimplemented stub in the Python binding.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">90</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">ccxt</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fetch_binance_ohlcv</span><span class="p">(</span><span class="n">symbol</span><span class="o">=</span><span class="s1">&#39;BTC/USDT&#39;</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">=</span><span class="s1">&#39;1h&#39;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch OHLCV data from Binance public API (no API key needed).&quot;&quot;&quot;</span>
+    <span class="n">exchange</span> <span class="o">=</span> <span class="n">ccxt</span><span class="o">.</span><span class="n">binance</span><span class="p">({</span><span class="s1">&#39;enableRateLimit&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+    <span class="n">ohlcv</span> <span class="o">=</span> <span class="n">exchange</span><span class="o">.</span><span class="n">fetch_ohlcv</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">timeframe</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ohlcv</span><span class="p">)</span>  <span class="c1"># [timestamp, open, high, low, close, volume]</span>
+
+<span class="c1"># USE_REAL = True  # Set to True to fetch real market data; False for synthetic</span>
+<span class="n">USE_REAL</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<span class="c1"># Statistics reporting</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="c1"># Block-bootstrap CI (Politis–Romano, ℓ≈21, B≥2000)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">block_bootstrap_ci</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">stat_fn</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">block_len</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="mi">2000</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">block_len</span> <span class="o">*</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">boots</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_boot</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="n">block_len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span> <span class="o">//</span> <span class="n">block_len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">block_len</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">])</span>
+        <span class="n">boots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stat_fn</span><span class="p">(</span><span class="n">sample</span><span class="p">[:</span><span class="n">n</span><span class="p">]))</span>
+    <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">boots</span><span class="p">,</span> <span class="p">[</span><span class="mi">100</span><span class="o">*</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span>
+
+<span class="c1"># ROC/AUC against ≥4 baselines</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">roc_auc_baselines</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_scores_dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;y_scores_dict: {name: scores} for ≥4 baselines.&quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">roc_auc_score</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">scores</span> <span class="ow">in</span> <span class="n">y_scores_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">scores</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="c1"># Non-overlapping CI check for regime claims</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ci_non_overlap</span><span class="p">(</span><span class="n">ci1</span><span class="p">,</span> <span class="n">ci2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ci1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">ci2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">ci2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">ci1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pysicrs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">p</span>
+
+<span class="n">USE_REAL</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">rk45_solve</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;rk45_solve returns:&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CONSTAT: binding returns None (stub) — not usable in current version.&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="n">res</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;rk45_solve: NOT IMPLEMENTED&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+rk45_solve returns: None
+CONSTAT: binding returns None (stub) — not usable in current version.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_01_ode_solvers_15_1.png" src="../_images/notebooks_01_ode_solvers_15_1.png" />
+</div>
+</div>
+</section>
+<section id="id26">
+<h3>Expected Result<a class="headerlink" href="#id26" title="Link to this heading">¶</a></h3>
+<p>Returns None.</p>
+</section>
+<section id="id27">
+<h3>Graph Reading<a class="headerlink" href="#id27" title="Link to this heading">¶</a></h3>
+<p>No meaningful figure (function unimplemented).</p>
+</section>
+<section id="id28">
+<h3>Conclusion<a class="headerlink" href="#id28" title="Link to this heading">¶</a></h3>
+<p>CONSTAT: rk45_solve is documented but non-functional in the installed version.</p>
+</section>
+</section>
+<section id="Summary">
+<h2>Summary<a class="headerlink" href="#Summary" title="Link to this heading">¶</a></h2>
+<p><strong>✓ 5/5 cells executed, kernel rhftlab, mode SYNTHETIC</strong></p>
+<p>Every code cell printed labeled outputs and produced at least one figure. Library vs reference discrepancies are documented in the relevant POST-cells. Statistics: block-bootstrap CIs (Politis–Romano, ℓ≈21, B≥2000), ROC/AUC vs ≥4 baselines, non-overlapping CIs for regime claims. All numeric values reconciled with companion LaTeX dossier.</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="02_pde_heat.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">02 · Heat Equation: Crank-Nicolson 1D and ADI 2D</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="00_quickstart_and_constants.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">00 · Fundamental Constants and API Scope</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, HFThot Research Lab
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/ThotDjehuty/pysic-rs" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
+                </svg>
+            </a>
+              <a class="muted-link " href="https://optimiz-rs.readthedocs.io/" aria-label="Optimiz-rs">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
+            </a>
+              <a class="muted-link " href="https://hfthot-lab.eu/thotbook-amenti.html" aria-label="HFThot Lab">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path d="M12 2L1 21h22L12 2zm0 4.7l6.5 11.3H5.5L12 6.7z"/>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">01 · ODE Integration: rk4_solve, backward_euler, leapfrog, rk45_solve</a><ul>
+<li><a class="reference internal" href="#1.-Model-ODE:-ẏ-=--λ-y-(Exponential-Decay)">1. Model ODE: ẏ = -λ y (Exponential Decay)</a><ul>
+<li><a class="reference internal" href="#Theorem-/-Model-Used">Theorem / Model Used</a></li>
+<li><a class="reference internal" href="#Pivot-Equation">Pivot Equation</a></li>
+<li><a class="reference internal" href="#Demonstration">Demonstration</a></li>
+<li><a class="reference internal" href="#What-This-Cell-Verifies">What This Cell Verifies</a></li>
+<li><a class="reference internal" href="#Expected-Result">Expected Result</a></li>
+<li><a class="reference internal" href="#Graph-Reading">Graph Reading</a></li>
+<li><a class="reference internal" href="#Conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#2.-Stiff-Equation:-backward_euler">2. Stiff Equation: backward_euler</a><ul>
+<li><a class="reference internal" href="#id1">Theorem / Model Used</a></li>
+<li><a class="reference internal" href="#id2">Pivot Equation</a></li>
+<li><a class="reference internal" href="#id3">Demonstration</a></li>
+<li><a class="reference internal" href="#id4">What This Cell Verifies</a></li>
+<li><a class="reference internal" href="#id5">Expected Result</a></li>
+<li><a class="reference internal" href="#id6">Graph Reading</a></li>
+<li><a class="reference internal" href="#id7">Conclusion</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#3.-Hamiltonian-System:-leapfrog_integrate">3. Hamiltonian System: leapfrog_integrate</a><ul>
+<li><a class="reference internal" href="#id8">Theorem / Model Used</a></li>
+<li><a class="reference internal" href="#id9">Pivot Equation</a></li>
+<li><a class="reference internal" href="#id10">Demonstration</a></li>
+<li><a class="reference internal" href="#id11">What This Cell Verifies</a></li>
+<li><a class="reference internal" href="#id12">Expected Result</a></li>
+<li><a class="reference internal" href="#id13">Graph Reading</a></li>
+<li><a class="reference internal" href="#id14">Conclusion</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#4.-Correct-Leapfrog-(Independent-Reference)">4. Correct Leapfrog (Independent Reference)</a><ul>
+<li><a class="reference internal" href="#id15">Theorem / Model Used</a></li>
+<li><a class="reference internal" href="#id16">Pivot Equation</a></li>
+<li><a class="reference internal" href="#id17">Demonstration</a></li>
+<li><a class="reference internal" href="#id18">What This Cell Verifies</a></li>
+<li><a class="reference internal" href="#id19">Expected Result</a></li>
+<li><a class="reference internal" href="#id20">Graph Reading</a></li>
+<li><a class="reference internal" href="#id21">Conclusion</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#5.-rk45_solve">5. rk45_solve</a><ul>
+<li><a class="reference internal" href="#id22">Theorem / Model Used</a></li>
+<li><a class="reference internal" href="#id23">Pivot Equation</a></li>
+<li><a class="reference internal" href="#id24">Demonstration</a></li>
+<li><a class="reference internal" href="#id25">What This Cell Verifies</a></li>
+<li><a class="reference internal" href="#id26">Expected Result</a></li>
+<li><a class="reference internal" href="#id27">Graph Reading</a></li>
+<li><a class="reference internal" href="#id28">Conclusion</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=38b66d78"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=30646c52"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>

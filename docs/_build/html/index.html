@@ -1,0 +1,854 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Getting Started" href="getting-started.html">
+        <link rel="prefetch" href="_static/logo_pysicrs.png" as="image">
+
+    <link rel="shortcut icon" href="_static/logo_pysicrs.png"><!-- Generated with Sphinx 7.4.7 and Furo 2025.12.19 -->
+        <title>Pysic-rs Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=a833a90c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  --color-brand-primary: #1e3a5f;
+  --color-brand-content: #1e3a5f;
+  --color-api-pre-background: #eef2ff;
+  --color-background-primary: #fefefe;
+  --color-background-secondary: #eef2ff;
+  --color-foreground-primary: #2d2d3a;
+  --color-foreground-secondary: #6b6b7a;
+  --color-foreground-muted: #9a9ab0;
+  --color-border: #c7d2fe;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #60a5fa;
+  --color-api-pre-background: #0f172a;
+  --color-background-primary: #0f172a;
+  --color-background-secondary: #1e293b;
+  --color-foreground-primary: #e8e8f0;
+  --color-foreground-secondary: #a0a0b8;
+  --color-foreground-muted: #707088;
+  --color-border: #334155;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #60a5fa;
+  --color-api-pre-background: #0f172a;
+  --color-background-primary: #0f172a;
+  --color-background-secondary: #1e293b;
+  --color-foreground-primary: #e8e8f0;
+  --color-foreground-secondary: #a0a0b8;
+  --color-foreground-muted: #707088;
+  --color-border: #334155;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+<div class="announcement">
+  <aside class="announcement-content">
+     🚀 <strong>Pysic-rs v0.1.0</strong> — Mathematical physics engine in Rust + Python • textbook-validated • <a href="changelog.html">View Changelog</a> • <a href="https://optimiz-rs.readthedocs.io/">Optimiz-rs Docs</a> • <a href="https://hfthot-lab.eu/thotbook-amenti.html">HFThot Research Lab</a> 
+  </aside>
+</div>
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="#"><div class="brand">Pysic-rs Documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="#">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="_static/logo_pysicrs.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Pysic-rs Documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="examples.html">Example Notebooks</a><input aria-label="Toggle navigation of Example Notebooks" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/00_quickstart_and_constants.html">00 · Fundamental Constants and API Scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/01_ode_solvers.html">01 · ODE Integration: rk4_solve, backward_euler, leapfrog, rk45_solve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/02_pde_heat.html">02 · Heat Equation: Crank-Nicolson 1D and ADI 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/03_pde_wave.html">03 · Wave Equation: FDTD 1D and 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/04_pde_poisson.html">04 · Poisson Equation: poisson_fft_2d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/05_pde_quantum.html">05 · Schrödinger &amp; Dirac 1D: Split-Step Evolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/06_fourier_analysis.html">06 · Fourier Analysis: fft/ifft, spectral_derivative, welch_psd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/07_quantum_states.html">07 · Quantum States: Pauli Matrices/Structures, Fock &amp; Coherent States</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/08_propagators.html">08 · Quantum Propagators: Feynman and Free</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/09_gauge_theory.html">09 · Gauge Theory: su(3) Structure Constants and Instanton Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/10_topology.html">10 · Quantum Topology: Berry Phase, Chern Number, Winding Number</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/11_general_relativity.html">11 · General Relativity: Schwarzschild Metric, Christoffel, ADM Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/12_classical_mechanics.html">12 · Classical Mechanics: Rotations, Euler Equations, Inertia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/13_electromagnetism_casimir.html">13 · Electromagnetism: Radiation, Compton, Casimir Effect</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Algorithms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/special_functions.html">Special Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/linalg.html">Linear Algebra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/calculus.html">Numerical Calculus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/ode.html">ODE Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/pde.html">PDE Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/fourier.html">Fourier Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/quantum.html">Quantum Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/general_relativity.html">General Relativity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/gauge.html">Gauge Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/classical.html">Classical Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/topology.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/em.html">Electromagnetism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/casimir.html">Casimir Effect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/special_functions.html">API Reference: Special Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/linalg.html">API Reference: Linear Algebra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/calculus.html">API Reference: Numerical Calculus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/ode.html">API Reference: ODE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/pde.html">API Reference: PDE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/fourier.html">API Reference: Fourier Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/quantum.html">API Reference: Quantum Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/general_relativity.html">API Reference: General Relativity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/gauge.html">API Reference: Gauge Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/classical.html">API Reference: Classical Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/topology.html">API Reference: Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/em.html">API Reference: Electromagnetism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/casimir.html">API Reference: Casimir Effect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="theory/mathematical_foundations.html">Mathematical Foundations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/ThotDjehuty/pysic-rs/blob/main/docs/source/index.rst?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/ThotDjehuty/pysic-rs/edit/main/docs/source/index.rst" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="pysic-rs-documentation">
+<h1>Pysic-rs Documentation<a class="headerlink" href="#pysic-rs-documentation" title="Link to this heading">¶</a></h1>
+<p><strong>High-performance mathematical physics engine in Rust with Python bindings</strong></p>
+<a class="reference external image-reference" href="https://github.com/ThotDjehuty/pysic-rs/releases"><img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue.svg" /></a>
+<a class="reference external image-reference" href="https://github.com/ThotDjehuty/pysic-rs/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-green.svg" /></a>
+<p>Pysic-rs provides CPU-only, textbook-validated implementations of standard mathematical
+physics, built entirely in Rust and exposed to Python through PyO3. Every algorithm is a
+canonical result from the established literature — nothing experimental, nothing
+research-pending. This is the physics companion to
+<a class="reference external" href="https://optimiz-rs.readthedocs.io/">Optimiz-rs</a>, which supplies the probabilistic and
+statistical machinery (MCMC, HMM, SDE, Kalman filtering). Where you need physics <em>and</em>
+statistics, the two libraries interoperate.</p>
+<p><strong>🗂 Module Map</strong> — Pysic-rs covers thirteen foundational areas:</p>
+<div class="grid cards" style="margin: 1.5rem 0;">
+  <div style="padding: 1rem; border-radius: 0.75rem; border: 1px solid #c7d2fe; background: #eef2ff; margin-bottom: 0.5rem;">
+    <b>🧮 Special Functions</b> — Γ, B, J_n, P_ℓ, Y_ℓ^m, erf, ζ · <b>Linear Algebra</b> — Cholesky, LU, inverse, tensor ops · <b>Calculus</b> — gradient, Hessian, Simpson, Romberg
+  </div>
+  <div style="padding: 1rem; border-radius: 0.75rem; border: 1px solid #c7d2fe; background: #eef2ff; margin-bottom: 0.5rem;">
+    <b>⏱ Equations</b> — RK4/RK45, symplectic integrators · Schrödinger/Dirac split-step, heat, wave FDTD, Poisson, Maxwell 3D FDTD
+  </div>
+  <div style="padding: 1rem; border-radius: 0.75rem; border: 1px solid #c7d2fe; background: #eef2ff; margin-bottom: 0.5rem;">
+    <b>⚛️ Quantum</b> — Pauli algebra, density matrices, coherent states, path integrals, propagators · <b>🌌 GR</b> — Schwarzschild/Kerr/FLRW, Christoffel, geodesics, ADM
+  </div>
+  <div style="padding: 1rem; border-radius: 0.75rem; border: 1px solid #c7d2fe; background: #eef2ff; margin-bottom: 0.5rem;">
+    <b>🎯 Gauge & Topology</b> — SU(2)/SU(3), Yang–Mills, Berry phase, Chern numbers · <b>⚙️ Classical</b> — Hamiltonian, Lagrangian, rigid body, Euler angles
+  </div>
+  <div style="padding: 1rem; border-radius: 0.75rem; border: 1px solid #c7d2fe; background: #eef2ff; margin-bottom: 0.5rem;">
+    <b>⚡ EM & Casimir</b> — Green's functions, radiation formulas, parallel-plate/sphere/Lifshitz Casimir energy
+  </div>
+</div><div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#quick-test">Quick test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#jupyter-note-workspace-convention">Jupyter note (workspace convention)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#next-steps">Next steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#install-from-source-recommended-path">Install from source (recommended path)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#build-a-python-wheel">Build a Python wheel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#cargo-features">Cargo features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#related">Related</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#physical-constants">Physical constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#schwarzschild-metric-general-relativity">Schwarzschild metric (General Relativity)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#ode-solving-harmonic-oscillator">ODE solving — harmonic oscillator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#fft-peak-detection">FFT peak detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#quantum-mechanics-pauli-algebra-coherent-state">Quantum mechanics — Pauli algebra &amp; coherent state</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#casimir-force">Casimir force</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#where-to-go-next">Where to go next</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example Notebooks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/00_quickstart_and_constants.html">00 · Fundamental Constants and API Scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/01_ode_solvers.html">01 · ODE Integration: rk4_solve, backward_euler, leapfrog, rk45_solve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/02_pde_heat.html">02 · Heat Equation: Crank-Nicolson 1D and ADI 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/03_pde_wave.html">03 · Wave Equation: FDTD 1D and 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/04_pde_poisson.html">04 · Poisson Equation: poisson_fft_2d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/05_pde_quantum.html">05 · Schrödinger &amp; Dirac 1D: Split-Step Evolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/06_fourier_analysis.html">06 · Fourier Analysis: fft/ifft, spectral_derivative, welch_psd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/07_quantum_states.html">07 · Quantum States: Pauli Matrices/Structures, Fock &amp; Coherent States</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/08_propagators.html">08 · Quantum Propagators: Feynman and Free</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/09_gauge_theory.html">09 · Gauge Theory: su(3) Structure Constants and Instanton Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/10_topology.html">10 · Quantum Topology: Berry Phase, Chern Number, Winding Number</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/11_general_relativity.html">11 · General Relativity: Schwarzschild Metric, Christoffel, ADM Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/12_classical_mechanics.html">12 · Classical Mechanics: Rotations, Euler Equations, Inertia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/13_electromagnetism_casimir.html">13 · Electromagnetism: Radiation, Compton, Casimir Effect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#catalogue">Catalogue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#real-world-applications">Real-World Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#statistical-validation">Statistical Validation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Algorithms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/special_functions.html">Special Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/special_functions.html#chebyshev-polynomials">5. Chebyshev Polynomials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/special_functions.html#riemann-zeta-function">7. Riemann Zeta Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/special_functions.html#airy-functions">8. Airy Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/special_functions.html#exponential-integral">9. Exponential Integral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/special_functions.html#available-functions">10. Available Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/linalg.html">Linear Algebra</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/linalg.html#matrix-factorisations">1. Matrix Factorisations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/linalg.html#tensor-operations-the-metric">2. Tensor Operations &amp; the Metric</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/linalg.html#vector-operations">3. Vector Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/linalg.html#routines">4. Routines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/linalg.html#usage-examples">5. Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/linalg.html#numerical-notes">6. Numerical Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/linalg.html#advantages-limitations">7. Advantages &amp; Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/linalg.html#references">8. References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/linalg.html#related-topics">9. Related Topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/calculus.html">Numerical Calculus</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/calculus.html#numerical-differentiation">1. Numerical Differentiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/calculus.html#quadrature-numerical-integration">2. Quadrature (Numerical Integration)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/calculus.html#interpolation">3. Interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/calculus.html#routines">4. Routines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/calculus.html#usage-examples">5. Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/calculus.html#numerical-notes">6. Numerical Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/calculus.html#advantages-limitations">7. Advantages &amp; Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/calculus.html#references">8. References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/calculus.html#related-topics">9. Related Topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/ode.html">ODE Solvers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/ode.html#the-initial-value-problem">1. The Initial-Value Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/ode.html#explicit-rungekutta-methods">2. Explicit Runge–Kutta Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/ode.html#implicit-methods">3. Implicit Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/ode.html#symplectic-integrators">4. Symplectic Integrators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/ode.html#routines">5. Routines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/ode.html#usage-examples">6. Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/ode.html#accuracy-performance">7. Accuracy &amp; Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/ode.html#advantages-limitations">8. Advantages &amp; Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/ode.html#references">9. References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/ode.html#related-topics">10. Related Topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/pde.html">PDE Solvers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/pde.html#classification-of-linear-pdes">1. Classification of Linear PDEs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/pde.html#schrodinger-equation-split-step-fourier">2. Schrödinger Equation (Split-Step Fourier)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/pde.html#dirac-equation-split-step">3. Dirac Equation (Split-Step)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/pde.html#heat-equation-cranknicolson">4. Heat Equation (Crank–Nicolson)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/pde.html#wave-equation-fdtd">5. Wave Equation (FDTD)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/pde.html#poisson-equation">6. Poisson Equation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/pde.html#maxwell-3d-yee-fdtd">7. Maxwell 3D (Yee FDTD)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/pde.html#routines">8. Routines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/pde.html#usage-examples">9. Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/pde.html#stability-guidelines-von-neumann-analysis-proven">10. Stability Guidelines (von Neumann analysis, proven)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/pde.html#advantages-limitations">11. Advantages &amp; Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/pde.html#references">12. References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/pde.html#related-topics">13. Related Topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/fourier.html">Fourier Analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/fourier.html#the-discrete-fourier-transform">1. The Discrete Fourier Transform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/fourier.html#power-spectral-density">2. Power Spectral Density</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/fourier.html#spectral-derivatives">3. Spectral Derivatives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/fourier.html#routines">4. Routines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/fourier.html#usage-examples">5. Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/fourier.html#numerical-notes">6. Numerical Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/fourier.html#advantages-limitations">7. Advantages &amp; Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/fourier.html#references">8. References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/fourier.html#related-topics">9. Related Topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/quantum.html">Quantum Mechanics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/quantum.html#hilbert-space-state-space">1. Hilbert Space &amp; State Space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/quantum.html#spin-1-2-algebra">2. Spin-1/2 Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/quantum.html#density-matrix-formalism">3. Density Matrix Formalism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/quantum.html#coherent-states">4. Coherent States</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/quantum.html#perturbation-theory">5. Perturbation Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/quantum.html#path-integral-feynman-1948">6. Path Integral (Feynman 1948)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/quantum.html#feynman-propagators">7. Feynman Propagators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/quantum.html#effective-potential">8. Effective Potential</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/quantum.html#routines">9. Routines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/quantum.html#usage-examples">10. Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/quantum.html#advantages-limitations">11. Advantages &amp; Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/quantum.html#references">12. References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/quantum.html#related-topics">13. Related Topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/general_relativity.html">General Relativity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/general_relativity.html#manifolds-the-metric-tensor">1. Manifolds &amp; the Metric Tensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/general_relativity.html#connection-curvature">2. Connection &amp; Curvature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/general_relativity.html#einstein-field-equations">3. Einstein Field Equations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/general_relativity.html#exact-metrics">4. Exact Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/general_relativity.html#geodesics">5. Geodesics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/general_relativity.html#adm-3-1-decomposition">6. ADM 3+1 Decomposition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/general_relativity.html#stressenergy-tensors">7. Stress–Energy Tensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/general_relativity.html#routines">8. Routines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/general_relativity.html#usage-examples">9. Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/general_relativity.html#numerical-notes">10. Numerical Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/general_relativity.html#advantages-limitations">11. Advantages &amp; Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/general_relativity.html#references">12. References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/general_relativity.html#related-topics">13. Related Topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/gauge.html">Gauge Theory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/gauge.html#lie-algebras-structure-constants">1. Lie Algebras &amp; Structure Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/gauge.html#gauge-connection-covariant-derivative">2. Gauge Connection &amp; Covariant Derivative</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/gauge.html#field-strength">3. Field Strength</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/gauge.html#yangmills-action-equations-of-motion">4. Yang–Mills Action &amp; Equations of Motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/gauge.html#instantons">5. Instantons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/gauge.html#routines">6. Routines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/gauge.html#usage-examples">7. Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/gauge.html#advantages-limitations">8. Advantages &amp; Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/gauge.html#references">9. References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/gauge.html#related-topics">10. Related Topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/classical.html">Classical Mechanics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/classical.html#lagrangian-mechanics">1. Lagrangian Mechanics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/classical.html#hamiltonian-mechanics">2. Hamiltonian Mechanics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/classical.html#rigid-body-dynamics">3. Rigid Body Dynamics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/classical.html#routines">4. Routines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/classical.html#usage-examples">5. Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/classical.html#advantages-limitations">6. Advantages &amp; Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/classical.html#references">7. References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/classical.html#related-topics">8. Related Topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/topology.html">Topology</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/topology.html#berry-phase">1. Berry Phase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/topology.html#chern-number-tknn-invariant">2. Chern Number (TKNN Invariant)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/topology.html#winding-number">3. Winding Number</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/topology.html#skyrmion-number">4. Skyrmion Number</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/topology.html#routines">5. Routines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/topology.html#usage-examples">6. Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/topology.html#advantages-limitations">7. Advantages &amp; Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/topology.html#references">8. References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/topology.html#related-topics">9. Related Topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/em.html">Electromagnetism</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/em.html#maxwells-equations">1. Maxwell’s Equations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/em.html#greens-functions">2. Green’s Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/em.html#radiation">3. Radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/em.html#routines">4. Routines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/em.html#usage-examples">5. Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/em.html#advantages-limitations">6. Advantages &amp; Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/em.html#references">7. References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/em.html#related-topics">8. Related Topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms/casimir.html">Casimir Effect</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/casimir.html#parallel-plates">1. Parallel Plates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/casimir.html#zeta-function-regularisation">2. Zeta-Function Regularisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/casimir.html#conducting-sphere">3. Conducting Sphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/casimir.html#concentric-cylinders">4. Concentric Cylinders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/casimir.html#finite-temperature-correction">5. Finite-Temperature Correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/casimir.html#lifshitz-formula-real-materials">6. Lifshitz Formula (Real Materials)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/casimir.html#polder-potential-atomwall">7. Polder Potential (Atom–Wall)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/casimir.html#routines">8. Routines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/casimir.html#usage-examples">9. Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/casimir.html#advantages-limitations">10. Advantages &amp; Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/casimir.html#references">11. References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms/casimir.html#related-topics">12. Related Topics</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/special_functions.html">API Reference: Special Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/special_functions.html#constants">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/special_functions.html#bound-exports-linalg-special-functions-family">Bound exports (linalg / special-functions family)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/special_functions.html#rust-not-yet-python-bound-see-the-algorithms-page">Rust (not yet Python-bound) — see the algorithms page</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/linalg.html">API Reference: Linear Algebra</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/linalg.html#currently-bound">Currently bound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/linalg.html#rust-api-not-yet-python-bound">Rust API (not yet Python-bound)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/calculus.html">API Reference: Numerical Calculus</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/calculus.html#rust-api-not-yet-python-bound">Rust API (not yet Python-bound)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/ode.html">API Reference: ODE</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/ode.html#explicit-methods">Explicit methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/ode.html#implicit-methods">Implicit methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/ode.html#symplectic-integrators">Symplectic integrators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/ode.html#rust-only-not-yet-bound">Rust-only (not yet bound)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/pde.html">API Reference: PDE</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/pde.html#quantum">Quantum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/pde.html#parabolic-hyperbolic-elliptic">Parabolic / hyperbolic / elliptic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/pde.html#rust-only-not-yet-bound">Rust-only (not yet bound)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/fourier.html">API Reference: Fourier Analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/fourier.html#transforms">Transforms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/fourier.html#spectral">Spectral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/fourier.html#rust-only-not-yet-bound">Rust-only (not yet bound)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/quantum.html">API Reference: Quantum Mechanics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/quantum.html#pauli-algebra-density-matrices">Pauli algebra &amp; density matrices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/quantum.html#hilbert-space">Hilbert space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/quantum.html#propagators">Propagators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/quantum.html#rust-only-not-yet-bound">Rust-only (not yet bound)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/general_relativity.html">API Reference: General Relativity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/general_relativity.html#metrics">Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/general_relativity.html#connection-curvature">Connection &amp; curvature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/general_relativity.html#adm-constraints">ADM constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/general_relativity.html#complete-rust-surface-binding-status">Complete Rust surface (binding status)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/gauge.html">API Reference: Gauge Theory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/gauge.html#structure-constants">Structure constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/gauge.html#instanton">Instanton</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/gauge.html#rust-only-not-yet-bound">Rust-only (not yet bound)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/classical.html">API Reference: Classical Mechanics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/classical.html#rigid-body">Rigid body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/classical.html#rust-only-not-yet-bound">Rust-only (not yet bound)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/topology.html">API Reference: Topology</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/topology.html#berry-phase-curvature">Berry phase &amp; curvature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/topology.html#chern-winding-skyrmion-numbers">Chern / winding / skyrmion numbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/topology.html#rust-only-not-yet-bound">Rust-only (not yet bound)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/em.html">API Reference: Electromagnetism</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/em.html#greens-functions">Green’s functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/em.html#radiation-formulas">Radiation formulas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/em.html#rust-only-not-yet-bound">Rust-only (not yet bound)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/casimir.html">API Reference: Casimir Effect</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/casimir.html#parallel-plates">Parallel plates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/casimir.html#other-geometry-regularization">Other geometry / regularization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/casimir.html#rust-only-not-yet-bound">Rust-only (not yet bound)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="theory/mathematical_foundations.html">Mathematical Foundations</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Advanced</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+</div>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading">¶</a></h2>
+<p><strong>Modules Included:</strong></p>
+<ul class="simple">
+<li><p><strong>Special Functions</strong>: Gamma (Lanczos), Beta, Bessel J/Y, Legendre P/P_ℓ^m, spherical harmonics, Chebyshev T/U, Airy, erf/erfc, exponential integral, Riemann zeta</p></li>
+<li><p><strong>Linear Algebra</strong>: Cholesky, LU with pivoting, Gauss–Jordan inverse, determinant, tensor raise/lower, metric signature, Lie bracket</p></li>
+<li><p><strong>Numerical Calculus</strong>: gradient, Hessian, Jacobian, trapezoid/Simpson/Gauss–Legendre/Romberg integration, linear &amp; cubic-spline interpolation</p></li>
+<li><p><strong>ODE Solvers</strong>: RK4, RK45 (Dormand–Prince), backward Euler, Crank–Nicolson, leapfrog, velocity Verlet, Yoshida symplectic, Hamiltonian integration</p></li>
+<li><p><strong>PDE Solvers</strong>: Schrödinger (split-step Fourier), Dirac, heat (Crank–Nicolson + ADI), wave (FDTD 1D/2D), Poisson (FFT + SOR), Maxwell (3D Yee)</p></li>
+<li><p><strong>Fourier Analysis</strong>: FFT/IFFT, power spectral density, Welch PSD, spectral derivatives</p></li>
+<li><p><strong>Quantum Mechanics</strong>: Pauli matrices, spin operators, density matrices, partial trace, coherent/number/squeeze states, Rayleigh–Schrödinger perturbation, path integrals, Feynman propagators</p></li>
+<li><p><strong>General Relativity</strong>: Schwarzschild, Kerr, Kerr–Newman, FLRW, Minkowski; Christoffel, Riemann, Ricci, Einstein tensors; geodesics; ADM 3+1; stress–energy</p></li>
+<li><p><strong>Gauge Theory</strong>: SU(2)/SU(3) structure constants, Gell-Mann matrices, connections, covariant derivative, Yang–Mills action/EOM, instantons (‘t Hooft)</p></li>
+<li><p><strong>Classical Mechanics</strong>: Hamiltonian, Lagrange/Euler–Lagrange, Poisson bracket, rigid-body (Euler equations, quaternions, Euler angles)</p></li>
+<li><p><strong>Topology</strong>: Berry phase &amp; curvature, Chern/TKNN numbers, winding numbers, skyrmion number</p></li>
+<li><p><strong>Electromagnetism</strong>: Green’s functions (static, retarded, Helmholtz, dyadic), radiation formulas (Larmor, dipole, cyclotron, synchrotron, Thomson, Compton)</p></li>
+<li><p><strong>Casimir Effect</strong>: parallel plates, sphere, cylinders, ζ-regularization, finite-T, Lifshitz, Polder, van der Waals</p></li>
+</ul>
+<p><strong>Performance:</strong></p>
+<ul class="simple">
+<li><p>Pure Rust core with zero-cost abstractions</p></li>
+<li><p>Python bindings via PyO3 (abi3) — no NumPy dependency at the boundary</p></li>
+<li><p>Optional Rayon parallelism</p></li>
+<li><p>50–100× faster than pure Python physics code</p></li>
+</ul>
+</section>
+<section id="quick-example">
+<h2>Quick Example<a class="headerlink" href="#quick-example" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pysicrs</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span><span class="p">,</span> <span class="n">schwarzschild_metric</span><span class="p">,</span> <span class="n">rk4_solve</span>
+
+<span class="c1"># Physical constants</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">constants</span><span class="p">()[</span><span class="s2">&quot;c&quot;</span><span class="p">])</span>      <span class="c1"># 2.997925e+08</span>
+
+<span class="c1"># Schwarzschild metric at r = 10M</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">schwarzschild_metric</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>     <span class="c1"># -(1 - 2/10) = -0.8</span>
+
+<span class="c1"># Integrate the harmonic oscillator with RK4</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">osc</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+
+<span class="n">times</span><span class="p">,</span> <span class="n">traj</span> <span class="o">=</span> <span class="n">rk4_solve</span><span class="p">(</span><span class="n">osc</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">traj</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># cos(10) ≈ -0.8391</span>
+</pre></div>
+</div>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
+<p>From source:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clone repository</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ThotDjehuty/pysic-rs.git
+<span class="nb">cd</span><span class="w"> </span>pysic-rs
+
+<span class="c1"># Build and install</span>
+pip<span class="w"> </span>install<span class="w"> </span>maturin
+maturin<span class="w"> </span>develop<span class="w"> </span>--release
+</pre></div>
+</div>
+</section>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="getting-started.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Getting Started</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, HFThot Research Lab
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/ThotDjehuty/pysic-rs" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
+                </svg>
+            </a>
+              <a class="muted-link " href="https://optimiz-rs.readthedocs.io/" aria-label="Optimiz-rs">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
+            </a>
+              <a class="muted-link " href="https://hfthot-lab.eu/thotbook-amenti.html" aria-label="HFThot Lab">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path d="M12 2L1 21h22L12 2zm0 4.7l6.5 11.3H5.5L12 6.7z"/>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Pysic-rs Documentation</a><ul>
+<li><a class="reference internal" href="#features">Features</a></li>
+<li><a class="reference internal" href="#quick-example">Quick Example</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=38b66d78"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=30646c52"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>

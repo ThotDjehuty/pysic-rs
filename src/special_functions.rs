@@ -517,42 +517,57 @@ pub fn expint_e1(x: f64) -> f64 {
 
 /// Riemann zeta function ζ(s) for real s > 1 via Euler-Maclaurin.
 pub fn zeta(s: f64) -> f64 {
-    if s <= 1.0 {
-        if (s - 1.0).abs() < 1e-10 {
-            return f64::INFINITY;
-        }
-        if s < 0.0 {
-            // Functional equation
-            return 2.0_f64.powi(s as i32) * std::f64::consts::PI.powf(s - 1.0)
-                * (std::f64::consts::PI * s / 2.0).sin()
-                * gamma(1.0 - s) * zeta(1.0 - s);
-        }
+    if (s - 1.0).abs() < 1e-12 {
+        return f64::INFINITY;
+    }
+    if s < 0.0 {
+        // Reflection: zeta(s) = 2^s pi^(s-1) sin(pi s/2) Gamma(1-s) zeta(1-s).
+        // Note powf, not powi: s is real, and truncating it to an integer here
+        // silently returned the wrong branch for every non-integer argument.
+        return 2.0_f64.powf(s)
+            * std::f64::consts::PI.powf(s - 1.0)
+            * (std::f64::consts::PI * s / 2.0).sin()
+            * gamma(1.0 - s)
+            * zeta(1.0 - s);
     }
 
-    // Euler-Maclaurin with N terms
-    let n = 60;
-    let k_max = 4;
+    // Euler-Maclaurin:
+    //   zeta(s) = sum_{k<N} k^-s + N^(1-s)/(s-1) + N^-s/2
+    //             + sum_j B_2j/(2j)! * (s)_{2j-1} / N^(s+2j-1)
+    // where (s)_{2j-1} = s(s+1)...(s+2j-2) is the rising factorial.
+    const N: u32 = 60;
+    const B2J: [f64; 7] = [
+        1.0 / 6.0,
+        -1.0 / 30.0,
+        1.0 / 42.0,
+        -1.0 / 30.0,
+        5.0 / 66.0,
+        -691.0 / 2730.0,
+        7.0 / 6.0,
+    ];
 
+    let nf = N as f64;
     let mut sum = 0.0;
-    for k in 1..=n {
-        sum += 1.0 / (k as f64).powf(s);
+    for k in 1..N {
+        sum += (k as f64).powf(-s);
     }
+    sum += nf.powf(1.0 - s) / (s - 1.0);
+    sum += 0.5 * nf.powf(-s);
 
-    // Bernoulli correction terms
-    let bernoulli = [1.0 / 6.0, -1.0 / 30.0, 1.0 / 42.0, -1.0 / 30.0];
-    for k in 0..k_max {
-        let mut s_prod = 1.0_f64;
-        let start = (s + 1.0).floor() as i64;
-        let end = (s + 2.0 * k as f64 + 1.0).floor() as i64;
-        for j in start..=end {
-            s_prod *= j as f64;
+    // Rising factorial and (2j)! are built up incrementally alongside the terms.
+    let mut rising = s; // (s)_1
+    let mut fact = 2.0; // (2j)! with j = 1
+    for (j, &b) in B2J.iter().enumerate() {
+        let jj = j + 1;
+        let term = b / fact * rising / nf.powf(s + 2.0 * jj as f64 - 1.0);
+        sum += term;
+        if term.abs() < 1e-18 * sum.abs() {
+            break;
         }
-        sum += bernoulli[k] * s_prod / (2 * (k + 1)) as f64 / (n as f64).powf(s + 2.0 * k as f64 + 1.0);
+        // advance to j+1: rising gains (s+2j-1)(s+2j), fact gains (2j+1)(2j+2)
+        rising *= (s + 2.0 * jj as f64 - 1.0) * (s + 2.0 * jj as f64);
+        fact *= (2.0 * jj as f64 + 1.0) * (2.0 * jj as f64 + 2.0);
     }
-
-    // Integral correction
-    sum += 0.5 / (n as f64).powf(s);
-    sum += 1.0 / ((s - 1.0) * (n as f64).powf(s - 1.0));
 
     sum
 }
@@ -710,6 +725,48 @@ mod tests {
                     "recurrence broken at n={n}, x={x}: {lhs} vs {rhs}"
                 );
             }
+        }
+    }
+
+    /// zeta at even integers has closed forms in pi, and the reflection formula
+    /// must reproduce the negative-odd values. Before the rewrite the
+    /// Euler-Maclaurin tail carried the wrong sign on the N^-s/2 term, so
+    /// zeta(2) was only good to four digits, and the reflection branch used
+    /// powi(s as i32), truncating every non-integer argument.
+    #[test]
+    fn test_zeta_closed_forms() {
+        let pi = std::f64::consts::PI;
+        for &(s, exact) in &[
+            (2.0_f64, pi.powi(2) / 6.0),
+            (4.0, pi.powi(4) / 90.0),
+            (6.0, pi.powi(6) / 945.0),
+            (8.0, pi.powi(8) / 9450.0),
+            (10.0, pi.powi(10) / 93555.0),
+        ] {
+            let got = zeta(s);
+            assert!(
+                (got - exact).abs() < 1e-13 * exact,
+                "zeta({s}) = {got}, exact {exact}"
+            );
+        }
+        // Reflection formula at the negative odd integers.
+        for &(s, exact) in &[(-1.0_f64, -1.0 / 12.0), (-3.0, 1.0 / 120.0), (-5.0, -1.0 / 252.0)] {
+            let got = zeta(s);
+            assert!(
+                (got - exact).abs() < 1e-10 * exact.abs(),
+                "zeta({s}) = {got}, exact {exact}"
+            );
+        }
+        // Monotone decrease towards 1, and the pole.
+        assert!(zeta(1.0).is_infinite());
+        let mut prev = f64::INFINITY;
+        let mut s = 1.05;
+        while s < 25.0 {
+            let z = zeta(s);
+            assert!(z < prev, "zeta not decreasing at s = {s}");
+            assert!(z > 1.0, "zeta({s}) = {z} dipped below 1");
+            prev = z;
+            s += 0.05;
         }
     }
 }

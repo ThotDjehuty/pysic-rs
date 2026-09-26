@@ -1,0 +1,908 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Classical Mechanics" href="classical.html"><link rel="prev" title="General Relativity" href="general_relativity.html">
+        <link rel="prefetch" href="../_static/logo_pysicrs.png" as="image">
+
+    <link rel="shortcut icon" href="../_static/logo_pysicrs.png"><!-- Generated with Sphinx 7.4.7 and Furo 2025.12.19 -->
+        <title>Gauge Theory - Pysic-rs Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a833a90c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  --color-brand-primary: #1e3a5f;
+  --color-brand-content: #1e3a5f;
+  --color-api-pre-background: #eef2ff;
+  --color-background-primary: #fefefe;
+  --color-background-secondary: #eef2ff;
+  --color-foreground-primary: #2d2d3a;
+  --color-foreground-secondary: #6b6b7a;
+  --color-foreground-muted: #9a9ab0;
+  --color-border: #c7d2fe;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #60a5fa;
+  --color-api-pre-background: #0f172a;
+  --color-background-primary: #0f172a;
+  --color-background-secondary: #1e293b;
+  --color-foreground-primary: #e8e8f0;
+  --color-foreground-secondary: #a0a0b8;
+  --color-foreground-muted: #707088;
+  --color-border: #334155;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #60a5fa;
+  --color-api-pre-background: #0f172a;
+  --color-background-primary: #0f172a;
+  --color-background-secondary: #1e293b;
+  --color-foreground-primary: #e8e8f0;
+  --color-foreground-secondary: #a0a0b8;
+  --color-foreground-muted: #707088;
+  --color-border: #334155;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+<div class="announcement">
+  <aside class="announcement-content">
+     🚀 <strong>Pysic-rs v0.1.0</strong> — Mathematical physics engine in Rust + Python • textbook-validated • <a href="changelog.html">View Changelog</a> • <a href="https://optimiz-rs.readthedocs.io/">Optimiz-rs Docs</a> • <a href="https://hfthot-lab.eu/thotbook-amenti.html">HFThot Research Lab</a> 
+  </aside>
+</div>
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Pysic-rs Documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/logo_pysicrs.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Pysic-rs Documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../examples.html">Example Notebooks</a><input aria-label="Toggle navigation of Example Notebooks" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/00_quickstart_and_constants.html">00 · Fundamental Constants and API Scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/01_ode_solvers.html">01 · ODE Integration: rk4_solve, backward_euler, leapfrog, rk45_solve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/02_pde_heat.html">02 · Heat Equation: Crank-Nicolson 1D and ADI 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/03_pde_wave.html">03 · Wave Equation: FDTD 1D and 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/04_pde_poisson.html">04 · Poisson Equation: poisson_fft_2d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/05_pde_quantum.html">05 · Schrödinger &amp; Dirac 1D: Split-Step Evolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/06_fourier_analysis.html">06 · Fourier Analysis: fft/ifft, spectral_derivative, welch_psd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/07_quantum_states.html">07 · Quantum States: Pauli Matrices/Structures, Fock &amp; Coherent States</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/08_propagators.html">08 · Quantum Propagators: Feynman and Free</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/09_gauge_theory.html">09 · Gauge Theory: su(3) Structure Constants and Instanton Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/10_topology.html">10 · Quantum Topology: Berry Phase, Chern Number, Winding Number</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/11_general_relativity.html">11 · General Relativity: Schwarzschild Metric, Christoffel, ADM Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/12_classical_mechanics.html">12 · Classical Mechanics: Rotations, Euler Equations, Inertia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/13_electromagnetism_casimir.html">13 · Electromagnetism: Radiation, Compton, Casimir Effect</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Algorithms</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="special_functions.html">Special Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">Linear Algebra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calculus.html">Numerical Calculus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ode.html">ODE Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pde.html">PDE Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fourier.html">Fourier Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantum.html">Quantum Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="general_relativity.html">General Relativity</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Gauge Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="classical.html">Classical Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topology.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="em.html">Electromagnetism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="casimir.html">Casimir Effect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/special_functions.html">API Reference: Special Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/linalg.html">API Reference: Linear Algebra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/calculus.html">API Reference: Numerical Calculus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/ode.html">API Reference: ODE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/pde.html">API Reference: PDE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/fourier.html">API Reference: Fourier Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/quantum.html">API Reference: Quantum Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/general_relativity.html">API Reference: General Relativity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/gauge.html">API Reference: Gauge Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/classical.html">API Reference: Classical Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/topology.html">API Reference: Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/em.html">API Reference: Electromagnetism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/casimir.html">API Reference: Casimir Effect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory/mathematical_foundations.html">Mathematical Foundations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/ThotDjehuty/pysic-rs/blob/main/docs/source/algorithms/gauge.md?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/ThotDjehuty/pysic-rs/edit/main/docs/source/algorithms/gauge.md" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section class="tex2jax_ignore mathjax_ignore" id="gauge-theory">
+<h1>Gauge Theory<a class="headerlink" href="#gauge-theory" title="Link to this heading">¶</a></h1>
+<p>Pysic-rs implements the algebraic and field-theoretic core of gauge theory: Lie-algebra
+structure constants, gauge connections and covariant derivatives, field strength, the
+Yang–Mills action and equations of motion, and instanton configurations — all at
+textbook (proven) level.</p>
+<blockquote>
+<div><p><strong>Python binding status:</strong> <code class="docutils literal notranslate"><span class="pre">su2_structure_constants</span></code>, <code class="docutils literal notranslate"><span class="pre">su3_structure_constants</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">instanton_action</span></code> are bound. Connections, covariant derivatives, field strength, and the
+Yang–Mills machinery are Rust-only. See the <a class="reference internal" href="../api/gauge.html"><span class="std std-doc">API page</span></a>.</p>
+</div></blockquote>
+<hr class="docutils" />
+<section id="lie-algebras-structure-constants">
+<h2>1. Lie Algebras &amp; Structure Constants<a class="headerlink" href="#lie-algebras-structure-constants" title="Link to this heading">¶</a></h2>
+<section id="definition">
+<h3>1.1 Definition<a class="headerlink" href="#definition" title="Link to this heading">¶</a></h3>
+<p>A <strong>Lie algebra</strong> <span class="math notranslate nohighlight">\(\mathfrak{g}\)</span> is a vector space equipped with a bilinear, antisymmetric
+bracket <span class="math notranslate nohighlight">\([\cdot,\cdot]\)</span> satisfying the <strong>Jacobi identity</strong>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+[X,[Y,Z]] + [Y,[Z,X]] + [Z,[X,Y]] = 0.
+\]</div>
+</div>
+<p>In a basis <span class="math notranslate nohighlight">\(\{T^a\}\)</span>, the commutator is</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+[T^a,T^b] = i\,f^{abc}\,T^c,
+\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(f^{abc}\)</span> are the <strong>structure constants</strong>, antisymmetric in all three indices.</p>
+</section>
+<section id="su-2-structure-constants">
+<h3>1.2 SU(2) Structure Constants<a class="headerlink" href="#su-2-structure-constants" title="Link to this heading">¶</a></h3>
+<p>The SU(2) generators in the fundamental representation are <span class="math notranslate nohighlight">\(T_a = \sigma_a/2\)</span> where
+<span class="math notranslate nohighlight">\(\sigma_a\)</span> are the Pauli matrices (see <a class="reference internal" href="quantum.html"><span class="std std-doc">Quantum</span></a>).</p>
+<p><strong>Theorem.</strong> The structure constants of SU(2) are <span class="math notranslate nohighlight">\(f^{abc} = \varepsilon^{abc}\)</span> (the
+Levi-Civita symbol).</p>
+<p><em>Proof.</em> From <span class="math notranslate nohighlight">\([\sigma_a/2,\sigma_b/2] = \frac{1}{4}[\sigma_a,\sigma_b] = \frac{1}{4}
+(2i\varepsilon_{abc}\sigma_c) = i\varepsilon_{abc}(\sigma_c/2)\)</span>. Reading off: <span class="math notranslate nohighlight">\(f^{abc}
+= \varepsilon^{abc}\)</span>. <span class="math notranslate nohighlight">\(\square\)</span></p>
+<p><strong>Properties:</strong></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(f^{123} = 1\)</span>, <span class="math notranslate nohighlight">\(f^{132} = -1\)</span>, etc. (6 sign-flipped copies of the basic triple).</p></li>
+<li><p>All other components vanish.</p></li>
+<li><p>Jacobi identity: <span class="math notranslate nohighlight">\(\varepsilon_{abe}\varepsilon_{ecd} + \varepsilon_{ade}\varepsilon_{ebc} +
+\varepsilon_{ace}\varepsilon_{edb} = 0\)</span> (proved via the identity <span class="math notranslate nohighlight">\(\varepsilon_{abe}\varepsilon_{cde}
+= \delta_{ac}\delta_{bd} - \delta_{ad}\delta_{bc}\)</span>).</p></li>
+</ul>
+</section>
+<section id="su-3-structure-constants">
+<h3>1.3 SU(3) Structure Constants<a class="headerlink" href="#su-3-structure-constants" title="Link to this heading">¶</a></h3>
+<p>The Gell-Mann matrices <span class="math notranslate nohighlight">\(\lambda_a\)</span> (<span class="math notranslate nohighlight">\(a=1,\ldots,8\)</span>) satisfy <span class="math notranslate nohighlight">\([\lambda_a,\lambda_b] =
+2if^{abc}\lambda_c\)</span>. The structure constants are extracted by</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+f^{abc} = \frac{1}{4i}\operatorname{tr}\bigl(\lambda_a[\lambda_b,\lambda_c]\bigr).
+\]</div>
+</div>
+<p><strong>Non-zero entries</strong> (proven, closed form):</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+f^{123} = 1, \qquad f^{147} = f^{246} = f^{257} = f^{345} = \frac{1}{2}, \qquad
+f^{458} = f^{678} = \frac{\sqrt{3}}{2}
+\]</div>
+</div>
+<p>with the complete antisymmetry <span class="math notranslate nohighlight">\(f^{abc} = -f^{bac} = -f^{acb}\)</span> etc. filling out all
+non-zero permutations. These are the same structure constants that appear in the
+electroweak and strong interaction Lagrangians.</p>
+<p><strong>Jacobi identity:</strong> For SU(3), the identity
+<span class="math notranslate nohighlight">\(f^{abe}f^{ecd}+f^{ade}f^{ebc}+f^{ace}f^{edb}=0\)</span> follows from the Jacobi identity of
+the Lie algebra (applied to the matrices <span class="math notranslate nohighlight">\(\lambda_a\)</span>). This is the algebraic consistency
+condition that ensures gauge invariance of the Yang–Mills action.</p>
+</section>
+<section id="killing-form">
+<h3>1.4 Killing Form<a class="headerlink" href="#killing-form" title="Link to this heading">¶</a></h3>
+<p>The <strong>Killing form</strong> on a Lie algebra is</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+B(X,Y) = \operatorname{tr}(\operatorname{ad}_X \operatorname{ad}_Y),
+\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\((\operatorname{ad}_X)(Y) = [X,Y]\)</span>. For a simple Lie algebra, <span class="math notranslate nohighlight">\(B\)</span> is
+non-degenerate (Cartan’s criterion). For SU(<span class="math notranslate nohighlight">\(N\)</span>): <span class="math notranslate nohighlight">\(B(T^a,T^b) = 2N\delta^{ab}\)</span> (in the
+fundamental representation).</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="gauge-connection-covariant-derivative">
+<h2>2. Gauge Connection &amp; Covariant Derivative<a class="headerlink" href="#gauge-connection-covariant-derivative" title="Link to this heading">¶</a></h2>
+<section id="gauge-fields">
+<h3>2.1 Gauge Fields<a class="headerlink" href="#gauge-fields" title="Link to this heading">¶</a></h3>
+<p>A <strong>gauge field</strong> <span class="math notranslate nohighlight">\(A_\mu = A_\mu^a T^a\)</span> is a Lie-algebra-valued 1-form on spacetime. The
+<strong>covariant derivative</strong> acting on matter fields <span class="math notranslate nohighlight">\(\phi\)</span> in representation <span class="math notranslate nohighlight">\(R\)</span> is</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\boxed{D_\mu\phi = \partial_\mu\phi - ig\,A_\mu\phi}
+\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(g\)</span> is the coupling constant and the product <span class="math notranslate nohighlight">\(A_\mu\phi\)</span> uses the representation
+matrix.</p>
+</section>
+<section id="gauge-transformation">
+<h3>2.2 Gauge Transformation<a class="headerlink" href="#gauge-transformation" title="Link to this heading">¶</a></h3>
+<p>Under a local gauge transformation <span class="math notranslate nohighlight">\(U(x) = e^{i\omega^a(x)T^a} \in G\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\phi \to U\phi, \qquad
+A_\mu \to U A_\mu U^{-1} - \frac{i}{g}(\partial_\mu U)U^{-1}
+\]</div>
+</div>
+<p><em>Proof.</em> The covariant derivative transforms covariantly: <span class="math notranslate nohighlight">\(D_\mu\phi \to U(D_\mu\phi)\)</span>,
+provided <span class="math notranslate nohighlight">\(A_\mu\)</span> transforms as above. The term <span class="math notranslate nohighlight">\(-(i/g)(\partial_\mu U)U^{-1}\)</span> compensates
+for the inhomogeneous transformation of <span class="math notranslate nohighlight">\(\partial_\mu\phi\)</span>: <span class="math notranslate nohighlight">\(\partial_\mu(U\phi) =
+U\partial_\mu\phi + (\partial_\mu U)\phi\)</span>, and the gauge term in <span class="math notranslate nohighlight">\(D_\mu(U\phi)\)</span> produces
+<span class="math notranslate nohighlight">\(-ig(UA_\mu U^{-1})U\phi - i(\partial_\mu U)\phi = U(-igA_\mu\phi)\)</span>. <span class="math notranslate nohighlight">\(\square\)</span></p>
+<p><strong>Infinitesimal form</strong> (<span class="math notranslate nohighlight">\(U \approx 1+i\omega\)</span>):</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\delta A_\mu = \partial_\mu\omega + ig[A_\mu,\omega] = D_\mu\omega
+\]</div>
+</div>
+<p>This is an <strong>adjoint</strong> transformation — the gauge field transforms in the adjoint
+representation of <span class="math notranslate nohighlight">\(G\)</span>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="field-strength">
+<h2>3. Field Strength<a class="headerlink" href="#field-strength" title="Link to this heading">¶</a></h2>
+<section id="id1">
+<h3>3.1 Definition<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<p>The <strong>non-abelian field strength</strong> is defined as</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\boxed{F_{\mu\nu} = \frac{i}{g}[D_\mu,D_\nu]}
+\]</div>
+</div>
+<p>Expanding the commutator:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+[D_\mu,D_\nu]\phi = (\partial_\mu\partial_\nu\phi - igA_\mu\partial_\nu\phi - ig\partial_\mu(A_\nu\phi)
+- g^2 A_\mu A_\nu\phi) - (\mu\leftrightarrow\nu)
+\]</div>
+</div>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+= -ig(\partial_\mu A_\nu - \partial_\nu A_\mu + ig[A_\mu,A_\nu])\phi
+\]</div>
+</div>
+<p>Hence</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\boxed{F_{\mu\nu}^a = \partial_\mu A_\nu^a - \partial_\nu A_\mu^a + g\,f^{abc}A_\mu^b A_\nu^c}
+\]</div>
+</div>
+<p>The extra <span class="math notranslate nohighlight">\(gf^{abc}A^bA^c\)</span> term is the <strong>non-abelian self-interaction</strong> — the fundamental
+difference from electrodynamics, where <span class="math notranslate nohighlight">\(F_{\mu\nu} = \partial_\mu A_\nu - \partial_\nu A_\mu\)</span>
+(abelian: <span class="math notranslate nohighlight">\([A_\mu,A_\nu]=0\)</span>).</p>
+</section>
+<section id="bianchi-identity">
+<h3>3.2 Bianchi Identity<a class="headerlink" href="#bianchi-identity" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+D_{[\lambda}F_{\mu\nu]} = 0
+\]</div>
+</div>
+<p><em>Proof.</em> From the Jacobi identity of covariant derivatives: <span class="math notranslate nohighlight">\([D_\lambda,[D_\mu,D_\nu]] +
+[\text{cyclic}] = 0\)</span>, and <span class="math notranslate nohighlight">\([D_\mu,D_\nu] = -igF_{\mu\nu}\)</span>. <span class="math notranslate nohighlight">\(\square\)</span></p>
+<p>This is the <strong>homogeneous</strong> equation of the gauge field (analogous to <span class="math notranslate nohighlight">\(\nabla\cdot B=0\)</span> in
+electromagnetism).</p>
+</section>
+<section id="transformation-law">
+<h3>3.3 Transformation Law<a class="headerlink" href="#transformation-law" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+F_{\mu\nu} \to U\,F_{\mu\nu}\,U^{-1}
+\]</div>
+</div>
+<p>The field strength transforms <strong>covariantly</strong> (in the adjoint representation), confirming
+that <span class="math notranslate nohighlight">\(F_{\mu\nu}^a F^{a\mu\nu}\)</span> is gauge-invariant.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="yangmills-action-equations-of-motion">
+<h2>4. Yang–Mills Action &amp; Equations of Motion<a class="headerlink" href="#yangmills-action-equations-of-motion" title="Link to this heading">¶</a></h2>
+<section id="yangmills-action">
+<h3>4.1 Yang–Mills Action<a class="headerlink" href="#yangmills-action" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\boxed{S_{\rm YM} = -\frac{1}{4}\int d^4x\,F^{a\mu\nu}F_{\mu\nu}^a = -\frac{1}{2}\int d^4x\,\operatorname{tr}(F_{\mu\nu}F^{\mu\nu})}
+\]</div>
+</div>
+<p><strong>Gauge invariance (proven):</strong> Under infinitesimal transformations <span class="math notranslate nohighlight">\(\delta A_\mu = D_\mu\omega\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\delta S_{\rm YM} = -\frac{1}{2}\int\operatorname{tr}(\delta F_{\mu\nu}F^{\mu\nu})
+= -\frac{i}{g}\int\operatorname{tr}([D_\mu\omega]F^{\mu\nu}F_{\nu}{}^{\mu}) = 0
+\]</div>
+</div>
+<p>after integration by parts and using the antisymmetry of <span class="math notranslate nohighlight">\(F_{\mu\nu}\)</span>.</p>
+</section>
+<section id="equations-of-motion">
+<h3>4.2 Equations of Motion<a class="headerlink" href="#equations-of-motion" title="Link to this heading">¶</a></h3>
+<p>Stationarity under <span class="math notranslate nohighlight">\(\delta A_\mu\)</span> gives the <strong>Yang–Mills equations</strong>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\boxed{D_\mu F^{\mu\nu} = J^{\nu}}
+\]</div>
+</div>
+<p>or in components:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\partial_\mu F^{\mu\nu a} + g\,f^{abc}A_\mu^b F^{\mu\nu c} = J^{\nu a}
+\]</div>
+</div>
+<p>The source current is <span class="math notranslate nohighlight">\(J^{\nu a} = g\bar{\psi}\gamma^\nu T^a\psi\)</span> for fermionic matter.</p>
+</section>
+<section id="self-interactions">
+<h3>4.3 Self-Interactions<a class="headerlink" href="#self-interactions" title="Link to this heading">¶</a></h3>
+<p>The non-abelian field strength contains cubic and quartic terms in <span class="math notranslate nohighlight">\(A_\mu\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+F_{\mu\nu}^a F^{a\mu\nu} = (\partial_\mu A_\nu^a - \partial_\nu A_\mu^a)^2
++ 2g f^{abc}A_\mu^b A_\nu^c(\partial^\mu A^{a\nu}-\partial^\nu A^{a\mu})
++ g^2 f^{abc}f^{ade}A_\mu^b A_\nu^c A^{\mu d} A^{\nu e}
+\]</div>
+</div>
+<p>The last two terms give <strong>3-gluon</strong> and <strong>4-gluon</strong> vertices — the gluons interact with
+each other (unlike photons in QED).</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="instantons">
+<h2>5. Instantons<a class="headerlink" href="#instantons" title="Link to this heading">¶</a></h2>
+<section id="euclidean-action-topological-charge">
+<h3>5.1 Euclidean Action &amp; Topological Charge<a class="headerlink" href="#euclidean-action-topological-charge" title="Link to this heading">¶</a></h3>
+<p>After Wick rotation <span class="math notranslate nohighlight">\(t\to -i\tau\)</span>, the Euclidean Yang–Mills action is</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+S_E = \frac{1}{2g^2}\int d^4x\,\operatorname{tr}(F_{\mu\nu}F_{\mu\nu}) \ge 0
+\]</div>
+</div>
+<p>The <strong>topological charge</strong> (Pontryagin index) is</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+Q = \frac{1}{32\pi^2}\int d^4x\,F_{\mu\nu}^a\tilde{F}^{a\mu\nu}
+\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\tilde{F}_{\mu\nu}^a = \frac{1}{2}\varepsilon_{\mu\nu\rho\sigma}F^{a\rho\sigma}\)</span> is the
+Hodge dual.</p>
+</section>
+<section id="the-bpst-instanton">
+<h3>5.2 The BPST Instanton<a class="headerlink" href="#the-bpst-instanton" title="Link to this heading">¶</a></h3>
+<p><strong>Theorem (Belavin–Polyakov–Schwarz–Tyupkin, 1975).</strong> The Euclidean YM equations admit
+finite-action solutions — <strong>instantons</strong> — with topological charge <span class="math notranslate nohighlight">\(Q = k \in \mathbb{Z}\)</span>.
+The action of the <span class="math notranslate nohighlight">\(k\)</span>-instanton is</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\boxed{S_{\rm inst} = \frac{8\pi^2}{g^2}|k|}
+\]</div>
+</div>
+<p><em>Proof.</em> The integrand <span class="math notranslate nohighlight">\(F\tilde{F}\)</span> is a total derivative:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+F_{\mu\nu}^a\tilde{F}^{a\mu\nu} = \partial_\mu K^\mu, \qquad
+K^\mu = 2\varepsilon^{\mu\nu\rho\sigma}\left(A_\nu^a\partial_\rho A_\sigma^a + \frac{g}{3}f^{abc}A_\nu^a A_\rho^b A_\sigma^c\right)
+\]</div>
+</div>
+<p>(the Chern–Simons current). By Stokes’ theorem, <span class="math notranslate nohighlight">\(Q\)</span> becomes a boundary integral at
+spatial infinity, which is a map <span class="math notranslate nohighlight">\(S^3\to G\)</span>. For <span class="math notranslate nohighlight">\(G = SU(2)\)</span>, this is classified by
+<span class="math notranslate nohighlight">\(\pi_3(SU(2)) = \mathbb{Z}\)</span>, so <span class="math notranslate nohighlight">\(Q\in\mathbb{Z}\)</span>. The Bogomolny bound gives <span class="math notranslate nohighlight">\(S_E \ge
+\frac{8\pi^2}{g^2}|Q|\)</span>, and instantons saturate this bound. <span class="math notranslate nohighlight">\(\square\)</span></p>
+</section>
+<section id="physiological-significance">
+<h3>5.3 Physiological Significance<a class="headerlink" href="#physiological-significance" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Vacuum structure:</strong> the QCD vacuum is a superposition of topologically distinct vacua
+<span class="math notranslate nohighlight">\(|n\rangle\)</span> labelled by the winding number <span class="math notranslate nohighlight">\(n\in\mathbb{Z}\)</span>.</p></li>
+<li><p><strong><span class="math notranslate nohighlight">\(\theta\)</span>-vacuum:</strong> <span class="math notranslate nohighlight">\(|\theta\rangle = \sum_n e^{in\theta}|n\rangle\)</span>, leading to the
+strong CP problem.</p></li>
+<li><p><strong>Tunneling:</strong> instantons mediate transitions between topologically distinct vacua.</p></li>
+<li><p><strong>Chiral symmetry breaking:</strong> instanton interactions break the <span class="math notranslate nohighlight">\(U(1)_A\)</span> anomaly.</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="routines">
+<h2>6. Routines<a class="headerlink" href="#routines" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Routine</p></th>
+<th class="head"><p>Returns</p></th>
+<th class="head"><p>Derivation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">su2_structure_constants()</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(f^{abc}=\varepsilon^{abc}\)</span></p></td>
+<td><p>Pauli matrix commutators</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">su3_structure_constants()</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(f^{abc}\)</span> (Gell-Mann basis)</p></td>
+<td><p>Gell-Mann matrix commutators</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">structure_constants(algebra)</span></code></p></td>
+<td><p>“su2”/“su3” → <span class="math notranslate nohighlight">\(\{f^{abc}\}\)</span></p></td>
+<td><p>Lie algebra definition</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gauge_connection(A,</span> <span class="pre">a,</span> <span class="pre">d)</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(A_\mu\)</span> discretized</p></td>
+<td><p>Gauge field on lattice</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">covariant_derivative(phi,</span> <span class="pre">A,</span> <span class="pre">g,</span> <span class="pre">x,</span> <span class="pre">h)</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(D_\mu\phi\)</span></p></td>
+<td><p>Gauge covariance</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">field_strength(A,</span> <span class="pre">g,</span> <span class="pre">d)</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(F_{\mu\nu}^a\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\([D_\mu,D_\nu]\)</span> commutator</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">yang_mills_action(F,</span> <span class="pre">g_inv,</span> <span class="pre">dim,</span> <span class="pre">dx)</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(S_{\rm YM}\)</span> density</p></td>
+<td><p>Gauge-invariant action</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">yang_mills_eom(F,</span> <span class="pre">A,</span> <span class="pre">g,</span> <span class="pre">dx,</span> <span class="pre">dim)</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(D_\mu F^{\mu\nu}\)</span> residual</p></td>
+<td><p>Euler–Lagrange equations</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">instanton_action(g)</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(8\pi^2/g^2\)</span></p></td>
+<td><p>Topological quantization</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="usage-examples">
+<h2>7. Usage Examples<a class="headerlink" href="#usage-examples" title="Link to this heading">¶</a></h2>
+<section id="su-3-jacobi-identity-verification">
+<h3>SU(3) Jacobi identity verification<a class="headerlink" href="#su-3-jacobi-identity-verification" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pysicrs</span><span class="w"> </span><span class="kn">import</span> <span class="n">su3_structure_constants</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">su3_structure_constants</span><span class="p">()</span>  <span class="c1"># f[a][b][c]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">jacobi</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">b</span><span class="p">][</span><span class="n">x</span><span class="p">]</span> <span class="o">*</span> <span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">][</span><span class="n">c</span><span class="p">][</span><span class="n">d</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">s</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SU(3) structure constants present:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="yangmills-self-interaction-term">
+<h3>Yang–Mills self-interaction term<a class="headerlink" href="#yangmills-self-interaction-term" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pysicrs</span><span class="w"> </span><span class="kn">import</span> <span class="n">field_strength</span>
+
+<span class="n">F</span> <span class="o">=</span> <span class="n">field_strength</span><span class="p">(</span><span class="n">A_field</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>   <span class="c1"># (4, 4, 8)  μν × a</span>
+</pre></div>
+</div>
+</section>
+<section id="instanton-action">
+<h3>Instanton action<a class="headerlink" href="#instanton-action" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pysicrs</span><span class="w"> </span><span class="kn">import</span> <span class="n">instanton_action</span>
+
+<span class="n">S</span> <span class="o">=</span> <span class="n">instanton_action</span><span class="p">(</span><span class="n">g</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;S_inst = </span><span class="si">{</span><span class="n">S</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  (expect 8π²/0.25 ≈ 315.83)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="advantages-limitations">
+<h2>8. Advantages &amp; Limitations<a class="headerlink" href="#advantages-limitations" title="Link to this heading">¶</a></h2>
+<p>✅ Exact SU(2)/SU(3) structure constants — no re-derivation needed</p>
+<p>✅ Field strength and EOM forms expose the non-abelian commutator term</p>
+<p>✅ Instantons tie into the Topology module’s winding/TKNN logic</p>
+<p>❌ Currently supports scalar matter coupling only (no fermions)</p>
+<p>❌ No gauge-fixing or lattice discretization beyond uniform grids</p>
+<p>❌ Structure constants are the classical constants; no full BRST machinery</p>
+</section>
+<hr class="docutils" />
+<section id="references">
+<h2>9. References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>t’Hooft, G. (1974). “Magnetic monopoles in unified gauge theories.” <em>Nucl. Phys. B</em> 79:276.</p></li>
+<li><p>Belavin, A.A., Polyakov, A.M., Schwartz, A.S. &amp; Tyupkin, Yu.S. (1975). <em>Phys. Lett. B</em> 59:85.</p></li>
+<li><p>Peskin, M. &amp; Schroeder, D. (1995). <em>An Introduction to Quantum Field Theory</em>. Addison-Wesley.</p></li>
+<li><p>Weinberg, S. (1996). <em>The Quantum Theory of Fields</em>, Vol. 2. Cambridge.</p></li>
+<li><p>Rajaraman, R. (1982). <em>Solitons and Instantons</em>. North-Holland.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="related-topics">
+<h2>10. Related Topics<a class="headerlink" href="#related-topics" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="quantum.html"><span class="std std-doc">Quantum</span></a> — Pauli matrices are the SU(2) generators used here</p></li>
+<li><p><a class="reference internal" href="topology.html"><span class="std std-doc">Topology</span></a> — winding number quantizes the instanton action</p></li>
+<li><p><a class="reference internal" href="general_relativity.html"><span class="std std-doc">General Relativity</span></a> — same covariant-derivative &amp; curvature pattern</p></li>
+<li><p><a class="reference internal" href="em.html"><span class="std std-doc">Electromagnetism</span></a> — abelian limit of Yang–Mills is Maxwell</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="classical.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Classical Mechanics</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="general_relativity.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">General Relativity</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, HFThot Research Lab
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/ThotDjehuty/pysic-rs" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
+                </svg>
+            </a>
+              <a class="muted-link " href="https://optimiz-rs.readthedocs.io/" aria-label="Optimiz-rs">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
+            </a>
+              <a class="muted-link " href="https://hfthot-lab.eu/thotbook-amenti.html" aria-label="HFThot Lab">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path d="M12 2L1 21h22L12 2zm0 4.7l6.5 11.3H5.5L12 6.7z"/>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Gauge Theory</a><ul>
+<li><a class="reference internal" href="#lie-algebras-structure-constants">1. Lie Algebras &amp; Structure Constants</a><ul>
+<li><a class="reference internal" href="#definition">1.1 Definition</a></li>
+<li><a class="reference internal" href="#su-2-structure-constants">1.2 SU(2) Structure Constants</a></li>
+<li><a class="reference internal" href="#su-3-structure-constants">1.3 SU(3) Structure Constants</a></li>
+<li><a class="reference internal" href="#killing-form">1.4 Killing Form</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gauge-connection-covariant-derivative">2. Gauge Connection &amp; Covariant Derivative</a><ul>
+<li><a class="reference internal" href="#gauge-fields">2.1 Gauge Fields</a></li>
+<li><a class="reference internal" href="#gauge-transformation">2.2 Gauge Transformation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#field-strength">3. Field Strength</a><ul>
+<li><a class="reference internal" href="#id1">3.1 Definition</a></li>
+<li><a class="reference internal" href="#bianchi-identity">3.2 Bianchi Identity</a></li>
+<li><a class="reference internal" href="#transformation-law">3.3 Transformation Law</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#yangmills-action-equations-of-motion">4. Yang–Mills Action &amp; Equations of Motion</a><ul>
+<li><a class="reference internal" href="#yangmills-action">4.1 Yang–Mills Action</a></li>
+<li><a class="reference internal" href="#equations-of-motion">4.2 Equations of Motion</a></li>
+<li><a class="reference internal" href="#self-interactions">4.3 Self-Interactions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#instantons">5. Instantons</a><ul>
+<li><a class="reference internal" href="#euclidean-action-topological-charge">5.1 Euclidean Action &amp; Topological Charge</a></li>
+<li><a class="reference internal" href="#the-bpst-instanton">5.2 The BPST Instanton</a></li>
+<li><a class="reference internal" href="#physiological-significance">5.3 Physiological Significance</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#routines">6. Routines</a></li>
+<li><a class="reference internal" href="#usage-examples">7. Usage Examples</a><ul>
+<li><a class="reference internal" href="#su-3-jacobi-identity-verification">SU(3) Jacobi identity verification</a></li>
+<li><a class="reference internal" href="#yangmills-self-interaction-term">Yang–Mills self-interaction term</a></li>
+<li><a class="reference internal" href="#instanton-action">Instanton action</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#advantages-limitations">8. Advantages &amp; Limitations</a></li>
+<li><a class="reference internal" href="#references">9. References</a></li>
+<li><a class="reference internal" href="#related-topics">10. Related Topics</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=38b66d78"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=30646c52"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>

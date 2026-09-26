@@ -1,0 +1,933 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Fourier Analysis" href="fourier.html"><link rel="prev" title="ODE Solvers" href="ode.html">
+        <link rel="prefetch" href="../_static/logo_pysicrs.png" as="image">
+
+    <link rel="shortcut icon" href="../_static/logo_pysicrs.png"><!-- Generated with Sphinx 7.4.7 and Furo 2025.12.19 -->
+        <title>PDE Solvers - Pysic-rs Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a833a90c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  --color-brand-primary: #1e3a5f;
+  --color-brand-content: #1e3a5f;
+  --color-api-pre-background: #eef2ff;
+  --color-background-primary: #fefefe;
+  --color-background-secondary: #eef2ff;
+  --color-foreground-primary: #2d2d3a;
+  --color-foreground-secondary: #6b6b7a;
+  --color-foreground-muted: #9a9ab0;
+  --color-border: #c7d2fe;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #60a5fa;
+  --color-api-pre-background: #0f172a;
+  --color-background-primary: #0f172a;
+  --color-background-secondary: #1e293b;
+  --color-foreground-primary: #e8e8f0;
+  --color-foreground-secondary: #a0a0b8;
+  --color-foreground-muted: #707088;
+  --color-border: #334155;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #60a5fa;
+  --color-api-pre-background: #0f172a;
+  --color-background-primary: #0f172a;
+  --color-background-secondary: #1e293b;
+  --color-foreground-primary: #e8e8f0;
+  --color-foreground-secondary: #a0a0b8;
+  --color-foreground-muted: #707088;
+  --color-border: #334155;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+<div class="announcement">
+  <aside class="announcement-content">
+     🚀 <strong>Pysic-rs v0.1.0</strong> — Mathematical physics engine in Rust + Python • textbook-validated • <a href="changelog.html">View Changelog</a> • <a href="https://optimiz-rs.readthedocs.io/">Optimiz-rs Docs</a> • <a href="https://hfthot-lab.eu/thotbook-amenti.html">HFThot Research Lab</a> 
+  </aside>
+</div>
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Pysic-rs Documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/logo_pysicrs.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Pysic-rs Documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../examples.html">Example Notebooks</a><input aria-label="Toggle navigation of Example Notebooks" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/00_quickstart_and_constants.html">00 · Fundamental Constants and API Scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/01_ode_solvers.html">01 · ODE Integration: rk4_solve, backward_euler, leapfrog, rk45_solve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/02_pde_heat.html">02 · Heat Equation: Crank-Nicolson 1D and ADI 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/03_pde_wave.html">03 · Wave Equation: FDTD 1D and 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/04_pde_poisson.html">04 · Poisson Equation: poisson_fft_2d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/05_pde_quantum.html">05 · Schrödinger &amp; Dirac 1D: Split-Step Evolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/06_fourier_analysis.html">06 · Fourier Analysis: fft/ifft, spectral_derivative, welch_psd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/07_quantum_states.html">07 · Quantum States: Pauli Matrices/Structures, Fock &amp; Coherent States</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/08_propagators.html">08 · Quantum Propagators: Feynman and Free</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/09_gauge_theory.html">09 · Gauge Theory: su(3) Structure Constants and Instanton Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/10_topology.html">10 · Quantum Topology: Berry Phase, Chern Number, Winding Number</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/11_general_relativity.html">11 · General Relativity: Schwarzschild Metric, Christoffel, ADM Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/12_classical_mechanics.html">12 · Classical Mechanics: Rotations, Euler Equations, Inertia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/13_electromagnetism_casimir.html">13 · Electromagnetism: Radiation, Compton, Casimir Effect</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Algorithms</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="special_functions.html">Special Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">Linear Algebra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calculus.html">Numerical Calculus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ode.html">ODE Solvers</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">PDE Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fourier.html">Fourier Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantum.html">Quantum Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="general_relativity.html">General Relativity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gauge.html">Gauge Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="classical.html">Classical Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topology.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="em.html">Electromagnetism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="casimir.html">Casimir Effect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/special_functions.html">API Reference: Special Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/linalg.html">API Reference: Linear Algebra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/calculus.html">API Reference: Numerical Calculus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/ode.html">API Reference: ODE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/pde.html">API Reference: PDE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/fourier.html">API Reference: Fourier Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/quantum.html">API Reference: Quantum Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/general_relativity.html">API Reference: General Relativity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/gauge.html">API Reference: Gauge Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/classical.html">API Reference: Classical Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/topology.html">API Reference: Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/em.html">API Reference: Electromagnetism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/casimir.html">API Reference: Casimir Effect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory/mathematical_foundations.html">Mathematical Foundations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/ThotDjehuty/pysic-rs/blob/main/docs/source/algorithms/pde.md?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/ThotDjehuty/pysic-rs/edit/main/docs/source/algorithms/pde.md" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section class="tex2jax_ignore mathjax_ignore" id="pde-solvers">
+<h1>PDE Solvers<a class="headerlink" href="#pde-solvers" title="Link to this heading">¶</a></h1>
+<p>Pysic-rs implements the canonical numerical schemes for the core PDEs of physics: the
+Schrödinger and Dirac equations (quantum), the heat and wave equations (parabolic/hyperbolic
+prototypes), the Poisson equation (elliptic), and the full 3D Maxwell system on a Yee grid.</p>
+<blockquote>
+<div><p><strong>Python binding status:</strong> <code class="docutils literal notranslate"><span class="pre">schrodinger_split_step_1d</span></code>, <code class="docutils literal notranslate"><span class="pre">schrodinger_eigen_1d</span></code>,
+<code class="docutils literal notranslate"><span class="pre">dirac_split_step_1d</span></code>, <code class="docutils literal notranslate"><span class="pre">heat_crank_nicolson_1d/2d</span></code>, <code class="docutils literal notranslate"><span class="pre">wave_fdtd_1d/2d</span></code>, and <code class="docutils literal notranslate"><span class="pre">poisson_fft_2d</span></code>
+are bound. <code class="docutils literal notranslate"><span class="pre">poisson_sor_2d</span></code> and the Maxwell 3D routines are Rust-only. See the
+<a class="reference internal" href="../api/pde.html"><span class="std std-doc">API page</span></a>.</p>
+</div></blockquote>
+<hr class="docutils" />
+<section id="classification-of-linear-pdes">
+<h2>1. Classification of Linear PDEs<a class="headerlink" href="#classification-of-linear-pdes" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Prototype</p></th>
+<th class="head"><p>Character</p></th>
+<th class="head"><p>Solver class</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Elliptic</strong></p></td>
+<td><p><span class="math notranslate nohighlight">\(\nabla^2 u = f\)</span></p></td>
+<td><p>No time variable</p></td>
+<td><p>Banded/SOR/FFT</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Parabolic</strong></p></td>
+<td><p><span class="math notranslate nohighlight">\(\partial_t u = \alpha\nabla^2 u\)</span></p></td>
+<td><p>Diffusion, infinite speed</p></td>
+<td><p>Crank–Nicolson, ADI</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Hyperbolic</strong></p></td>
+<td><p><span class="math notranslate nohighlight">\(\partial_{tt}u = c^2\nabla^2 u\)</span></p></td>
+<td><p>Wave propagation, finite speed</p></td>
+<td><p>FDTD leapfrog</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Dispersive</strong></p></td>
+<td><p><span class="math notranslate nohighlight">\(i\hbar\partial_t\psi = -\frac{\hbar^2}{2m}\nabla^2\psi+V\psi\)</span></p></td>
+<td><p>Phase dispersion</p></td>
+<td><p>Split-step FFT</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="schrodinger-equation-split-step-fourier">
+<h2>2. Schrödinger Equation (Split-Step Fourier)<a class="headerlink" href="#schrodinger-equation-split-step-fourier" title="Link to this heading">¶</a></h2>
+<section id="time-dependent-schrodinger">
+<h3>2.1 Time-Dependent Schrödinger<a class="headerlink" href="#time-dependent-schrodinger" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+i\hbar\frac{\partial\psi}{\partial t} = -\frac{\hbar^2}{2m}\frac{\partial^2\psi}{\partial x^2} + V(x)\psi
+\]</div>
+</div>
+</section>
+<section id="split-step-method">
+<h3>2.2 Split-Step Method<a class="headerlink" href="#split-step-method" title="Link to this heading">¶</a></h3>
+<p>The evolution operator over time <span class="math notranslate nohighlight">\(\Delta t\)</span> is</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+e^{-i\hat{H}\Delta t/\hbar} \approx e^{-iV\Delta t/2\hbar}\,e^{-i\hat{p}^2\Delta t/(2m\hbar)}\,e^{-iV\Delta t/2\hbar} + \mathcal{O}(\Delta t^3)
+\]</div>
+</div>
+<p><strong>Derivation (Strang splitting).</strong> Write <span class="math notranslate nohighlight">\(\hat{H} = \hat{T}+\hat{V}\)</span> and use the Baker–
+Campbell–Hausdorff formula:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+e^{-i(\hat{T}+\hat{V})\Delta t/\hbar} = e^{-i\hat{V}\Delta t/2\hbar}\,e^{-i\hat{T}\Delta t/\hbar}\,e^{-i\hat{V}\Delta t/2\hbar}\,e^{\frac{1}{24}[\hat{V},[\hat{V},\hat{T}]]\Delta t^3/\hbar^3+\cdots}
+\]</div>
+</div>
+<p>The symmetric (Strang) splitting is second-order: <span class="math notranslate nohighlight">\(\mathcal{O}(\Delta t^3)\)</span> local error,
+<span class="math notranslate nohighlight">\(\mathcal{O}(\Delta t^2)\)</span> global error.</p>
+<p><strong>Algorithm per step:</strong></p>
+<ol class="arabic simple">
+<li><p>Half-step potential phase: <span class="math notranslate nohighlight">\(\psi \leftsto \psi\,e^{-iV\Delta t/(2\hbar)}\)</span> (position space).</p></li>
+<li><p>Full-step kinetic phase: <span class="math notranslate nohighlight">\(\hat{\psi} = \text{FFT}(\psi)\)</span>; <span class="math notranslate nohighlight">\(\hat{\psi} \leftsto \hat{\psi}\,
+e^{-i\hbar k^2\Delta t/(2m)}\)</span> (momentum space).</p></li>
+<li><p>Half-step potential phase: <span class="math notranslate nohighlight">\(\psi = \text{IFFT}(\hat{\psi})\)</span>; <span class="math notranslate nohighlight">\(\psi \leftsto \psi\,
+e^{-iV\Delta t/(2\hbar)}\)</span>.</p></li>
+</ol>
+<p><strong>Properties (proven):</strong></p>
+<ul class="simple">
+<li><p><strong>Unitary:</strong> each exponential factor has <span class="math notranslate nohighlight">\(|e^{i\theta}|=1\)</span>, so <span class="math notranslate nohighlight">\(\|\psi\|_2\)</span> is exactly
+conserved to machine precision.</p></li>
+<li><p><strong>Spectrally accurate in space:</strong> the spatial derivative is exact in Fourier space.</p></li>
+<li><p><strong>Second-order in time:</strong> the Strang splitting gives <span class="math notranslate nohighlight">\(\mathcal{O}(\Delta t^2)\)</span> global error.</p></li>
+</ul>
+</section>
+<section id="imaginary-time-propagation-eigenstates">
+<h3>2.3 Imaginary-Time Propagation (Eigenstates)<a class="headerlink" href="#imaginary-time-propagation-eigenstates" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">schrodinger_eigen_1d</span></code> computes bound-state energies/states by evolving in <strong>imaginary time</strong>
+<span class="math notranslate nohighlight">\(\tau = it\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\partial_\tau\psi = -\hat{H}\psi/\hbar
+\]</div>
+</div>
+<p>Each eigenstate decays as <span class="math notranslate nohighlight">\(e^{-E_n\tau/\hbar}\)</span>; the ground state (<span class="math notranslate nohighlight">\(E_0\)</span> smallest) dominates
+as <span class="math notranslate nohighlight">\(\tau\to\infty\)</span>. Excited states are isolated by <strong>Gram–Schmidt orthogonalisation</strong> against
+converged lower states.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="dirac-equation-split-step">
+<h2>3. Dirac Equation (Split-Step)<a class="headerlink" href="#dirac-equation-split-step" title="Link to this heading">¶</a></h2>
+<section id="d-dirac-equation">
+<h3>3.1 1D Dirac Equation<a class="headerlink" href="#d-dirac-equation" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+i\hbar\partial_t\psi = \left(-i\hbar c\,\alpha\partial_x + mc^2\beta + V\right)\psi
+\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\alpha = \sigma_x\)</span> and <span class="math notranslate nohighlight">\(\beta = \sigma_z\)</span> (see <a class="reference internal" href="quantum.html"><span class="std std-doc">Quantum</span></a> for the Pauli
+algebra).</p>
+</section>
+<section id="split-step-decomposition">
+<h3>3.2 Split-Step Decomposition<a class="headerlink" href="#split-step-decomposition" title="Link to this heading">¶</a></h3>
+<p>The kinetic part <span class="math notranslate nohighlight">\(-i\hbar c\,\alpha\partial_x\)</span> is diagonal in momentum space:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\hat{T}(k) = \hbar c\,\alpha\,k + mc^2\beta
+\]</div>
+</div>
+<p>The two eigenvalues are <span class="math notranslate nohighlight">\(E_\pm(k) = \pm\sqrt{(\hbar ck)^2+(mc^2)^2}\)</span> (relativistic
+dispersion). The split-step proceeds as for Schrödinger, with the momentum-space phase
+being a <span class="math notranslate nohighlight">\(2\times 2\)</span> matrix exponential.</p>
+<p><strong>Norm conservation:</strong> the split-step is unitary on each spinor component, preserving
+<span class="math notranslate nohighlight">\(\int|\psi_1|^2+|\psi_2|^2\,dx\)</span>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="heat-equation-cranknicolson">
+<h2>4. Heat Equation (Crank–Nicolson)<a class="headerlink" href="#heat-equation-cranknicolson" title="Link to this heading">¶</a></h2>
+<section id="d-discretisation">
+<h3>4.1 1D Discretisation<a class="headerlink" href="#d-discretisation" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\frac{\partial u}{\partial t} = \alpha\frac{\partial^2 u}{\partial x^2}
+\]</div>
+</div>
+<p>The <strong>Crank–Nicolson scheme</strong> (trapezoidal in time, central difference in space):</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\frac{u_j^{n+1}-u_j^n}{\Delta t} = \frac{\alpha}{2}\left[\frac{u_{j-1}^{n+1}-2u_j^{n+1}+u_{j+1}^{n+1}}{\Delta x^2} + \frac{u_{j-1}^n-2u_j^n+u_{j+1}^n}{\Delta x^2}\right]
+\]</div>
+</div>
+<p>This is a <strong>tridiagonal linear system</strong> per step, solved with the Thomas algorithm in
+<span class="math notranslate nohighlight">\(O(N)\)</span> operations.</p>
+</section>
+<section id="stability-analysis-von-neumann">
+<h3>4.2 Stability Analysis (Von Neumann)<a class="headerlink" href="#stability-analysis-von-neumann" title="Link to this heading">¶</a></h3>
+<p>The amplification factor is</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+g(k) = \frac{1-\sigma\sin^2(k\Delta x/2)}{1+\sigma\sin^2(k\Delta x/2)},
+\qquad \sigma = \frac{\alpha\Delta t}{\Delta x^2}
+\]</div>
+</div>
+<p>Since <span class="math notranslate nohighlight">\(|g(k)|\le 1\)</span> for all <span class="math notranslate nohighlight">\(k\)</span> and all <span class="math notranslate nohighlight">\(\sigma&gt;0\)</span>, the scheme is <strong>unconditionally
+stable</strong> (A-stable). It is second-order accurate in both space and time.</p>
+</section>
+<section id="d-adi-method">
+<h3>4.3 2D: ADI Method<a class="headerlink" href="#d-adi-method" title="Link to this heading">¶</a></h3>
+<p>For 2D heat, the <strong>Alternating Direction Implicit (ADI)</strong> method splits each step:</p>
+<ol class="arabic simple">
+<li><p>Implicit in <span class="math notranslate nohighlight">\(x\)</span>, explicit in <span class="math notranslate nohighlight">\(y\)</span>.</p></li>
+<li><p>Implicit in <span class="math notranslate nohighlight">\(y\)</span>, explicit in <span class="math notranslate nohighlight">\(x\)</span>.</p></li>
+</ol>
+<p>Each sub-step is a tridiagonal solve (along one row/column), giving <span class="math notranslate nohighlight">\(O(N^2)\)</span> total cost
+for an <span class="math notranslate nohighlight">\(N\times N\)</span> grid. <strong>Proven:</strong> ADI is unconditionally stable and second-order
+accurate for constant <span class="math notranslate nohighlight">\(\alpha\)</span>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="wave-equation-fdtd">
+<h2>5. Wave Equation (FDTD)<a class="headerlink" href="#wave-equation-fdtd" title="Link to this heading">¶</a></h2>
+<section id="leapfrog-discretisation">
+<h3>5.1 Leapfrog Discretisation<a class="headerlink" href="#leapfrog-discretisation" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\frac{\partial^2 u}{\partial t^2} = c^2\nabla^2 u
+\]</div>
+</div>
+<p>The finite-difference time-domain (FDTD) leapfrog scheme is</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+u_j^{n+1} = 2u_j^n - u_j^{n-1} + \left(\frac{c\Delta t}{\Delta x}\right)^2(u_{j+1}^n-2u_j^n+u_{j-1}^n)
+\]</div>
+</div>
+<p><strong>Properties:</strong> explicit (no linear solve), second-order in space and time, conditionally
+stable.</p>
+</section>
+<section id="cfl-condition">
+<h3>5.2 CFL Condition<a class="headerlink" href="#cfl-condition" title="Link to this heading">¶</a></h3>
+<p><strong>Theorem (Courant–Friedrichs–Lewy).</strong> The leapfrog scheme is stable iff</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\boxed{c\,\frac{\Delta t}{\Delta x}\le 1}
+\]</div>
+</div>
+<p><em>Proof (von Neumann analysis).</em> Substitute <span class="math notranslate nohighlight">\(u_j^n = g^n e^{ikj\Delta x}\)</span>. The
+amplification equation is <span class="math notranslate nohighlight">\(g^2-2\lambda g+1=0\)</span> with <span class="math notranslate nohighlight">\(\lambda = 1-2\mu^2\sin^2(k\Delta x/2)\)</span>,
+<span class="math notranslate nohighlight">\(\mu = c\Delta t/\Delta x\)</span>. For <span class="math notranslate nohighlight">\(|g|\le 1\)</span> we need <span class="math notranslate nohighlight">\(|\lambda|\le 1\)</span>, giving <span class="math notranslate nohighlight">\(\mu\le 1\)</span>.
+<span class="math notranslate nohighlight">\(\square\)</span></p>
+<p><strong>2D extension:</strong> <span class="math notranslate nohighlight">\(c\Delta t \le \Delta x/\sqrt{2}\)</span> (the Courant number must not exceed the
+ratio of grid spacing to the diagonal of a cell).</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="poisson-equation">
+<h2>6. Poisson Equation<a class="headerlink" href="#poisson-equation" title="Link to this heading">¶</a></h2>
+<section id="fft-method-spectral">
+<h3>6.1 FFT Method (Spectral)<a class="headerlink" href="#fft-method-spectral" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\nabla^2\phi = -\frac{\rho}{\varepsilon_0}
+\]</div>
+</div>
+<p>In Fourier space: <span class="math notranslate nohighlight">\(\hat{\phi}(\mathbf{k}) = \hat{\rho}(\mathbf{k})/(\varepsilon_0 k^2)\)</span>.
+One inverse FFT gives <span class="math notranslate nohighlight">\(\phi\)</span>. <strong>Requires periodic boundary conditions.</strong></p>
+</section>
+<section id="sor-successive-over-relaxation">
+<h3>6.2 SOR (Successive Over-Relaxation)<a class="headerlink" href="#sor-successive-over-relaxation" title="Link to this heading">¶</a></h3>
+<p>Gauss–Seidel with relaxation factor <span class="math notranslate nohighlight">\(\omega\in(1,2)\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\phi_j^{(k+1)} = (1-\omega)\phi_j^{(k)} + \frac{\omega}{4}(\phi_{j-1}^{(k+1)}+\phi_{j+1}^{(k)}+\phi_j^{(k,\text{other})}+\cdots)
+\]</div>
+</div>
+<p>The optimal <span class="math notranslate nohighlight">\(\omega\)</span> for an <span class="math notranslate nohighlight">\(n\times n\)</span> grid with Dirichlet boundaries is</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\omega_{\rm opt} = \frac{2}{1+\sin(\pi/n)}
+\]</div>
+</div>
+<p>Convergence is monotone for <span class="math notranslate nohighlight">\(\omega\in(1,\omega_{\rm opt})\)</span> and oscillatory for
+<span class="math notranslate nohighlight">\(\omega\in(\omega_{\rm opt},2)\)</span>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="maxwell-3d-yee-fdtd">
+<h2>7. Maxwell 3D (Yee FDTD)<a class="headerlink" href="#maxwell-3d-yee-fdtd" title="Link to this heading">¶</a></h2>
+<section id="maxwells-curl-equations">
+<h3>7.1 Maxwell’s Curl Equations<a class="headerlink" href="#maxwells-curl-equations" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\varepsilon\frac{\partial\mathbf{E}}{\partial t} = \nabla\times\mathbf{H}-\sigma\mathbf{E},
+\qquad
+\mu\frac{\partial\mathbf{H}}{\partial t} = -\nabla\times\mathbf{E}
+\]</div>
+</div>
+</section>
+<section id="yees-staggered-grid-yee-1966">
+<h3>7.2 Yee’s Staggered Grid (Yee 1966)<a class="headerlink" href="#yees-staggered-grid-yee-1966" title="Link to this heading">¶</a></h3>
+<p>The key insight: place <span class="math notranslate nohighlight">\(E\)</span> components on <strong>cell edges</strong> and <span class="math notranslate nohighlight">\(H\)</span> components on <strong>cell faces</strong>
+in a dual lattice. Then every curl is a <strong>central difference</strong> and Gauss’s laws
+(<span class="math notranslate nohighlight">\(\nabla\cdot\mathbf{B}=0\)</span>, <span class="math notranslate nohighlight">\(\nabla\cdot\mathbf{D}=\rho\)</span>) are automatically satisfied to
+machine precision.</p>
+<p><strong>3D CFL limit:</strong> <span class="math notranslate nohighlight">\(c\Delta t \le \Delta x/\sqrt{3}\)</span>.</p>
+</section>
+<section id="energy-conservation">
+<h3>7.3 Energy Conservation<a class="headerlink" href="#energy-conservation" title="Link to this heading">¶</a></h3>
+<p>The Yee scheme satisfies a discrete Poynting theorem: the total electromagnetic energy
+decays only due to the resistive term <span class="math notranslate nohighlight">\(\sigma\mathbf{E}\cdot\mathbf{E}\)</span>, not due to
+numerical dissipation. This is a direct consequence of the central differencing and the
+staggered grid.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="routines">
+<h2>8. Routines<a class="headerlink" href="#routines" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Routine</p></th>
+<th class="head"><p>Equation</p></th>
+<th class="head"><p>Method</p></th>
+<th class="head"><p>Stability</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">schrodinger_split_step_1d</span></code></p></td>
+<td><p>TDSE</p></td>
+<td><p>split-step FFT</p></td>
+<td><p>unconditional (unitary)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">schrodinger_eigen_1d</span></code></p></td>
+<td><p>TISE</p></td>
+<td><p>imaginary time</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dirac_split_step_1d</span></code></p></td>
+<td><p>Dirac</p></td>
+<td><p>split-step FFT</p></td>
+<td><p>unconditional (unitary)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">heat_crank_nicolson_1d/2d</span></code></p></td>
+<td><p>heat</p></td>
+<td><p>C-N + ADI</p></td>
+<td><p>unconditional</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wave_fdtd_1d/2d</span></code></p></td>
+<td><p>wave</p></td>
+<td><p>leapfrog FDTD</p></td>
+<td><p>CFL: <span class="math notranslate nohighlight">\(c\Delta t\le\Delta x\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">poisson_fft_2d</span></code></p></td>
+<td><p>Poisson</p></td>
+<td><p>spectral</p></td>
+<td><p>PBC</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">poisson_sor_2d</span></code></p></td>
+<td><p>Poisson</p></td>
+<td><p>SOR</p></td>
+<td><p>elliptic, monotone</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">maxwell_step_3d</span></code></p></td>
+<td><p>Maxwell</p></td>
+<td><p>Yee FDTD</p></td>
+<td><p>CFL: <span class="math notranslate nohighlight">\(c\Delta t\le\Delta x/\sqrt{3}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">maxwell_max_dt(dx,</span> <span class="pre">c)</span></code></p></td>
+<td><p>—</p></td>
+<td><p>CFL helper</p></td>
+<td><p>returns the safe <span class="math notranslate nohighlight">\(\Delta t\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="usage-examples">
+<h2>9. Usage Examples<a class="headerlink" href="#usage-examples" title="Link to this heading">¶</a></h2>
+<section id="wave-packet-propagation-in-a-harmonic-trap">
+<h3>Wave packet propagation in a harmonic trap<a class="headerlink" href="#wave-packet-propagation-in-a-harmonic-trap" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pysicrs</span><span class="w"> </span><span class="kn">import</span> <span class="n">schrodinger_split_step_1d</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">n</span><span class="p">,</span> <span class="n">dx</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span> <span class="mf">0.05</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+<span class="n">psi0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="mf">0.5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="mf">2.0</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># moving Gaussian</span>
+<span class="n">v</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>                              <span class="c1"># harmonic potential</span>
+
+<span class="n">psi</span> <span class="o">=</span> <span class="n">schrodinger_split_step_1d</span><span class="p">(</span>
+    <span class="nb">list</span><span class="p">(</span><span class="n">psi0</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">psi0</span><span class="o">.</span><span class="n">imag</span><span class="p">),</span>
+    <span class="nb">list</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">n_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">mass</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">hbar</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="heat-diffusion-cfl-safe">
+<h3>Heat diffusion CFL-safe<a class="headerlink" href="#heat-diffusion-cfl-safe" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pysicrs</span><span class="w"> </span><span class="kn">import</span> <span class="n">heat_crank_nicolson_1d</span>
+
+<span class="n">u0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span><span class="o">*</span><span class="mi">20</span> <span class="o">+</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="mi">40</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">heat_crank_nicolson_1d</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">n_steps</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="maxwell-3d-safe-step">
+<h3>Maxwell 3D — safe step<a class="headerlink" href="#maxwell-3d-safe-step" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pysicrs</span><span class="w"> </span><span class="kn">import</span> <span class="n">maxwell_max_dt</span><span class="p">,</span> <span class="n">maxwell_step_3d</span>
+
+<span class="n">dt</span> <span class="o">=</span> <span class="n">maxwell_max_dt</span><span class="p">(</span><span class="n">dx</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># ≤ dx/√3</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="stability-guidelines-von-neumann-analysis-proven">
+<h2>10. Stability Guidelines (von Neumann analysis, proven)<a class="headerlink" href="#stability-guidelines-von-neumann-analysis-proven" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Scheme</p></th>
+<th class="head"><p>Condition</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Crank–Nicolson (heat)</p></td>
+<td><p>none — unconditionally stable</p></td>
+</tr>
+<tr class="row-odd"><td><p>Leapfrog FDTD (wave)</p></td>
+<td><p><span class="math notranslate nohighlight">\(c\Delta t/\Delta x \le 1\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Maxwell 3D Yee</p></td>
+<td><p><span class="math notranslate nohighlight">\(c\Delta t/\Delta x \le 1/\sqrt{3}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Split-step (Schrödinger/Dirac)</p></td>
+<td><p>none — unitary</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Practical rule:</strong> if a simulation blows up, first check the CFL ratio.</p>
+</section>
+<hr class="docutils" />
+<section id="advantages-limitations">
+<h2>11. Advantages &amp; Limitations<a class="headerlink" href="#advantages-limitations" title="Link to this heading">¶</a></h2>
+<p>✅ Split-step gives spectral spatial accuracy + norm conservation for quantum problems</p>
+<p>✅ Crank–Nicolson and ADI remove parabolic stability constraints entirely</p>
+<p>✅ Yee grid conserves <span class="math notranslate nohighlight">\(\nabla\cdot B=0\)</span> discretely (proven to round-off)</p>
+<p>❌ Wave/Maxwell FDTD is explicitly constrained by CFL — small <span class="math notranslate nohighlight">\(\Delta t\)</span> needed</p>
+<p>❌ FFT-Poisson requires periodic boundaries</p>
+<p>❌ No PML absorbing boundaries implemented yet (hard-wall boundaries default)</p>
+</section>
+<hr class="docutils" />
+<section id="references">
+<h2>12. References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Trefethen, L.N. (2000). <em>Spectral Methods in MATLAB</em>. SIAM.</p></li>
+<li><p>Yee, K.S. (1966). “Numerical solution of initial boundary value problems involving Maxwell’s equations.” <em>IEEE Trans. AP</em> 14(3):302–307.</p></li>
+<li><p>Press, W. et al. (2007). <em>Numerical Recipes</em>, 3rd ed. Cambs.</p></li>
+<li><p>Strikwerda, J.C. (2004). <em>Finite Difference Schemes and Partial Differential Equations</em>, 2nd ed. SIAM.</p></li>
+<li><p>Taflove, A. &amp; Hagness, S.C. (2005). <em>Computational Electrodynamics</em>, 3rd ed. Artech House.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="related-topics">
+<h2>13. Related Topics<a class="headerlink" href="#related-topics" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="fourier.html"><span class="std std-doc">Fourier</span></a> — supplies the FFT kernels used by the spectral solvers</p></li>
+<li><p><a class="reference internal" href="ode.html"><span class="std std-doc">ODE</span></a> — method-of-lines semidiscretisations reuse the RK suite</p></li>
+<li><p><a class="reference internal" href="casimir.html"><span class="std std-doc">Casimir</span></a> — the mode-sum viewpoint of vacuum energy is FDTD-compatible</p></li>
+<li><p><a class="reference internal" href="quantum.html"><span class="std std-doc">Quantum</span></a> — the split-step Schrödinger solver is the main time-evolution engine</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="fourier.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Fourier Analysis</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="ode.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">ODE Solvers</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, HFThot Research Lab
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/ThotDjehuty/pysic-rs" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
+                </svg>
+            </a>
+              <a class="muted-link " href="https://optimiz-rs.readthedocs.io/" aria-label="Optimiz-rs">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
+            </a>
+              <a class="muted-link " href="https://hfthot-lab.eu/thotbook-amenti.html" aria-label="HFThot Lab">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path d="M12 2L1 21h22L12 2zm0 4.7l6.5 11.3H5.5L12 6.7z"/>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">PDE Solvers</a><ul>
+<li><a class="reference internal" href="#classification-of-linear-pdes">1. Classification of Linear PDEs</a></li>
+<li><a class="reference internal" href="#schrodinger-equation-split-step-fourier">2. Schrödinger Equation (Split-Step Fourier)</a><ul>
+<li><a class="reference internal" href="#time-dependent-schrodinger">2.1 Time-Dependent Schrödinger</a></li>
+<li><a class="reference internal" href="#split-step-method">2.2 Split-Step Method</a></li>
+<li><a class="reference internal" href="#imaginary-time-propagation-eigenstates">2.3 Imaginary-Time Propagation (Eigenstates)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dirac-equation-split-step">3. Dirac Equation (Split-Step)</a><ul>
+<li><a class="reference internal" href="#d-dirac-equation">3.1 1D Dirac Equation</a></li>
+<li><a class="reference internal" href="#split-step-decomposition">3.2 Split-Step Decomposition</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#heat-equation-cranknicolson">4. Heat Equation (Crank–Nicolson)</a><ul>
+<li><a class="reference internal" href="#d-discretisation">4.1 1D Discretisation</a></li>
+<li><a class="reference internal" href="#stability-analysis-von-neumann">4.2 Stability Analysis (Von Neumann)</a></li>
+<li><a class="reference internal" href="#d-adi-method">4.3 2D: ADI Method</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#wave-equation-fdtd">5. Wave Equation (FDTD)</a><ul>
+<li><a class="reference internal" href="#leapfrog-discretisation">5.1 Leapfrog Discretisation</a></li>
+<li><a class="reference internal" href="#cfl-condition">5.2 CFL Condition</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#poisson-equation">6. Poisson Equation</a><ul>
+<li><a class="reference internal" href="#fft-method-spectral">6.1 FFT Method (Spectral)</a></li>
+<li><a class="reference internal" href="#sor-successive-over-relaxation">6.2 SOR (Successive Over-Relaxation)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#maxwell-3d-yee-fdtd">7. Maxwell 3D (Yee FDTD)</a><ul>
+<li><a class="reference internal" href="#maxwells-curl-equations">7.1 Maxwell’s Curl Equations</a></li>
+<li><a class="reference internal" href="#yees-staggered-grid-yee-1966">7.2 Yee’s Staggered Grid (Yee 1966)</a></li>
+<li><a class="reference internal" href="#energy-conservation">7.3 Energy Conservation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#routines">8. Routines</a></li>
+<li><a class="reference internal" href="#usage-examples">9. Usage Examples</a><ul>
+<li><a class="reference internal" href="#wave-packet-propagation-in-a-harmonic-trap">Wave packet propagation in a harmonic trap</a></li>
+<li><a class="reference internal" href="#heat-diffusion-cfl-safe">Heat diffusion CFL-safe</a></li>
+<li><a class="reference internal" href="#maxwell-3d-safe-step">Maxwell 3D — safe step</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#stability-guidelines-von-neumann-analysis-proven">10. Stability Guidelines (von Neumann analysis, proven)</a></li>
+<li><a class="reference internal" href="#advantages-limitations">11. Advantages &amp; Limitations</a></li>
+<li><a class="reference internal" href="#references">12. References</a></li>
+<li><a class="reference internal" href="#related-topics">13. Related Topics</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=38b66d78"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=30646c52"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>

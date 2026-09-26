@@ -1,0 +1,803 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Casimir Effect" href="casimir.html"><link rel="prev" title="Topology" href="topology.html">
+        <link rel="prefetch" href="../_static/logo_pysicrs.png" as="image">
+
+    <link rel="shortcut icon" href="../_static/logo_pysicrs.png"><!-- Generated with Sphinx 7.4.7 and Furo 2025.12.19 -->
+        <title>Electromagnetism - Pysic-rs Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a833a90c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  --color-brand-primary: #1e3a5f;
+  --color-brand-content: #1e3a5f;
+  --color-api-pre-background: #eef2ff;
+  --color-background-primary: #fefefe;
+  --color-background-secondary: #eef2ff;
+  --color-foreground-primary: #2d2d3a;
+  --color-foreground-secondary: #6b6b7a;
+  --color-foreground-muted: #9a9ab0;
+  --color-border: #c7d2fe;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #60a5fa;
+  --color-api-pre-background: #0f172a;
+  --color-background-primary: #0f172a;
+  --color-background-secondary: #1e293b;
+  --color-foreground-primary: #e8e8f0;
+  --color-foreground-secondary: #a0a0b8;
+  --color-foreground-muted: #707088;
+  --color-border: #334155;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #60a5fa;
+  --color-api-pre-background: #0f172a;
+  --color-background-primary: #0f172a;
+  --color-background-secondary: #1e293b;
+  --color-foreground-primary: #e8e8f0;
+  --color-foreground-secondary: #a0a0b8;
+  --color-foreground-muted: #707088;
+  --color-border: #334155;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+<div class="announcement">
+  <aside class="announcement-content">
+     🚀 <strong>Pysic-rs v0.1.0</strong> — Mathematical physics engine in Rust + Python • textbook-validated • <a href="changelog.html">View Changelog</a> • <a href="https://optimiz-rs.readthedocs.io/">Optimiz-rs Docs</a> • <a href="https://hfthot-lab.eu/thotbook-amenti.html">HFThot Research Lab</a> 
+  </aside>
+</div>
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Pysic-rs Documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/logo_pysicrs.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Pysic-rs Documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../examples.html">Example Notebooks</a><input aria-label="Toggle navigation of Example Notebooks" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/00_quickstart_and_constants.html">00 · Fundamental Constants and API Scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/01_ode_solvers.html">01 · ODE Integration: rk4_solve, backward_euler, leapfrog, rk45_solve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/02_pde_heat.html">02 · Heat Equation: Crank-Nicolson 1D and ADI 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/03_pde_wave.html">03 · Wave Equation: FDTD 1D and 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/04_pde_poisson.html">04 · Poisson Equation: poisson_fft_2d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/05_pde_quantum.html">05 · Schrödinger &amp; Dirac 1D: Split-Step Evolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/06_fourier_analysis.html">06 · Fourier Analysis: fft/ifft, spectral_derivative, welch_psd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/07_quantum_states.html">07 · Quantum States: Pauli Matrices/Structures, Fock &amp; Coherent States</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/08_propagators.html">08 · Quantum Propagators: Feynman and Free</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/09_gauge_theory.html">09 · Gauge Theory: su(3) Structure Constants and Instanton Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/10_topology.html">10 · Quantum Topology: Berry Phase, Chern Number, Winding Number</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/11_general_relativity.html">11 · General Relativity: Schwarzschild Metric, Christoffel, ADM Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/12_classical_mechanics.html">12 · Classical Mechanics: Rotations, Euler Equations, Inertia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/13_electromagnetism_casimir.html">13 · Electromagnetism: Radiation, Compton, Casimir Effect</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Algorithms</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="special_functions.html">Special Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">Linear Algebra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calculus.html">Numerical Calculus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ode.html">ODE Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pde.html">PDE Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fourier.html">Fourier Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantum.html">Quantum Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="general_relativity.html">General Relativity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gauge.html">Gauge Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="classical.html">Classical Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topology.html">Topology</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Electromagnetism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="casimir.html">Casimir Effect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/special_functions.html">API Reference: Special Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/linalg.html">API Reference: Linear Algebra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/calculus.html">API Reference: Numerical Calculus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/ode.html">API Reference: ODE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/pde.html">API Reference: PDE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/fourier.html">API Reference: Fourier Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/quantum.html">API Reference: Quantum Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/general_relativity.html">API Reference: General Relativity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/gauge.html">API Reference: Gauge Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/classical.html">API Reference: Classical Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/topology.html">API Reference: Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/em.html">API Reference: Electromagnetism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/casimir.html">API Reference: Casimir Effect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory/mathematical_foundations.html">Mathematical Foundations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/ThotDjehuty/pysic-rs/blob/main/docs/source/algorithms/em.md?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/ThotDjehuty/pysic-rs/edit/main/docs/source/algorithms/em.md" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section class="tex2jax_ignore mathjax_ignore" id="electromagnetism">
+<h1>Electromagnetism<a class="headerlink" href="#electromagnetism" title="Link to this heading">¶</a></h1>
+<p>Pysic-rs implements the classical results of electrodynamics — Green’s functions and the
+canonical radiation-formula family — in natural SI units with explicit physical constants.</p>
+<blockquote>
+<div><p><strong>Python binding status:</strong> <code class="docutils literal notranslate"><span class="pre">green_fn_static</span></code>, <code class="docutils literal notranslate"><span class="pre">larmor_formula</span></code>, <code class="docutils literal notranslate"><span class="pre">dipole_radiation</span></code>,
+<code class="docutils literal notranslate"><span class="pre">field_strength_point_charge</span></code>, and <code class="docutils literal notranslate"><span class="pre">compton_wavelength_shift</span></code> are bound. The retarded/
+advanced Green’s functions and the angular-distribution helpers are Rust-only. See the
+<a class="reference internal" href="../api/em.html"><span class="std std-doc">API page</span></a>.</p>
+</div></blockquote>
+<hr class="docutils" />
+<section id="maxwells-equations">
+<h2>1. Maxwell’s Equations<a class="headerlink" href="#maxwells-equations" title="Link to this heading">¶</a></h2>
+<section id="differential-form">
+<h3>1.1 Differential Form<a class="headerlink" href="#differential-form" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\nabla\cdot\mathbf{E} = \frac{\rho}{\varepsilon_0}, \qquad
+\nabla\times\mathbf{E} = -\frac{\partial\mathbf{B}}{\partial t}
+\]</div>
+</div>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\nabla\cdot\mathbf{B} = 0, \qquad
+\nabla\times\mathbf{B} = \mu_0\mathbf{J} + \mu_0\varepsilon_0\frac{\partial\mathbf{E}}{\partial t}
+\]</div>
+</div>
+</section>
+<section id="covariant-form-4d">
+<h3>1.2 Covariant Form (4D)<a class="headerlink" href="#covariant-form-4d" title="Link to this heading">¶</a></h3>
+<p>The electromagnetic field tensor <span class="math notranslate nohighlight">\(F^{\mu\nu}\)</span> encodes both <span class="math notranslate nohighlight">\(\mathbf{E}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{B}\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\begin{split}
+F^{\mu\nu} = \begin{pmatrix}0&amp;-E_x/c&amp;-E_y/c&amp;-E_z/c\\
+E_x/c&amp;0&amp;-B_z&amp;B_y\\
+E_y/c&amp;B_z&amp;0&amp;-B_x\\
+E_z/c&amp;-B_y&amp;B_x&amp;0\end{pmatrix}
+\end{split}\]</div>
+</div>
+<p>Maxwell’s equations become</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\partial_\mu F^{\mu\nu} = \mu_0 J^\nu, \qquad
+\partial_{[\lambda}F_{\mu\nu]} = 0
+\]</div>
+</div>
+<p>The second equation is the <strong>Bianchi identity</strong> — it is automatic from <span class="math notranslate nohighlight">\(F_{\mu\nu} =
+\partial_\mu A_\nu - \partial_\nu A_\mu\)</span> (see <a class="reference internal" href="gauge.html"><span class="std std-doc">Gauge</span></a> for the non-abelian
+generalization).</p>
+</section>
+<section id="gauge-invariance">
+<h3>1.3 Gauge Invariance<a class="headerlink" href="#gauge-invariance" title="Link to this heading">¶</a></h3>
+<p>Under <span class="math notranslate nohighlight">\(A_\mu \to A_\mu + \partial_\mu\Lambda\)</span> (abelian gauge transformation):</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+F_{\mu\nu} \to F_{\mu\nu} + \partial_\mu\partial_\nu\Lambda - \partial_\nu\partial_\mu\Lambda = F_{\mu\nu}
+\]</div>
+</div>
+<p>since partial derivatives commute. The physics is invariant — only gauge-variant quantities
+(<span class="math notranslate nohighlight">\(A_\mu\)</span> itself) change.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="greens-functions">
+<h2>2. Green’s Functions<a class="headerlink" href="#greens-functions" title="Link to this heading">¶</a></h2>
+<section id="helmholtz-poisson-operator">
+<h3>2.1 Helmholtz/Poisson Operator<a class="headerlink" href="#helmholtz-poisson-operator" title="Link to this heading">¶</a></h3>
+<p>The Green function <span class="math notranslate nohighlight">\(G(\mathbf{r},\mathbf{r}')\)</span> solves</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\nabla^2 G = -\delta(\mathbf{r}-\mathbf{r}')
+\]</div>
+</div>
+<p>and builds solutions by convolution: <span class="math notranslate nohighlight">\(\phi(\mathbf{r}) = \int G(\mathbf{r},\mathbf{r}')
+\rho(\mathbf{r}')/\varepsilon_0\,d^3r'\)</span>.</p>
+</section>
+<section id="static-greens-function-3d-poisson">
+<h3>2.2 Static Green’s Function (3D Poisson)<a class="headerlink" href="#static-greens-function-3d-poisson" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\boxed{G_{\rm static}(\mathbf{r}) = \frac{1}{4\pi|\mathbf{r}-\mathbf{r}'|}
+}
+\]</div>
+</div>
+<p><em>Proof.</em> In spherical coordinates centered at <span class="math notranslate nohighlight">\(\mathbf{r}'\)</span>, <span class="math notranslate nohighlight">\(G = G(r)\)</span>. The equation
+becomes <span class="math notranslate nohighlight">\(\frac{1}{r^2}\partial_r(r^2\partial_r G) = -\delta^3(\mathbf{r})/r^2\)</span>, so
+<span class="math notranslate nohighlight">\(r^2\partial_r G = -1\)</span> for <span class="math notranslate nohighlight">\(r&gt;0\)</span>, giving <span class="math notranslate nohighlight">\(G = 1/(4\pi r) + C\)</span>. The constant <span class="math notranslate nohighlight">\(C\)</span> is fixed
+by requiring the total flux through a sphere to equal 1: <span class="math notranslate nohighlight">\(\oint\nabla G\cdot d\mathbf{S}
+= -1\)</span>. <span class="math notranslate nohighlight">\(\square\)</span></p>
+</section>
+<section id="retarded-greens-function-causal">
+<h3>2.3 Retarded Green’s Function (Causal)<a class="headerlink" href="#retarded-greens-function-causal" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\boxed{G_{\rm ret}(\mathbf{r},t;\,\mathbf{r}',t') = \frac{\delta\!\bigl(t'-t+|\mathbf{r}-\mathbf{r}'|/c\bigr)}{4\pi|\mathbf{r}-\mathbf{r}'|}
+}
+\]</div>
+</div>
+<p>This is the <strong>causal</strong> propagator: <span class="math notranslate nohighlight">\(G_{\rm ret}=0\)</span> for <span class="math notranslate nohighlight">\(t'&lt;t\)</span> (no effect before the
+cause). The delta function enforces that the signal propagates at speed <span class="math notranslate nohighlight">\(c\)</span>.</p>
+</section>
+<section id="advanced-greens-function">
+<h3>2.4 Advanced Green’s Function<a class="headerlink" href="#advanced-greens-function" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+G_{\rm adv}(\mathbf{r},t;\,\mathbf{r}',t') = \frac{\delta\!\bigl(t'-t-|\mathbf{r}-\mathbf{r}'|/c\bigr)}{4\pi|\mathbf{r}-\mathbf{r}'|}
+\]</div>
+</div>
+<p>The <strong>anti-causal</strong> propagator: vanishes for <span class="math notranslate nohighlight">\(t'&gt;t\)</span>. The combination <span class="math notranslate nohighlight">\(G_{\rm ret} -
+G_{\rm adv}\)</span> is proportional to the commutator of the electromagnetic field operators in
+quantum field theory.</p>
+</section>
+<section id="hertz-potential">
+<h3>2.5 Hertz Potential<a class="headerlink" href="#hertz-potential" title="Link to this heading">¶</a></h3>
+<p>The retarded potentials in the Lorenz gauge (<span class="math notranslate nohighlight">\(\nabla\cdot\mathbf{A}+\mu_0\varepsilon_0
+\partial\phi/\partial t = 0\)</span>) are</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\phi(\mathbf{r},t) = \frac{1}{4\pi\varepsilon_0}\int\frac{\rho(\mathbf{r}',t_{\rm ret})}{|\mathbf{r}-\mathbf{r}'|}\,d^3r'
+\]</div>
+</div>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\mathbf{A}(\mathbf{r},t) = \frac{\mu_0}{4\pi}\int\frac{\mathbf{J}(\mathbf{r}',t_{\rm ret})}{|\mathbf{r}-\mathbf{r}'|}\,d^3r'
+\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(t_{\rm ret} = t - |\mathbf{r}-\mathbf{r}'|/c\)</span> is the retarded time.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="radiation">
+<h2>3. Radiation<a class="headerlink" href="#radiation" title="Link to this heading">¶</a></h2>
+<section id="larmor-formula">
+<h3>3.1 Larmor Formula<a class="headerlink" href="#larmor-formula" title="Link to this heading">¶</a></h3>
+<p><strong>Theorem (Larmor).</strong> A point charge <span class="math notranslate nohighlight">\(q\)</span> with acceleration <span class="math notranslate nohighlight">\(a\)</span> radiates total power</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\boxed{P = \frac{2}{3}\frac{q^2 a^2}{4\pi\varepsilon_0 c^3}}
+\]</div>
+</div>
+<p><em>Proof.</em> The angular distribution of radiated power is obtained from the Poynting vector
+integrated over a sphere. In the far zone, the辐射 electric field is <span class="math notranslate nohighlight">\(\mathbf{E}_{\rm rad}
+= \frac{q}{4\pi\varepsilon_0 c^2}\frac{\hat{n}\times(\hat{n}\times\mathbf{a})}{r}\)</span>, and
+the Poynting flux <span class="math notranslate nohighlight">\(\mathbf{S} = \frac{1}{\mu_0}\mathbf{E}\times\mathbf{B}\)</span>. Integrating
+<span class="math notranslate nohighlight">\(\mathbf{S}\cdot\hat{n}\)</span> over the sphere and using the dipole pattern <span class="math notranslate nohighlight">\(\langle\sin^2\theta
+\rangle = 2/3\)</span> gives the Larmor formula. <span class="math notranslate nohighlight">\(\square\)</span></p>
+</section>
+<section id="dipole-radiation">
+<h3>3.2 Dipole Radiation<a class="headerlink" href="#dipole-radiation" title="Link to this heading">¶</a></h3>
+<p>For an oscillating electric dipole <span class="math notranslate nohighlight">\(\mathbf{p}(t) = p_0\cos(\omega t)\,\hat{z}\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\boxed{P = \frac{\mu_0\omega^4 p_0^2}{12\pi c^3}}
+\]</div>
+</div>
+<p>The <span class="math notranslate nohighlight">\(\omega^4\)</span> dependence is the <strong>Rayleigh scattering law</strong> — small particles scatter
+shorter wavelengths much more efficiently (explaining the blue sky).</p>
+<p><strong>Angular distribution:</strong></p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\frac{dP}{d\Omega} = \frac{\mu_0\omega^4 p_0^2}{32\pi^2 c^3}\sin^2\theta
+\]</div>
+</div>
+<p>The <span class="math notranslate nohighlight">\(\sin^2\theta\)</span> pattern is the classic <strong>dipole lobe</strong> — maximum radiation perpendicular
+to the dipole axis, zero along it.</p>
+</section>
+<section id="magnetic-dipole">
+<h3>3.3 Magnetic Dipole<a class="headerlink" href="#magnetic-dipole" title="Link to this heading">¶</a></h3>
+<p>For an oscillating magnetic dipole <span class="math notranslate nohighlight">\(m(t) = m_0\cos(\omega t)\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+P = \frac{\mu_0 m_0^2\omega^4}{12\pi c^3}
+\]</div>
+</div>
+<p>Same <span class="math notranslate nohighlight">\(\omega^4\)</span> scaling but with magnetic moment replacing electric dipole moment.</p>
+</section>
+<section id="thomson-scattering">
+<h3>3.4 Thomson Scattering<a class="headerlink" href="#thomson-scattering" title="Link to this heading">¶</a></h3>
+<p>A free electron oscillating in an incident wave radiates with cross-section</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\sigma_T = \frac{8\pi}{3}r_e^2, \qquad r_e = \frac{e^2}{4\pi\varepsilon_0 m_e c^2} \approx 2.82\times 10^{-15}\,\text{m}
+\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(r_e\)</span> is the classical electron radius. This is frequency-independent (Rayleigh
+regime for <span class="math notranslate nohighlight">\(\lambda \gg r_e\)</span>).</p>
+</section>
+<section id="compton-scattering">
+<h3>3.5 Compton Scattering<a class="headerlink" href="#compton-scattering" title="Link to this heading">¶</a></h3>
+<p>The wavelength shift in Compton scattering (photon off free electron) is</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\Delta\lambda = \lambda' - \lambda = \frac{h}{m_e c}(1-\cos\theta) = \lambda_C(1-\cos\theta)
+\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\lambda_C = h/(m_e c) \approx 2.43\times 10^{-12}\)</span> m is the Compton wavelength.
+This is the <code class="docutils literal notranslate"><span class="pre">compton_wavelength_shift</span></code> function.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="routines">
+<h2>4. Routines<a class="headerlink" href="#routines" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Routine</p></th>
+<th class="head"><p>Formula</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">green_fn_static(r)</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(1/(4\pi r)\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">green_fn_retarded(r,</span> <span class="pre">t)</span></code></p></td>
+<td><p>causal <span class="math notranslate nohighlight">\(\delta\)</span>-propagator</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">green_fn_advanced(r,</span> <span class="pre">t)</span></code></p></td>
+<td><p>anti-causal</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">larmor_formula(q,</span> <span class="pre">a,</span> <span class="pre">eps0,</span> <span class="pre">c)</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{2}{3}\frac{q^2a^2}{4\pi\varepsilon_0c^3}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dipole_radiation(p0,</span> <span class="pre">omega,</span> <span class="pre">mu0,</span> <span class="pre">c)</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{\mu_0\omega^4p_0^2}{12\pi c^3}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">radiation_power_oscillating(p0,</span> <span class="pre">omega,</span> <span class="pre">...)</span></code></p></td>
+<td><p>dipole with cosine time dependence</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dipole_angular_distribution(theta,</span> <span class="pre">p0,</span> <span class="pre">...)</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(dP/d\Omega\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">magnetic_dipole_radiation(m,</span> <span class="pre">omega,</span> <span class="pre">...)</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{\mu_0 m^2\omega^4}{12\pi c^3}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">field_strength_point_charge(...)</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathbf{E}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{B}\)</span> of a point charge</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">compton_wavelength_shift(...)</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\Delta\lambda = \lambda_C(1-\cos\theta)\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="usage-examples">
+<h2>5. Usage Examples<a class="headerlink" href="#usage-examples" title="Link to this heading">¶</a></h2>
+<section id="larmor-radiation-of-an-accelerating-electron">
+<h3>Larmor radiation of an accelerating electron<a class="headerlink" href="#larmor-radiation-of-an-accelerating-electron" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pysicrs</span><span class="w"> </span><span class="kn">import</span> <span class="n">larmor_formula</span>
+
+<span class="n">e</span> <span class="o">=</span> <span class="mf">1.602176634e-19</span>     <span class="c1"># C</span>
+<span class="n">eps0</span> <span class="o">=</span> <span class="mf">8.8541878128e-12</span> <span class="c1"># F/m</span>
+<span class="n">c</span> <span class="o">=</span> <span class="mf">2.99792458e8</span>        <span class="c1"># m/s</span>
+
+<span class="n">g_accel</span> <span class="o">=</span> <span class="mf">9.81</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">g_accel</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;P = </span><span class="si">{</span><span class="n">larmor_formula</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">eps0</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2"> W&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="dipole-radiation-power-scales-as-4">
+<h3>Dipole radiation power scales as ω⁴<a class="headerlink" href="#dipole-radiation-power-scales-as-4" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pysicrs</span><span class="w"> </span><span class="kn">import</span> <span class="n">dipole_radiation</span>
+
+<span class="n">p0</span><span class="p">,</span> <span class="n">mu0</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mf">1e-29</span><span class="p">,</span> <span class="mf">1.25663706212e-6</span><span class="p">,</span> <span class="mf">2.99792458e8</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">1e8</span><span class="p">,</span> <span class="mf">1e9</span><span class="p">):</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="mf">3.141592653589793</span> <span class="o">*</span> <span class="n">f</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;f=</span><span class="si">{</span><span class="n">f</span><span class="si">:</span><span class="s2">.0e</span><span class="si">}</span><span class="s2"> Hz: P = </span><span class="si">{</span><span class="n">dipole_radiation</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="n">mu0</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2"> W&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="angular-distribution-has-a-sin2-lobe">
+<h3>Angular distribution has a sin²θ lobe<a class="headerlink" href="#angular-distribution-has-a-sin2-lobe" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pysicrs</span><span class="w"> </span><span class="kn">import</span> <span class="n">dipole_angular_distribution</span>
+
+<span class="k">for</span> <span class="n">th</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.7854</span><span class="p">,</span> <span class="mf">1.5708</span><span class="p">):</span>  <span class="c1"># 0°, 45°, 90°</span>
+    <span class="n">dP</span> <span class="o">=</span> <span class="n">dipole_angular_distribution</span><span class="p">(</span><span class="n">th</span><span class="p">,</span> <span class="mf">1e-29</span><span class="p">,</span> <span class="mf">2e9</span><span class="p">,</span> <span class="n">mu0</span><span class="o">=</span><span class="mf">1.25663706212e-6</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">2.99792458e8</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;θ=</span><span class="si">{</span><span class="n">th</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">: dP/dΩ = </span><span class="si">{</span><span class="n">dP</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># peaks at θ=90°, vanishes at θ=0° (along the dipole axis)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="advantages-limitations">
+<h2>6. Advantages &amp; Limitations<a class="headerlink" href="#advantages-limitations" title="Link to this heading">¶</a></h2>
+<p>✅ Exact constants in SI units — no ambiguity between unit systems</p>
+<p>✅ Retarded/advanced propagation naturally causal</p>
+<p>✅ Cover the textbook radiation <span class="math notranslate nohighlight">\(\omega^4\)</span> laws used in antenna and scattering theory</p>
+<p>❌ Point charges only (finite-size and multipole corrections modeled by extra terms)</p>
+<p>❌ No numerical solving of full wave/curl equations — that’s the PDE Maxwell FDTD</p>
+<p>❌ No dielectric/magnetization response functions; those live in CASIMIR’s Lifshitz machinery</p>
+</section>
+<hr class="docutils" />
+<section id="references">
+<h2>7. References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Jackson, J.D. (1999). <em>Classical Electrodynamics</em>, 3rd ed. Wiley.</p></li>
+<li><p>Griffiths, D.J. (2017). <em>Introduction to Electrodynamics</em>, 4th ed. Cambridge.</p></li>
+<li><p>Landau, L.D. &amp; Lifshitz, E.M. (1975). <em>The Classical Theory of Fields</em>, 4th ed.</p></li>
+<li><p>Zangwill, A. (2012). <em>Modern Electrodynamics</em>. Cambridge.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="related-topics">
+<h2>8. Related Topics<a class="headerlink" href="#related-topics" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="pde.html"><span class="std std-doc">PDE</span></a> — Maxwell 3D FDTD complements the analytic formulas here</p></li>
+<li><p><a class="reference internal" href="casimir.html"><span class="std std-doc">Casimir</span></a> — vacuum energy is a mode sum of EM modes between plates</p></li>
+<li><p><a class="reference internal" href="linalg.html"><span class="std std-doc">Linear Algebra</span></a> — field tensors <span class="math notranslate nohighlight">\(F_{\mu\nu}\)</span> interact with raise/lower</p></li>
+<li><p><a class="reference internal" href="gauge.html"><span class="std std-doc">Gauge</span></a> — electrodynamics is the abelian U(1) limit of Yang–Mills</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="casimir.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Casimir Effect</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="topology.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Topology</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, HFThot Research Lab
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/ThotDjehuty/pysic-rs" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
+                </svg>
+            </a>
+              <a class="muted-link " href="https://optimiz-rs.readthedocs.io/" aria-label="Optimiz-rs">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
+            </a>
+              <a class="muted-link " href="https://hfthot-lab.eu/thotbook-amenti.html" aria-label="HFThot Lab">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path d="M12 2L1 21h22L12 2zm0 4.7l6.5 11.3H5.5L12 6.7z"/>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Electromagnetism</a><ul>
+<li><a class="reference internal" href="#maxwells-equations">1. Maxwell’s Equations</a><ul>
+<li><a class="reference internal" href="#differential-form">1.1 Differential Form</a></li>
+<li><a class="reference internal" href="#covariant-form-4d">1.2 Covariant Form (4D)</a></li>
+<li><a class="reference internal" href="#gauge-invariance">1.3 Gauge Invariance</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#greens-functions">2. Green’s Functions</a><ul>
+<li><a class="reference internal" href="#helmholtz-poisson-operator">2.1 Helmholtz/Poisson Operator</a></li>
+<li><a class="reference internal" href="#static-greens-function-3d-poisson">2.2 Static Green’s Function (3D Poisson)</a></li>
+<li><a class="reference internal" href="#retarded-greens-function-causal">2.3 Retarded Green’s Function (Causal)</a></li>
+<li><a class="reference internal" href="#advanced-greens-function">2.4 Advanced Green’s Function</a></li>
+<li><a class="reference internal" href="#hertz-potential">2.5 Hertz Potential</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#radiation">3. Radiation</a><ul>
+<li><a class="reference internal" href="#larmor-formula">3.1 Larmor Formula</a></li>
+<li><a class="reference internal" href="#dipole-radiation">3.2 Dipole Radiation</a></li>
+<li><a class="reference internal" href="#magnetic-dipole">3.3 Magnetic Dipole</a></li>
+<li><a class="reference internal" href="#thomson-scattering">3.4 Thomson Scattering</a></li>
+<li><a class="reference internal" href="#compton-scattering">3.5 Compton Scattering</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#routines">4. Routines</a></li>
+<li><a class="reference internal" href="#usage-examples">5. Usage Examples</a><ul>
+<li><a class="reference internal" href="#larmor-radiation-of-an-accelerating-electron">Larmor radiation of an accelerating electron</a></li>
+<li><a class="reference internal" href="#dipole-radiation-power-scales-as-4">Dipole radiation power scales as ω⁴</a></li>
+<li><a class="reference internal" href="#angular-distribution-has-a-sin2-lobe">Angular distribution has a sin²θ lobe</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#advantages-limitations">6. Advantages &amp; Limitations</a></li>
+<li><a class="reference internal" href="#references">7. References</a></li>
+<li><a class="reference internal" href="#related-topics">8. Related Topics</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=38b66d78"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=30646c52"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>
