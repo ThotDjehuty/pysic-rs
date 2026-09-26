@@ -98,6 +98,7 @@ statistics, the two libraries interoperate.
    :caption: Theory
 
    theory/mathematical_foundations
+   theory/quantum_to_gravity
 
 .. toctree::
    :maxdepth: 1

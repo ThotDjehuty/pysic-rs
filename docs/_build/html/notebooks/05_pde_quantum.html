@@ -295,6 +295,7 @@
 <p class="caption" role="heading"><span class="caption-text">Theory</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../theory/mathematical_foundations.html">Mathematical Foundations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory/quantum_to_gravity.html">From Quantisation to Quantum Gravity</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Advanced</span></p>
 <ul>
@@ -486,26 +487,27 @@ Initial norm: 1.2533141373155001  Final norm: 1.2533141373155083  Relative drift
 <p>schrodinger_split_step_1d is unitary and conforming: reliable for 1D time evolution.</p>
 </section>
 </section>
-<section id="2.-Schrödinger-—-Potential-Well-and-Confinement">
-<h2>2. Schrödinger — Potential Well and Confinement<a class="headerlink" href="#2.-Schrödinger-—-Potential-Well-and-Confinement" title="Link to this heading">¶</a></h2>
+<section id="2.-Schrödinger-—-Wavepacket-Meeting-a-Potential-Well">
+<h2>2. Schrödinger — Wavepacket Meeting a Potential Well<a class="headerlink" href="#2.-Schrödinger-—-Wavepacket-Meeting-a-Potential-Well" title="Link to this heading">¶</a></h2>
 <section id="id1">
 <h3>Theorem / Model Used<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
-<p>E = -|V₀| for deep well (bound state), norm conserved.</p>
+<p>Unitary evolution under <span class="math notranslate nohighlight">\(H = -\frac{\hbar^2}{2m}\partial_x^2 + V(x)\)</span> with an attractive square well. Note what this <em>cannot</em> show: a wavepacket is not captured into a bound state by unitary evolution. Binding requires the system to shed energy, and the Schrödinger propagator conserves it. A packet released outside the well spreads, and is pulled toward the well without ever settling into it.</p>
 </section>
 <section id="id2">
 <h3>Pivot Equation<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
-\[\langle H \rangle \approx E_0 + \langle K \rangle\]</div>
+\[\mathcal{N} = \int|\psi|^2 dx = \text{const}, \qquad
+\frac{d\langle p\rangle}{dt} = -\langle V'(x)\rangle\]</div>
 </div>
 </section>
 <section id="id3">
 <h3>Demonstration<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
-<p>Mean energy must remain bounded; state stays localized in the well.</p>
+<p>The split-step propagator is a product of unitary factors, so the norm is an exact invariant. The initial packet is real-valued, hence <span class="math notranslate nohighlight">\(\langle p\rangle=0\)</span> at <span class="math notranslate nohighlight">\(t=0\)</span> — but Ehrenfest’s theorem says that does not persist: the well edge contributes <span class="math notranslate nohighlight">\(-\langle V'\rangle \neq 0\)</span>, so the centre of mass accelerates toward the well.</p>
 </section>
 <section id="id4">
 <h3>What This Cell Verifies<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
-<p>Verify wavepacket under attractive potential remains confined and conserves norm.</p>
+<p>That the norm is conserved to round-off, and tracks both the fraction of probability that reaches the well and the resulting shift in the centre of mass.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
@@ -569,25 +571,33 @@ Initial norm: 1.2533141373155001  Final norm: 1.2533141373155083  Relative drift
 <span class="n">L</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mi">512</span>
 <span class="n">dx</span> <span class="o">=</span> <span class="n">L</span><span class="o">/</span><span class="n">N</span><span class="p">;</span> <span class="n">dt</span> <span class="o">=</span> <span class="mf">0.005</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">L</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">L</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">psi0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="mf">3.0</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">0.3</span><span class="p">)</span>
+
+<span class="c1"># Real-valued Gaussian released at x = -3, outside the well, so &lt;p&gt; = 0 at t=0.</span>
+<span class="c1"># It does not stay zero: Ehrenfest gives d&lt;p&gt;/dt = -&lt;V&#39;&gt;, and the well pulls.</span>
+<span class="n">psi0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">x</span> <span class="o">+</span> <span class="mf">3.0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">0.3</span><span class="p">)</span>
 <span class="n">norm0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">dx</span>
 <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">2.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
 <span class="n">re</span><span class="p">,</span> <span class="n">im</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">schrodinger_split_step_1d</span><span class="p">(</span><span class="n">psi0</span><span class="o">.</span><span class="n">real</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">psi0</span><span class="o">.</span><span class="n">imag</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">V</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
 <span class="n">psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">re</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
 <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">dx</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Norm:&quot;</span><span class="p">,</span> <span class="n">norm0</span><span class="p">,</span> <span class="s2">&quot;-&gt;&quot;</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="s2">&quot; Drift:&quot;</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">norm</span><span class="o">-</span><span class="n">norm0</span><span class="p">)</span><span class="o">/</span><span class="n">norm0</span><span class="p">)</span>
-<span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
-<span class="n">inside</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">2.0</span><span class="p">))</span> <span class="o">*</span> <span class="n">dx</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Probability in |x|&lt;2:&quot;</span><span class="p">,</span> <span class="n">inside</span><span class="p">,</span> <span class="s2">&quot; (bound state expected ≈ 1)&quot;</span><span class="p">)</span>
-<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">norm</span><span class="o">-</span><span class="n">norm0</span><span class="p">)</span><span class="o">/</span><span class="n">norm0</span> <span class="o">&lt;</span> <span class="mf">1e-4</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;norm </span><span class="si">{</span><span class="n">norm0</span><span class="si">:</span><span class="s2">.12f</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">norm</span><span class="si">:</span><span class="s2">.12f</span><span class="si">}</span><span class="s2">   relative drift </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">norm</span><span class="o">-</span><span class="n">norm0</span><span class="p">)</span><span class="o">/</span><span class="n">norm0</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">centre</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">/</span> <span class="n">norm</span>
+<span class="n">inside0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">2.0</span><span class="p">))</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">/</span> <span class="n">norm0</span>
+<span class="n">inside</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">2.0</span><span class="p">))</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">/</span> <span class="n">norm</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;fraction inside |x|&lt;2 : </span><span class="si">{</span><span class="n">inside0</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> at t=0  -&gt;  </span><span class="si">{</span><span class="n">inside</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> at t=2&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;centre of mass        : </span><span class="si">{</span><span class="o">-</span><span class="mf">3.0</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">centre</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">   (pulled by the well)&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">norm</span><span class="o">-</span><span class="n">norm0</span><span class="p">)</span><span class="o">/</span><span class="n">norm0</span> <span class="o">&lt;</span> <span class="mf">1e-10</span><span class="p">,</span> <span class="s2">&quot;split-step must conserve the norm&quot;</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$|\psi(t)|^2$ final&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;well V=-2&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Density&quot;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Wavepacket Captured by Well — Norm Conservation&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">norm0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$|\psi(0)|^2$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">norm</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$|\psi(t)|^2$ final&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;well $V=-2$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;normalised density&quot;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Packet spreads from x=-3 and is drawn toward the well&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
+<br/></pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -595,8 +605,9 @@ Initial norm: 1.2533141373155001  Final norm: 1.2533141373155083  Relative drift
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Norm: 0.6864684246478268 -&gt; 0.6864684246478538  Drift: 3.946203616685107e-14
-Probability in |x|&lt;2: 0.20250297999985234  (bound state expected ≈ 1)
+norm 0.686468424648 -&gt; 0.686468424648   relative drift 3.95e-14
+fraction inside |x|&lt;2 : 0.0002 at t=0  -&gt;  0.2950 at t=2
+centre of mass        : -3.0000 -&gt; -2.0242   (pulled by the well)
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -609,37 +620,37 @@ Probability in |x|&lt;2: 0.20250297999985234  (bound state expected ≈ 1)
 </section>
 <section id="id5">
 <h3>Expected Result<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
-<p>Packet localized in well (probability ≈ 1), norm conserved to 1e-4.</p>
+<p>Norm conserved to <span class="math notranslate nohighlight">\(\sim10^{-14}\)</span>; the fraction inside the well rising from essentially zero to roughly <span class="math notranslate nohighlight">\(0.3\)</span>; and the centre of mass moving from <span class="math notranslate nohighlight">\(-3\)</span> toward the well edge.</p>
 </section>
 <section id="id6">
 <h3>Graph Reading<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
-<p>Packet injected outside well oscillates then remains concentrated in V=-2.</p>
+<p>The grey curve is the initial packet, sharply localised at <span class="math notranslate nohighlight">\(x=-3\)</span>. The final density is far broader, and its weight has shifted to the right: spreading plus the attractive pull of the shaded well.</p>
 </section>
 <section id="id7">
 <h3>Conclusion<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
-<p>Split-step correctly captures confinement effect; V must be a list of floats.</p>
+<p>The propagator conserves the norm exactly, and the centre-of-mass shift is the Ehrenfest force, not capture — the packet passes through and spreads rather than binding. The earlier revision of this cell asserted “bound state expected ≈ 1”, which no unitary evolution can produce from a packet released outside the well, and which could not have held in any case since the total norm was 0.686.</p>
 </section>
 </section>
 <section id="3.-1D-Eigenvalues-—-schrodinger_eigen_1d">
-<h2>3. 1D Eigenvalues — schrodinger_eigen_1d<a class="headerlink" href="#3.-1D-Eigenvalues-—-schrodinger_eigen_1d" title="Link to this heading">¶</a></h2>
+<h2>3. 1D Eigenvalues — <code class="docutils literal notranslate"><span class="pre">schrodinger_eigen_1d</span></code><a class="headerlink" href="#3.-1D-Eigenvalues-—-schrodinger_eigen_1d" title="Link to this heading">¶</a></h2>
 <section id="id8">
 <h3>Theorem / Model Used<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
-<p>Infinite well eigenvalues on [0,L]: E_n = (n+1)²π²ħ²/(2mL²).</p>
+<p>Particle in an infinite well. The finite-difference Hamiltonian uses Dirichlet boundaries, so <code class="docutils literal notranslate"><span class="pre">N</span></code> interior nodes at spacing <code class="docutils literal notranslate"><span class="pre">dx</span></code> model a well of width <code class="docutils literal notranslate"><span class="pre">L</span> <span class="pre">=</span> <span class="pre">(N+1)·dx</span></code> — one node beyond each end is where ψ is pinned to zero.</p>
 </section>
 <section id="id9">
 <h3>Pivot Equation<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
-\[E_n = \frac{(n+1)^2 \pi^2 \hbar^2}{2 m L^2}\]</div>
+\[E_n = \frac{n^2 \pi^2 \hbar^2}{2 m L^2}, \qquad L = (N+1)\,\Delta x\]</div>
 </div>
 </section>
 <section id="id10">
 <h3>Demonstration<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
-<p>Standard tridiagonal diagonalization (finite-difference Hamiltonian).</p>
+<p>Diagonalization of the symmetric tridiagonal Hamiltonian by the implicit QL algorithm with Wilkinson shifts. For a flat potential this has the exact discrete spectrum <span class="math notranslate nohighlight">\(E_k = \frac{2\hbar^2}{m\Delta x^2}\sin^2\!\big(\frac{k\pi}{2(N+1)}\big)\)</span>, which converges to the continuum result as <span class="math notranslate nohighlight">\(\Delta x \to 0\)</span>.</p>
 </section>
 <section id="id11">
 <h3>What This Cell Verifies<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h3>
-<p>CONSTAT: Returned energies have inconsistent offset/scale vs expected E_n — binding returns shifted values.</p>
+<p>That the four lowest levels match <span class="math notranslate nohighlight">\(n^2\pi^2\hbar^2/2mL^2\)</span>, and that the <span class="math notranslate nohighlight">\(n\)</span>-th eigenvector carries exactly <span class="math notranslate nohighlight">\(n-1\)</span> interior nodes.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
@@ -700,24 +711,33 @@ Probability in |x|&lt;2: 0.20250297999985234  (bound state expected ≈ 1)
 
 <span class="n">USE_REAL</span> <span class="o">=</span> <span class="kc">False</span>
 
-<span class="n">Lw</span><span class="p">,</span> <span class="n">Nw</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mi">400</span>
-<span class="n">dxw</span> <span class="o">=</span> <span class="n">Lw</span><span class="o">/</span><span class="n">Nw</span>
-<span class="n">Vw</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="n">Nw</span>
+<span class="n">Nw</span><span class="p">,</span> <span class="n">dxw</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span> <span class="mf">0.025</span>
+<span class="n">Lw</span> <span class="o">=</span> <span class="p">(</span><span class="n">Nw</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">dxw</span>          <span class="c1"># Dirichlet walls sit one node beyond each end</span>
+<span class="n">Vw</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">Nw</span>
 <span class="n">energies</span><span class="p">,</span> <span class="n">vecs</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">schrodinger_eigen_1d</span><span class="p">(</span><span class="n">Vw</span><span class="p">,</span> <span class="n">dxw</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-<span class="n">expected</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">Lw</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>   <span class="c1"># ħ=m=1, infinite well [0,L]</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Binding energies:&quot;</span><span class="p">,</span> <span class="n">energies</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Expected energies:&quot;</span><span class="p">,</span> <span class="n">expected</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CONSTAT: Systematic offset (energies = N²·factor) — unusable for spectra without correction.&quot;</span><span class="p">)</span>
+<span class="n">expected</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">Lw</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>   <span class="c1"># hbar = m = 1</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Well width L = (N+1)*dx = </span><span class="si">{</span><span class="n">Lw</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;n&#39;</span><span class="si">:</span><span class="s2">&gt;2</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;E_n (pysic-rs)&#39;</span><span class="si">:</span><span class="s2">&gt;16</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;E_n exact&#39;</span><span class="si">:</span><span class="s2">&gt;14</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;rel. err&#39;</span><span class="si">:</span><span class="s2">&gt;11</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;nodes&#39;</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">vecs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">vecs</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">vecs</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-8</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()]</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sig</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">sig</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">rel</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">energies</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">-</span> <span class="n">expected</span><span class="p">[</span><span class="n">n</span><span class="p">])</span> <span class="o">/</span> <span class="n">expected</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">energies</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="si">:</span><span class="s2">16.8f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">expected</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="si">:</span><span class="s2">14.8f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">rel</span><span class="si">:</span><span class="s2">11.2e</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">nodes</span><span class="si">:</span><span class="s2">7d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Lw</span><span class="p">,</span> <span class="n">Nw</span><span class="p">)</span>
-<span class="n">vecs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">vecs</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">vecs</span><span class="p">))):</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">vecs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">vecs</span><span class="p">[</span><span class="n">k</span><span class="p">])</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="n">k</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;n=</span><span class="si">{</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">vecs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">vecs</span><span class="p">[</span><span class="n">k</span><span class="p">])</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">v</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">v</span><span class="p">))]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="o">-</span><span class="n">v</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">v</span> <span class="o">+</span> <span class="n">k</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;n=</span><span class="si">{</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([]);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Eigenvectors (offset)&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;schrodinger_eigen_1d — Eigenvectors at Inconsistent Energies&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;schrodinger_eigen_1d — infinite-well modes&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
+<br/></pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -725,9 +745,12 @@ Probability in |x|&lt;2: 0.20250297999985234  (bound state expected ≈ 1)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Binding energies: [810.3044565860537, 1003.9237360214661, 1302.053040311411, 1318.6759861458431]
-Expected energies: [0.04934802 0.19739209 0.4441322  0.78956835]
-CONSTAT: Systematic offset (energies = N²·factor) — unusable for spectra without correction.
+Well width L = (N+1)*dx = 10.025
+ n   E_n (pysic-rs)      E_n exact    rel. err   nodes
+ 1       0.04910195     0.04910220    5.11e-06       0
+ 2       0.19640480     0.19640882    2.05e-05       1
+ 3       0.44189949     0.44191984    4.60e-05       2
+ 4       0.78557097     0.78563527    8.18e-05       3
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -740,37 +763,41 @@ CONSTAT: Systematic offset (energies = N²·factor) — unusable for spectra wit
 </section>
 <section id="id12">
 <h3>Expected Result<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h3>
-<p>Binding ≈ [1301.9, 1351.1, 1907.1, 2203.6] vs expected [0.0491, 0.1964, 0.4419, 0.7856].</p>
+<p>Relative errors of order <span class="math notranslate nohighlight">\(10^{-5}\)</span> — the <span class="math notranslate nohighlight">\(O(\Delta x^2)\)</span> discretization error of the three-point Laplacian — and node counts <span class="math notranslate nohighlight">\(0,1,2,3\)</span>.</p>
 </section>
 <section id="id13">
 <h3>Graph Reading<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h3>
-<p>Wavefunctions oscillate like well modes but returned energy scale is wrong.</p>
+<p>Each mode vanishes at both walls and gains one interior node per level, the signature of the infinite well.</p>
 </section>
 <section id="id14">
 <h3>Conclusion<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h3>
-<p>CONSTAT: schrodinger_eigen_1d has eigenvalue normalization/offset bug; documented for fix.</p>
+<p>The eigensolver reproduces the well spectrum. Earlier revisions of this notebook recorded it as returning values ~<span class="math notranslate nohighlight">\(10^4\)</span> too large; that was a broken Jacobi sweep in the Rust core, since replaced by the implicit QL algorithm and covered by closed-form tests.</p>
 </section>
 </section>
 <section id="4.-Dirac-1D-—-Split-Step">
 <h2>4. Dirac 1D — Split-Step<a class="headerlink" href="#4.-Dirac-1D-—-Split-Step" title="Link to this heading">¶</a></h2>
 <section id="id15">
 <h3>Theorem / Model Used<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h3>
-<p>1D Dirac equation: iħ∂_t ψ = (c α p + β m c² + V) ψ, 2-component spinor.</p>
+<p>1D Dirac equation <span class="math notranslate nohighlight">\(i\hbar\partial_t\psi = (c\,\alpha\,p + \beta mc^2 + V)\psi\)</span> for a 2-component spinor. The propagator is a Strang product <span class="math notranslate nohighlight">\(V/2 \cdot M/2 \cdot K \cdot M/2 \cdot V/2\)</span>, every factor of which is unitary.</p>
 </section>
 <section id="id16">
 <h3>Pivot Equation<a class="headerlink" href="#id16" title="Link to this heading">¶</a></h3>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
-\[C_{\text{norm}} = \int |\psi_1|^2 + |\psi_2|^2 dx \quad (\text{must stay } \approx 1)\]</div>
+\[\mathcal{N} = \int \big(|\psi_L|^2 + |\psi_R|^2\big)\,dx = \text{const}\]</div>
 </div>
 </section>
 <section id="id17">
 <h3>Demonstration<a class="headerlink" href="#id17" title="Link to this heading">¶</a></h3>
-<p>Dirac evolution is unitary ⇒ spinor norm conserved.</p>
+<p>A product of unitary operators is unitary, so the norm is an exact invariant of the scheme, independent of <span class="math notranslate nohighlight">\(\Delta t\)</span>. Either it is conserved or the implementation is wrong — there is no middle ground.</p>
+</section>
+<section id="Layout-note">
+<h3>Layout note<a class="headerlink" href="#Layout-note" title="Link to this heading">¶</a></h3>
+<p>The spinor is passed <strong>interleaved</strong>: element <span class="math notranslate nohighlight">\(2i\)</span> is <span class="math notranslate nohighlight">\(\psi_L(x_i)\)</span> and <span class="math notranslate nohighlight">\(2i+1\)</span> is <span class="math notranslate nohighlight">\(\psi_R(x_i)\)</span>, so the array has length <span class="math notranslate nohighlight">\(2N\)</span>. Packing it as two concatenated blocks instead silently scrambles the two components.</p>
 </section>
 <section id="id18">
 <h3>What This Cell Verifies<a class="headerlink" href="#id18" title="Link to this heading">¶</a></h3>
-<p>CONSTAT: dirac_split_step_1d binding increases norm by factor ≈ 4 per step (non-unitary).</p>
+<p>That the norm holds to round-off over several hundred steps.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
@@ -832,33 +859,50 @@ CONSTAT: Systematic offset (energies = N²·factor) — unusable for spectra wit
 <span class="n">USE_REAL</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="n">L</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mi">256</span>
-<span class="n">dx</span> <span class="o">=</span> <span class="n">L</span><span class="o">/</span><span class="n">N</span><span class="p">;</span> <span class="n">dt</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">dx</span> <span class="o">=</span> <span class="n">L</span> <span class="o">/</span> <span class="n">N</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.01</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">L</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">L</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="mf">0.8</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">complex</span><span class="p">)</span>
-<span class="n">comps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">psi</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">psi</span><span class="o">.</span><span class="n">imag</span><span class="p">])</span>
-<span class="n">norm0</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>   <span class="c1"># 2 components</span>
-<span class="n">re0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">psi</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)])</span>
-<span class="n">im0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="n">psi</span><span class="o">.</span><span class="n">imag</span><span class="p">])</span>
-<span class="n">V</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="n">N</span>
-<span class="n">norms</span> <span class="o">=</span> <span class="p">[</span><span class="n">norm0</span><span class="p">]</span>
-<span class="k">for</span> <span class="n">n_steps</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
-    <span class="n">re</span><span class="p">,</span> <span class="n">im</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">dirac_split_step_1d</span><span class="p">(</span><span class="n">re0</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">im0</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">V</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
-    <span class="c1"># Layout: 2*N interleaved elements (L,R)</span>
-    <span class="n">psi_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">re</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;len(psi) binding =&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">psi_all</span><span class="p">),</span> <span class="s2">&quot; (expected 2N =&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">N</span><span class="p">,</span> <span class="s2">&quot;)&quot;</span><span class="p">)</span>
-    <span class="n">n1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_all</span><span class="p">[::</span><span class="mi">2</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_all</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
-    <span class="n">norms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n1</span><span class="p">)</span>
-<span class="n">norms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">norms</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Norms after 0,1,2,3 steps:&quot;</span><span class="p">,</span> <span class="n">norms</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ratio n(k+1)/n(k) ≈&quot;</span><span class="p">,</span> <span class="n">norms</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">norms</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CONSTAT: Norm multiplied by ~4 per step → non-unitary evolution.&quot;</span><span class="p">)</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">norms</span><span class="p">,</span> <span class="s2">&quot;o-&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Step&quot;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$L^2$ norm (spinor)&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;dirac_split_step_1d — Non-physical Norm Growth&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
+<span class="c1"># Interleaved 2-spinor: index 2i is psi_L(x_i), index 2i+1 is psi_R(x_i).</span>
+<span class="n">spinor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">N</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+<span class="n">spinor</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="mf">0.8</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>      <span class="c1"># all amplitude in the upper component</span>
+<span class="n">norm0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">spinor</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+
+<span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">]</span>
+<span class="n">norms</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">n_steps</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">n_steps</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">psi_all</span> <span class="o">=</span> <span class="n">spinor</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">re</span><span class="p">,</span> <span class="n">im</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">dirac_split_step_1d</span><span class="p">(</span>
+            <span class="n">spinor</span><span class="o">.</span><span class="n">real</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">spinor</span><span class="o">.</span><span class="n">imag</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="n">N</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
+        <span class="n">psi_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">re</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+    <span class="n">norms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">psi_all</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span><span class="p">)</span>
+<span class="n">norms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">norms</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;len(psi) = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">psi_all</span><span class="p">)</span><span class="si">}</span><span class="s2">   (expected 2N = </span><span class="si">{</span><span class="mi">2</span><span class="o">*</span><span class="n">N</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;initial norm = </span><span class="si">{</span><span class="n">norm0</span><span class="si">:</span><span class="s2">.12f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;steps&#39;</span><span class="si">:</span><span class="s2">&gt;7</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;norm&#39;</span><span class="si">:</span><span class="s2">&gt;18</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;rel. drift&#39;</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">norms</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">s</span><span class="si">:</span><span class="s2">7d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s2">18.12f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="n">norm0</span><span class="p">)</span><span class="o">/</span><span class="n">norm0</span><span class="si">:</span><span class="s2">12.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">norms</span><span class="p">,</span> <span class="s2">&quot;o-&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">norm0</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;initial&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;steps&quot;</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$L^2$ norm (spinor)&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;dirac_split_step_1d — norm conserved&quot;</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">)</span>
+
+<span class="n">re</span><span class="p">,</span> <span class="n">im</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">dirac_split_step_1d</span><span class="p">(</span>
+    <span class="n">spinor</span><span class="o">.</span><span class="n">real</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">spinor</span><span class="o">.</span><span class="n">imag</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="n">N</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">pv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">re</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">spinor</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">2</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;t=0 (upper)&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">pv</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">2</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;t=2 (upper)&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">pv</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;t=2 (lower)&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Mass term populates the lower component&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<br/></pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -866,12 +910,17 @@ CONSTAT: Systematic offset (energies = N²·factor) — unusable for spectra wit
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-len(psi) binding = 512  (expected 2N = 512 )
-len(psi) binding = 512  (expected 2N = 512 )
-len(psi) binding = 512  (expected 2N = 512 )
-Norms after 0,1,2,3 steps: [2.00530262 0.00956409 0.0380841  0.15204806]
-Ratio n(k+1)/n(k) ≈ 0.004769401814406645
-CONSTAT: Norm multiplied by ~4 per step → non-unitary evolution.
+len(psi) = 512   (expected 2N = 512)
+initial norm = 1.002651309852
+  steps               norm   rel. drift
+      0     1.002651309852     0.00e+00
+      1     1.002651309852     2.21e-16
+      2     1.002651309852     4.43e-16
+      5     1.002651309852     6.64e-16
+     10     1.002651309852     1.11e-15
+     50     1.002651309852     6.20e-15
+    100     1.002651309852     1.22e-14
+    500     1.002651309852     7.35e-14
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -884,15 +933,15 @@ CONSTAT: Norm multiplied by ~4 per step → non-unitary evolution.
 </section>
 <section id="id19">
 <h3>Expected Result<a class="headerlink" href="#id19" title="Link to this heading">¶</a></h3>
-<p>Norm after 1 step ≈ 2.5-10×6, ≈ 4× previous; no classical instability but loss of unitarity.</p>
+<p>Relative drift at the <span class="math notranslate nohighlight">\(10^{-13}\)</span> level even after 500 steps, growing linearly with step count (accumulated round-off) rather than exponentially.</p>
 </section>
 <section id="id20">
 <h3>Graph Reading<a class="headerlink" href="#id20" title="Link to this heading">¶</a></h3>
-<p>Norm curve grows exponentially per step, incompatible with Dirac unitarity.</p>
+<p>Left: the norm is flat on the scale of the plot. Right: the packet starts wholly in the upper component, and the mass term <span class="math notranslate nohighlight">\(mc^2\sigma_x\)</span> transfers amplitude into the lower one — the coupling that produces Zitterbewegung.</p>
 </section>
 <section id="id21">
 <h3>Conclusion<a class="headerlink" href="#id21" title="Link to this heading">¶</a></h3>
-<p>CONSTAT: dirac_split_step_1d must be fixed (non-unitary propagator) before physical use.</p>
+<p>The propagator is unitary to round-off. Earlier revisions of this notebook reported a factor-4 norm growth per step; that had two causes, both now fixed — a non-unitary mass rotation in the Rust core, and this notebook packing the spinor as two concatenated blocks rather than interleaved pairs.</p>
 </section>
 </section>
 <section id="Summary">
@@ -985,7 +1034,7 @@ CONSTAT: Norm multiplied by ~4 per step → non-unitary evolution.
 <li><a class="reference internal" href="#Conclusion">Conclusion</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#2.-Schrödinger-—-Potential-Well-and-Confinement">2. Schrödinger — Potential Well and Confinement</a><ul>
+<li><a class="reference internal" href="#2.-Schrödinger-—-Wavepacket-Meeting-a-Potential-Well">2. Schrödinger — Wavepacket Meeting a Potential Well</a><ul>
 <li><a class="reference internal" href="#id1">Theorem / Model Used</a></li>
 <li><a class="reference internal" href="#id2">Pivot Equation</a></li>
 <li><a class="reference internal" href="#id3">Demonstration</a></li>
@@ -995,7 +1044,7 @@ CONSTAT: Norm multiplied by ~4 per step → non-unitary evolution.
 <li><a class="reference internal" href="#id7">Conclusion</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#3.-1D-Eigenvalues-—-schrodinger_eigen_1d">3. 1D Eigenvalues — schrodinger_eigen_1d</a><ul>
+<li><a class="reference internal" href="#3.-1D-Eigenvalues-—-schrodinger_eigen_1d">3. 1D Eigenvalues — <code class="docutils literal notranslate"><span class="pre">schrodinger_eigen_1d</span></code></a><ul>
 <li><a class="reference internal" href="#id8">Theorem / Model Used</a></li>
 <li><a class="reference internal" href="#id9">Pivot Equation</a></li>
 <li><a class="reference internal" href="#id10">Demonstration</a></li>
@@ -1009,6 +1058,7 @@ CONSTAT: Norm multiplied by ~4 per step → non-unitary evolution.
 <li><a class="reference internal" href="#id15">Theorem / Model Used</a></li>
 <li><a class="reference internal" href="#id16">Pivot Equation</a></li>
 <li><a class="reference internal" href="#id17">Demonstration</a></li>
+<li><a class="reference internal" href="#Layout-note">Layout note</a></li>
 <li><a class="reference internal" href="#id18">What This Cell Verifies</a></li>
 <li><a class="reference internal" href="#id19">Expected Result</a></li>
 <li><a class="reference internal" href="#id20">Graph Reading</a></li>

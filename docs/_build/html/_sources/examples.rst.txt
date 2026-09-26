@@ -40,6 +40,7 @@ regime claims.
    notebooks/11_general_relativity.ipynb
    notebooks/12_classical_mechanics.ipynb
    notebooks/13_electromagnetism_casimir.ipynb
+   notebooks/14_dirac_adm_wheeler_dewitt.ipynb
 
 Catalogue
 ---------
@@ -95,6 +96,9 @@ Catalogue
    * - ``13_electromagnetism_casimir.ipynb``
      - Green, Coulomb, Larmor, dipole, Compton, Casimir, Polder
      - Larmor/Compton/Casimir/Polder exact; dipole CONSTAT (1/c² factor on E/A, F/A matches formulas)
+   * - ``14_dirac_adm_wheeler_dewitt.ipynb``
+     - Schrödinger, Dirac, Zitterbewegung, Maxwell, Aharonov–Bohm, ADM, Wheeler–DeWitt
+     - Split-step 1.6e-14 vs exact Gaussian; Dirac norm 1.4e-12 over 5000 steps; Berry phase −π; ADM constraints exact; Wheeler–DeWitt graded against Airy
 
 Real-World Applications
 -----------------------

@@ -1,0 +1,979 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Contributing" href="../contributing.html"><link rel="prev" title="Mathematical Foundations" href="mathematical_foundations.html">
+        <link rel="prefetch" href="../_static/logo_pysicrs.png" as="image">
+
+    <link rel="shortcut icon" href="../_static/logo_pysicrs.png"><!-- Generated with Sphinx 7.4.7 and Furo 2025.12.19 -->
+        <title>From Quantisation to Quantum Gravity - Pysic-rs Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a833a90c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  --color-brand-primary: #1e3a5f;
+  --color-brand-content: #1e3a5f;
+  --color-api-pre-background: #eef2ff;
+  --color-background-primary: #fefefe;
+  --color-background-secondary: #eef2ff;
+  --color-foreground-primary: #2d2d3a;
+  --color-foreground-secondary: #6b6b7a;
+  --color-foreground-muted: #9a9ab0;
+  --color-border: #c7d2fe;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #60a5fa;
+  --color-api-pre-background: #0f172a;
+  --color-background-primary: #0f172a;
+  --color-background-secondary: #1e293b;
+  --color-foreground-primary: #e8e8f0;
+  --color-foreground-secondary: #a0a0b8;
+  --color-foreground-muted: #707088;
+  --color-border: #334155;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #60a5fa;
+  --color-brand-content: #60a5fa;
+  --color-api-pre-background: #0f172a;
+  --color-background-primary: #0f172a;
+  --color-background-secondary: #1e293b;
+  --color-foreground-primary: #e8e8f0;
+  --color-foreground-secondary: #a0a0b8;
+  --color-foreground-muted: #707088;
+  --color-border: #334155;
+  --color-announcement-background: #1e3a5f;
+  --color-announcement-text: #ffffff;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+<div class="announcement">
+  <aside class="announcement-content">
+     🚀 <strong>Pysic-rs v0.1.0</strong> — Mathematical physics engine in Rust + Python • textbook-validated • <a href="changelog.html">View Changelog</a> • <a href="https://optimiz-rs.readthedocs.io/">Optimiz-rs Docs</a> • <a href="https://hfthot-lab.eu/thotbook-amenti.html">HFThot Research Lab</a> 
+  </aside>
+</div>
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Pysic-rs Documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/logo_pysicrs.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Pysic-rs Documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../examples.html">Example Notebooks</a><input aria-label="Toggle navigation of Example Notebooks" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/00_quickstart_and_constants.html">00 · Fundamental Constants and API Scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/01_ode_solvers.html">01 · ODE Integration: rk4_solve, backward_euler, leapfrog, rk45_solve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/02_pde_heat.html">02 · Heat Equation: Crank-Nicolson 1D and ADI 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/03_pde_wave.html">03 · Wave Equation: FDTD 1D and 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/04_pde_poisson.html">04 · Poisson Equation: poisson_fft_2d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/05_pde_quantum.html">05 · Schrödinger &amp; Dirac 1D: Split-Step Evolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/06_fourier_analysis.html">06 · Fourier Analysis: fft/ifft, spectral_derivative, welch_psd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/07_quantum_states.html">07 · Quantum States: Pauli Matrices/Structures, Fock &amp; Coherent States</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/08_propagators.html">08 · Quantum Propagators: Feynman and Free</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/09_gauge_theory.html">09 · Gauge Theory: su(3) Structure Constants and Instanton Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/10_topology.html">10 · Quantum Topology: Berry Phase, Chern Number, Winding Number</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/11_general_relativity.html">11 · General Relativity: Schwarzschild Metric, Christoffel, ADM Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/12_classical_mechanics.html">12 · Classical Mechanics: Rotations, Euler Equations, Inertia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/13_electromagnetism_casimir.html">13 · Electromagnetism: Radiation, Compton, Casimir Effect</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Algorithms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/special_functions.html">Special Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/linalg.html">Linear Algebra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/calculus.html">Numerical Calculus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/ode.html">ODE Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/pde.html">PDE Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/fourier.html">Fourier Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/quantum.html">Quantum Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/general_relativity.html">General Relativity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/gauge.html">Gauge Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/classical.html">Classical Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/topology.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/em.html">Electromagnetism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms/casimir.html">Casimir Effect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/special_functions.html">API Reference: Special Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/linalg.html">API Reference: Linear Algebra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/calculus.html">API Reference: Numerical Calculus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/ode.html">API Reference: ODE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/pde.html">API Reference: PDE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/fourier.html">API Reference: Fourier Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/quantum.html">API Reference: Quantum Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/general_relativity.html">API Reference: General Relativity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/gauge.html">API Reference: Gauge Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/classical.html">API Reference: Classical Mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/topology.html">API Reference: Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/em.html">API Reference: Electromagnetism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/casimir.html">API Reference: Casimir Effect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Theory</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="mathematical_foundations.html">Mathematical Foundations</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">From Quantisation to Quantum Gravity</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/ThotDjehuty/pysic-rs/blob/main/docs/source/theory/quantum_to_gravity.md?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/ThotDjehuty/pysic-rs/edit/main/docs/source/theory/quantum_to_gravity.md" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section class="tex2jax_ignore mathjax_ignore" id="from-quantisation-to-quantum-gravity">
+<h1>From Quantisation to Quantum Gravity<a class="headerlink" href="#from-quantisation-to-quantum-gravity" title="Link to this heading">¶</a></h1>
+<p>This page gives the mathematical formulation behind six equations that pysic-rs
+solves, in the order in which they were historically forced on physics:
+Schrödinger, Dirac, Maxwell/Aharonov–Bohm, the ADM constraints, and
+Wheeler–DeWitt. Each section states the equation, derives the scheme pysic-rs
+uses to solve it, and names the invariant that the implementation is graded
+against.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Every numerical figure quoted here is measured, not asserted. The companion
+notebook
+<a class="reference external" href="https://github.com/ThotDjehuty/pysic-rs/blob/main/notebooks/14_dirac_adm_wheeler_dewitt.ipynb"><code class="docutils literal notranslate"><span class="pre">14_dirac_adm_wheeler_dewitt.ipynb</span></code></a>
+reproduces all of them, grading each solver against a closed form where one
+exists and against SciPy’s Airy function where one does not.</p>
+</div>
+<hr class="docutils" />
+<section id="schrodinger-and-the-flaw-that-forced-dirac">
+<h2>1. Schrödinger, and the flaw that forced Dirac<a class="headerlink" href="#schrodinger-and-the-flaw-that-forced-dirac" title="Link to this heading">¶</a></h2>
+<section id="the-equation">
+<h3>1.1 The equation<a class="headerlink" href="#the-equation" title="Link to this heading">¶</a></h3>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+i\hbar\,\frac{\partial\psi}{\partial t}
+ = \hat H\psi
+ = \left[-\frac{\hbar^2}{2m}\nabla^2 + V(\mathbf r)\right]\psi
+\]</div>
+</div>
+<p>The equation is <strong>first order in <span class="math notranslate nohighlight">\(t\)</span></strong> and <strong>second order in <span class="math notranslate nohighlight">\(\mathbf x\)</span></strong>. Under a
+Lorentz boost those derivatives transform differently, so the equation cannot be
+covariant. That asymmetry is not a technical nuisance to be patched — it is what
+sent Dirac looking for a first-order-in-both alternative in 1928.</p>
+</section>
+<section id="splitting-the-propagator">
+<h3>1.2 Splitting the propagator<a class="headerlink" href="#splitting-the-propagator" title="Link to this heading">¶</a></h3>
+<p>The formal solution is <span class="math notranslate nohighlight">\(\psi(t) = e^{-i\hat Ht/\hbar}\psi(0)\)</span>. Writing
+<span class="math notranslate nohighlight">\(\hat H = \hat T + \hat V\)</span>, the two pieces are each diagonal in a different
+basis: <span class="math notranslate nohighlight">\(\hat T\)</span> in momentum space, <span class="math notranslate nohighlight">\(\hat V\)</span> in position space. They do not
+commute, so <span class="math notranslate nohighlight">\(e^{-i(\hat T+\hat V)\Delta t/\hbar} \neq e^{-i\hat T\Delta t/\hbar}e^{-i\hat V\Delta t/\hbar}\)</span>.</p>
+<p><strong>Theorem (Strang splitting).</strong> For bounded operators,</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+e^{-i(\hat T+\hat V)\Delta t/\hbar}
+ = e^{-i\hat V\Delta t/2\hbar}\,
+   e^{-i\hat T\Delta t/\hbar}\,
+   e^{-i\hat V\Delta t/2\hbar}
+ + \mathcal O(\Delta t^3).
+\]</div>
+</div>
+<p><em>Proof sketch.</em> Expand both sides through third order in <span class="math notranslate nohighlight">\(\Delta t\)</span> using
+Baker–Campbell–Hausdorff. The first-order terms match trivially. The
+second-order terms match because the symmetric arrangement cancels the
+commutator <span class="math notranslate nohighlight">\([\hat T,\hat V]\)</span> that spoils the naive product. The leading
+discrepancy is the double commutator at <span class="math notranslate nohighlight">\(\mathcal O(\Delta t^3)\)</span> per step,
+giving <span class="math notranslate nohighlight">\(\mathcal O(\Delta t^2)\)</span> global accuracy. <span class="math notranslate nohighlight">\(\square\)</span></p>
+<p>Each factor is the exponential of a Hermitian operator, hence <strong>unitary</strong>. A
+product of unitaries is unitary, so</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\mathcal N = \int|\psi|^2\,dx
+\]</div>
+</div>
+<p>is an exact invariant of the discrete scheme — independent of <span class="math notranslate nohighlight">\(\Delta t\)</span>, and
+not merely conserved to truncation order. This is the property to test: either
+the norm holds to round-off, or the implementation is wrong.</p>
+</section>
+<section id="what-it-is-graded-against">
+<h3>1.3 What it is graded against<a class="headerlink" href="#what-it-is-graded-against" title="Link to this heading">¶</a></h3>
+<p>For <span class="math notranslate nohighlight">\(V=0\)</span>, a Gaussian stays Gaussian:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\sigma(t) = \sigma_0\sqrt{1+\left(\frac{\hbar t}{m\sigma_0^2}\right)^{2}},
+\qquad
+\langle x\rangle(t) = \langle x\rangle_0 + \frac{\hbar k_0}{m}t.
+\]</div>
+</div>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">schrodinger_split_step_1d()</span></code> reproduces this envelope to <strong>1.6 × 10⁻¹⁴</strong>,
+with norm drift <strong>2 × 10⁻¹⁴</strong>.</p>
+</section>
+<section id="bound-states">
+<h3>1.4 Bound states<a class="headerlink" href="#bound-states" title="Link to this heading">¶</a></h3>
+<p>The time-independent problem is discretised on a uniform grid with Dirichlet
+boundaries, giving a symmetric tridiagonal Hamiltonian:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+H_{ii} = \frac{\hbar^2}{m\,\Delta x^2} + V_i,
+\qquad
+H_{i,i\pm1} = -\frac{\hbar^2}{2m\,\Delta x^2}.
+\]</div>
+</div>
+<p>For a flat potential this has an <strong>exact</strong> spectrum,</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+E_k = \frac{2\hbar^2}{m\,\Delta x^2}\sin^2\!\left(\frac{k\pi}{2(N+1)}\right),
+\]</div>
+</div>
+<p>which converges to <span class="math notranslate nohighlight">\(k^2\pi^2\hbar^2/2mL^2\)</span> with <span class="math notranslate nohighlight">\(L=(N+1)\Delta x\)</span> as
+<span class="math notranslate nohighlight">\(\Delta x\to0\)</span>. <code class="xref py py-func docutils literal notranslate"><span class="pre">schrodinger_eigen_1d()</span></code> uses the implicit QL algorithm with
+Wilkinson shifts and matches this to machine precision; on the harmonic
+oscillator it returns <span class="math notranslate nohighlight">\(E_n=(n+\tfrac12)\hbar\omega\)</span> to <span class="math notranslate nohighlight">\(3\times10^{-6}\)</span>, with
+eigenvectors overlapping the exact Hermite functions to <span class="math notranslate nohighlight">\(10^{-9}\)</span>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Count nodes above an amplitude threshold. In the classically forbidden tails
+<span class="math notranslate nohighlight">\(|\psi|\sim10^{-300}\)</span> and its sign is pure round-off, so a naive sign-change
+count returns nonsense — 90 nodes for the ground state rather than 0.</p>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="dirac-relativity-forces-antimatter">
+<h2>2. Dirac: relativity forces antimatter<a class="headerlink" href="#dirac-relativity-forces-antimatter" title="Link to this heading">¶</a></h2>
+<section id="the-clifford-algebra">
+<h3>2.1 The Clifford algebra<a class="headerlink" href="#the-clifford-algebra" title="Link to this heading">¶</a></h3>
+<p>Dirac wanted first order in both <span class="math notranslate nohighlight">\(t\)</span> and <span class="math notranslate nohighlight">\(\mathbf x\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+i\hbar\,\partial_t\psi = \left(c\,\boldsymbol\alpha\cdot\mathbf p + \beta mc^2\right)\psi .
+\]</div>
+</div>
+<p>Iterating must return the relativistic dispersion <span class="math notranslate nohighlight">\(E^2 = p^2c^2+m^2c^4\)</span>.
+Squaring the right-hand side gives cross terms <span class="math notranslate nohighlight">\(\alpha_i\alpha_j + \alpha_j\alpha_i\)</span>
+and <span class="math notranslate nohighlight">\(\alpha_i\beta+\beta\alpha_i\)</span>, which must vanish, while the squares must be
+the identity:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\boxed{\{\gamma^\mu,\gamma^\nu\} = 2\eta^{\mu\nu}\mathbb 1},
+\qquad
+\alpha_i^2=\beta^2=\mathbb 1,
+\qquad
+\{\alpha_i,\beta\}=0 .
+\]</div>
+</div>
+<p>Numbers commute, so no set of numbers can satisfy this. The coefficients must be
+<strong>matrices</strong>, and <span class="math notranslate nohighlight">\(\psi\)</span> a multi-component <strong>spinor</strong>. Two things follow without
+being assumed:</p>
+<ol class="arabic simple">
+<li><p><strong>Spin ½</strong> appears in the structure of the equation, not as a postulate.</p></li>
+<li><p>The spectrum has <strong>two branches</strong>, <span class="math notranslate nohighlight">\(E_\pm = \pm\sqrt{p^2c^2+m^2c^4}\)</span>, separated
+by a gap <span class="math notranslate nohighlight">\(2mc^2\)</span>. Dirac read the lower branch as a new particle in 1931;
+Anderson photographed the positron in 1932.</p></li>
+</ol>
+<p>In 1+1 dimensions the Pauli matrices supplied by <code class="xref py py-func docutils literal notranslate"><span class="pre">pauli_matrices()</span></code> realise
+the algebra with <span class="math notranslate nohighlight">\(\alpha=\sigma_z\)</span>, <span class="math notranslate nohighlight">\(\beta=\sigma_x\)</span>, giving</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\hat H = c\,\sigma_z\,\hat p + mc^2\sigma_x + V .
+\]</div>
+</div>
+</section>
+<section id="the-propagator-and-why-unitarity-is-the-test">
+<h3>2.2 The propagator, and why unitarity is the test<a class="headerlink" href="#the-propagator-and-why-unitarity-is-the-test" title="Link to this heading">¶</a></h3>
+<p>pysic-rs splits the evolution as <span class="math notranslate nohighlight">\(V/2\cdot M/2\cdot K\cdot M/2\cdot V/2\)</span>. The
+mass factor is a rotation in the <span class="math notranslate nohighlight">\((\psi_L,\psi_R)\)</span> plane:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+e^{-i\sigma_x\theta/2}
+ = \cos\frac{\theta}{2}\,\mathbb 1 - i\sin\frac{\theta}{2}\,\sigma_x,
+\qquad \theta = \frac{mc^2\Delta t}{\hbar}.
+\]</div>
+</div>
+<div class="warning admonition">
+<p class="admonition-title">A bug worth recording</p>
+<p>An earlier version of this rotation computed <code class="docutils literal notranslate"><span class="pre">exp(i·sin(θ/2))</span></code> — a complex
+exponential of the sine, of modulus 1 — where <code class="docutils literal notranslate"><span class="pre">i·sin(θ/2)</span></code> was meant. The step
+matrix became approximately <span class="math notranslate nohighlight">\(\begin{pmatrix}1&amp;-1\\-1&amp;1\end{pmatrix}\)</span>, whose
+singular values are 2 and 0. The norm then grew by a fixed factor every step
+<strong>regardless of <span class="math notranslate nohighlight">\(\Delta t\)</span></strong>: a Gaussian went from 1.77 to <span class="math notranslate nohighlight">\(3.6\times10^{57}\)</span> in
+100 steps. Because the growth is <span class="math notranslate nohighlight">\(\Delta t\)</span>-independent, shrinking the step size
+does not help — which is exactly the signature of a broken operator rather than
+an unstable one.</p>
+</div>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">dirac_split_step_1d()</span></code> now holds the norm to <strong>1.4 × 10⁻¹²</strong> over 5000
+steps, drifting linearly with step count as accumulated round-off should.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The spinor is passed <strong>interleaved</strong>: element <span class="math notranslate nohighlight">\(2i\)</span> is <span class="math notranslate nohighlight">\(\psi_L(x_i)\)</span> and <span class="math notranslate nohighlight">\(2i+1\)</span>
+is <span class="math notranslate nohighlight">\(\psi_R(x_i)\)</span>, so the array has length <span class="math notranslate nohighlight">\(2N\)</span>. Packing it as two concatenated
+blocks silently scrambles the two components and produces plausible-looking but
+meaningless output.</p>
+</div>
+</section>
+<section id="zitterbewegung-antimatter-you-can-measure">
+<h3>2.3 Zitterbewegung: antimatter you can measure<a class="headerlink" href="#zitterbewegung-antimatter-you-can-measure" title="Link to this heading">¶</a></h3>
+<p>A localised state is not an energy eigenstate — it superposes both branches, and
+the interference between them is observable. At <span class="math notranslate nohighlight">\(p=0\)</span> the Hamiltonian reduces to
+<span class="math notranslate nohighlight">\(mc^2\sigma_x\)</span>, and the evolution of a state starting in the upper component is
+exactly solvable:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\psi(t) = \begin{pmatrix}\cos(mc^2t/\hbar)\\ -i\sin(mc^2t/\hbar)\end{pmatrix}
+\quad\Longrightarrow\quad
+|\psi_R(t)|^2 = \frac{1-\cos(2mc^2t/\hbar)}{2}.
+\end{split}\]</div>
+</div>
+<p>The lower-component population therefore beats at the <strong>Compton frequency</strong>
+<span class="math notranslate nohighlight">\(\omega_{\rm zb} = 2mc^2/\hbar \approx 1.6\times10^{21}\,\mathrm{s^{-1}}\)</span> for an
+electron. For a packet of finite width each momentum component beats at
+<span class="math notranslate nohighlight">\(2E_p/\hbar\)</span>, so a <strong>broad packet in <span class="math notranslate nohighlight">\(x\)</span></strong> (narrow in <span class="math notranslate nohighlight">\(p\)</span>) is needed to keep them
+in phase.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Measuring a frequency requires integrating over several periods. A first version
+of this experiment ran to <span class="math notranslate nohighlight">\(t=1.2\)</span> when the period is <span class="math notranslate nohighlight">\(\pi\)</span> — less than half a
+cycle — and its FFT returned a frequency wrong by 160% with no error raised. A
+correct solver is no defence against a wrong measurement protocol.</p>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="maxwell-and-aharonovbohm-the-potential-is-physical">
+<h2>3. Maxwell and Aharonov–Bohm: the potential is physical<a class="headerlink" href="#maxwell-and-aharonovbohm-the-potential-is-physical" title="Link to this heading">¶</a></h2>
+<section id="gauge-freedom">
+<h3>3.1 Gauge freedom<a class="headerlink" href="#gauge-freedom" title="Link to this heading">¶</a></h3>
+<p>Maxwell’s equations are unchanged under</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\mathbf A \to \mathbf A + \nabla\chi,
+\qquad
+\phi \to \phi - \partial_t\chi ,
+\]</div>
+</div>
+<p>which for a century was read as evidence that <span class="math notranslate nohighlight">\((\phi,\mathbf A)\)</span> are mere
+bookkeeping and only <span class="math notranslate nohighlight">\(\mathbf E,\mathbf B\)</span> are real.</p>
+</section>
+<section id="the-counterexample">
+<h3>3.2 The counterexample<a class="headerlink" href="#the-counterexample" title="Link to this heading">¶</a></h3>
+<p>Aharonov and Bohm showed in 1959 that an electron circling a solenoid picks up</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\boxed{\Delta\varphi_{\rm AB}
+ = \frac{q}{\hbar}\oint\mathbf A\cdot d\boldsymbol\ell
+ = \frac{q\Phi}{\hbar}}
+\]</div>
+</div>
+<p>even though <span class="math notranslate nohighlight">\(\mathbf B = 0\)</span> <strong>everywhere along its path</strong>. The line integral is
+gauge invariant because <span class="math notranslate nohighlight">\(\oint\nabla\chi\cdot d\boldsymbol\ell = 0\)</span> for
+single-valued <span class="math notranslate nohighlight">\(\chi\)</span>. The potential carries information the local fields do not;
+electromagnetism is a <strong>gauge theory</strong>, and the observable is a phase.</p>
+</section>
+<section id="geometric-phase">
+<h3>3.3 Geometric phase<a class="headerlink" href="#geometric-phase" title="Link to this heading">¶</a></h3>
+<p>This is the first known case of what Berry generalised in 1984. Transporting a
+state around a closed loop in parameter space leaves</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\gamma = i\oint\langle\psi|\nabla_{\!R}\psi\rangle\cdot d\mathbf R ,
+\]</div>
+</div>
+<p>which depends only on the geometry of the loop, not the rate of traversal. For a
+spin-½ on a cone of solid angle <span class="math notranslate nohighlight">\(\Omega\)</span>, <span class="math notranslate nohighlight">\(\gamma = -\Omega/2\)</span>; an equatorial
+loop subtends <span class="math notranslate nohighlight">\(\Omega = 2\pi\)</span>, so <span class="math notranslate nohighlight">\(\gamma = -\pi\)</span> and the state returns with its
+sign reversed. <code class="xref py py-func docutils literal notranslate"><span class="pre">berry_phase()</span></code> reproduces <span class="math notranslate nohighlight">\(-\pi\)</span> to <span class="math notranslate nohighlight">\(10^{-10}\)</span>.</p>
+<p>The associated invariant is an <strong>integer</strong>: <code class="xref py py-func docutils literal notranslate"><span class="pre">winding_number()</span></code> returns
+<span class="math notranslate nohighlight">\(n=\pm1,\pm2,\pm3\)</span> exactly for <span class="math notranslate nohighlight">\(e^{in\theta}\)</span>. Quantisation is what makes the AB
+effect robust to disorder, and it reappears as the Chern number in the quantum
+Hall effect — via the Harper equation that draws the Hofstadter butterfly in the
+project logo.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">green_fn_static()</span></code> returns <span class="math notranslate nohighlight">\(-1/4\pi r\)</span>, i.e. the solution of
+<span class="math notranslate nohighlight">\(\nabla^2G = +\delta\)</span>. Flip the sign for the usual Coulomb convention
+<span class="math notranslate nohighlight">\(\nabla^2G = -\delta\)</span>.</p>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="adm-general-relativity-as-a-constrained-system">
+<h2>4. ADM: general relativity as a constrained system<a class="headerlink" href="#adm-general-relativity-as-a-constrained-system" title="Link to this heading">¶</a></h2>
+<section id="the-3-1-split">
+<h3>4.1 The 3+1 split<a class="headerlink" href="#the-3-1-split" title="Link to this heading">¶</a></h3>
+<p>Arnowitt, Deser and Misner sliced spacetime into spatial hypersurfaces labelled
+by a time function. The line element becomes</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+ds^2 = -N^2dt^2 + \gamma_{ij}\left(dx^i + N^idt\right)\left(dx^j + N^jdt\right),
+\]</div>
+</div>
+<p>with <span class="math notranslate nohighlight">\(\gamma_{ij}\)</span> the induced spatial metric, <span class="math notranslate nohighlight">\(N\)</span> the <strong>lapse</strong> and <span class="math notranslate nohighlight">\(N^i\)</span> the
+<strong>shift</strong>. The extrinsic curvature measures how the slice bends inside
+spacetime:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+K_{ij} = \frac{1}{2N}\left(\partial_t\gamma_{ij} - D_iN_j - D_jN_i\right).
+\]</div>
+</div>
+</section>
+<section id="the-constraints">
+<h3>4.2 The constraints<a class="headerlink" href="#the-constraints" title="Link to this heading">¶</a></h3>
+<p>Projecting Einstein’s equations normal and tangential to the slice splits them
+into six evolution equations and four equations containing <strong>no time
+derivative</strong>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\boxed{\mathcal H = {}^{(3)}\!R + K^2 - K_{ij}K^{ij} - 16\pi\rho = 0}
+\]</div>
+</div>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\boxed{\mathcal M^i = D_j\left(K^{ij} - \gamma^{ij}K\right) - 8\pi j^i = 0}
+\]</div>
+</div>
+<p>These are <span class="math notranslate nohighlight">\(\mathcal H = 2G_{\mu\nu}n^\mu n^\nu - 16\pi\rho\)</span> and
+<span class="math notranslate nohighlight">\(\mathcal M^i = -2G_{\mu\nu}n^\mu\gamma^{\nu i} - 8\pi j^i\)</span>. The Bianchi
+identities guarantee they are preserved by the evolution, so it is enough to
+impose them on the initial data.</p>
+<p>The consequence is structural: <strong>the total Hamiltonian of general relativity is
+a constraint</strong>, <span class="math notranslate nohighlight">\(\mathcal H \approx 0\)</span>. It does not generate evolution in an
+external time, because there is no external time. This is what produces the
+problem of time on quantisation.</p>
+</section>
+<section id="closed-forms-to-grade-against">
+<h3>4.3 Closed forms to grade against<a class="headerlink" href="#closed-forms-to-grade-against" title="Link to this heading">¶</a></h3>
+<p>On a flat slice (<span class="math notranslate nohighlight">\({}^{(3)}\!R=0\)</span>):</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Configuration</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\mathcal H\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(K_{ij}=0\)</span>, <span class="math notranslate nohighlight">\(\rho=0\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(0\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(K_{ij}=0\)</span>, <span class="math notranslate nohighlight">\(\rho\neq0\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(-16\pi\rho\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(K_{ij}=c\,\delta_{ij}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(K^2-K_{ij}K^{ij}=9c^2-3c^2=6c^2\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">hamiltonian_constraint()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">momentum_constraint()</span></code> reproduce all
+three with <strong>exactly zero</strong> deviation.</p>
+<div class="warning admonition">
+<p class="admonition-title">Schwarzschild must be Ricci-flat</p>
+<p>Schwarzschild is a vacuum solution, so <span class="math notranslate nohighlight">\(R \equiv 0\)</span> at every radius and every
+polar angle. An earlier <code class="xref py py-func docutils literal notranslate"><span class="pre">ricci_scalar()</span></code> returned a stable <span class="math notranslate nohighlight">\(-2/r^2\)</span> instead,
+because <code class="xref py py-func docutils literal notranslate"><span class="pre">schwarzschild_metric()</span></code> freezes <span class="math notranslate nohighlight">\(g_{\varphi\varphi}=r^2\)</span> “assuming
+<span class="math notranslate nohighlight">\(\theta=\pi/2\)</span>”. The curvature routines <em>differentiate</em> the metric, so the
+missing <span class="math notranslate nohighlight">\(\sin^2\theta\)</span> meant <span class="math notranslate nohighlight">\(\partial_\theta g_{\varphi\varphi}=0\)</span> and the
+angular terms stopped cancelling. Use <code class="xref py py-func docutils literal notranslate"><span class="pre">schwarzschild_metric_full()</span></code>
+whenever the metric will be differentiated; <span class="math notranslate nohighlight">\(R\)</span> is then <span class="math notranslate nohighlight">\(\sim10^{-8}\)</span>, the
+finite-difference residual.</p>
+<p>The test that should have caught this passed a <em>constant</em> metric closure to the
+routine — every derivative was zero, so <span class="math notranslate nohighlight">\(R\)</span> vanished trivially. A test that
+cannot fail is worse than no test, because it inspires confidence.</p>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="wheelerdewitt-quantising-the-constraint">
+<h2>5. Wheeler–DeWitt: quantising the constraint<a class="headerlink" href="#wheelerdewitt-quantising-the-constraint" title="Link to this heading">¶</a></h2>
+<section id="the-equation-and-the-disappearance-of-time">
+<h3>5.1 The equation, and the disappearance of time<a class="headerlink" href="#the-equation-and-the-disappearance-of-time" title="Link to this heading">¶</a></h3>
+<p>Canonical quantisation promotes the constraint to an operator equation on a wave
+functional of the spatial geometry:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\boxed{\hat{\mathcal H}\,\Psi[\gamma_{ij}] = 0}
+\]</div>
+</div>
+<p>There is <strong>no time derivative</strong>. The state of the universe does not evolve; it
+is. This is the <strong>problem of time</strong>, and it remains open.</p>
+</section>
+<section id="minisuperspace">
+<h3>5.2 Minisuperspace<a class="headerlink" href="#minisuperspace" title="Link to this heading">¶</a></h3>
+<p>Freezing every degree of freedom but the scale factor <span class="math notranslate nohighlight">\(a\)</span> reduces the functional
+equation to an ODE:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\frac{d^2\Psi}{da^2} + \frac{p}{a}\frac{d\Psi}{da} - U(a)\Psi = 0,
+\qquad
+U(a) = a^2 - \frac{\Lambda}{3}a^4 ,
+\]</div>
+</div>
+<p>with <span class="math notranslate nohighlight">\(p\)</span> an operator-ordering parameter. The potential vanishes at the <strong>turning
+point</strong></p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+a_t = \sqrt{3/\Lambda},
+\]</div>
+</div>
+<p>which separates the classically forbidden region from the expanding universe.
+Tunnelling through it is the universe-creation mechanism of Vilenkin and of
+Hartle–Hawking.</p>
+</section>
+<section id="the-airy-connection">
+<h3>5.3 The Airy connection<a class="headerlink" href="#the-airy-connection" title="Link to this heading">¶</a></h3>
+<p>Near <span class="math notranslate nohighlight">\(a_t\)</span>,</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+U'(a_t) = 2a_t - \frac{4\Lambda}{3}a_t^3 = -2\sqrt{3/\Lambda},
+\qquad
+U(a) \simeq U'(a_t)\,(a-a_t).
+\]</div>
+</div>
+<p>Substituting <span class="math notranslate nohighlight">\(z = -\left[2\sqrt{3/\Lambda}\right]^{1/3}(a-a_t)\)</span> turns the
+equation into</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\frac{d^2\Psi}{dz^2} = z\,\Psi ,
+\]</div>
+</div>
+<p>the <strong>Airy equation</strong>, whose decaying solution is <span class="math notranslate nohighlight">\(\mathrm{Ai}(z)\)</span>. This makes
+the problem gradable: integrate the full ODE with <code class="xref py py-func docutils literal notranslate"><span class="pre">rk45_solve()</span></code> and compare
+against <span class="math notranslate nohighlight">\(\mathrm{Ai}\)</span> in the window where the linearisation holds. The agreement
+is <span class="math notranslate nohighlight">\(9.2\times10^{-3}\)</span>, degrading away from <span class="math notranslate nohighlight">\(a_t\)</span> — which is the linearisation
+failing, not the integrator.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">airy_ai()</span></code> is also available directly, machine-precision for <span class="math notranslate nohighlight">\(|x|\le9\)</span> via
+the Maclaurin series <span class="math notranslate nohighlight">\(\mathrm{Ai} = c_1f - c_2g\)</span> and <span class="math notranslate nohighlight">\(1.2\times10^{-7}\)</span> beyond
+it from the four-term asymptotic expansion.</p>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="summary">
+<h2>6. Summary<a class="headerlink" href="#summary" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Equation</p></th>
+<th class="head"><p>Year</p></th>
+<th class="head"><p>What it adds</p></th>
+<th class="head"><p>Routine</p></th>
+<th class="head"><p>Graded against</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Schrödinger</p></td>
+<td><p>1926</p></td>
+<td><p>quantisation</p></td>
+<td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">schrodinger_split_step_1d()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">schrodinger_eigen_1d()</span></code></p></td>
+<td><p>exact Gaussian, <span class="math notranslate nohighlight">\(1.6\times10^{-14}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Dirac</p></td>
+<td><p>1928</p></td>
+<td><p>relativity, spin, antimatter</p></td>
+<td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">dirac_split_step_1d()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">pauli_matrices()</span></code></p></td>
+<td><p>unitarity, <span class="math notranslate nohighlight">\(1.4\times10^{-12}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Maxwell / AB</p></td>
+<td><p>1865 / 1959</p></td>
+<td><p>gauge, geometric phase</p></td>
+<td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">green_fn_static()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">berry_phase()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">winding_number()</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\gamma=-\pi\)</span>, integer winding</p></td>
+</tr>
+<tr class="row-odd"><td><p>ADM</p></td>
+<td><p>1959</p></td>
+<td><p>GR as constrained evolution</p></td>
+<td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">hamiltonian_constraint()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">ricci_scalar()</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(-16\pi\rho\)</span>, <span class="math notranslate nohighlight">\(6c^2\)</span>, exact</p></td>
+</tr>
+<tr class="row-even"><td><p>Wheeler–DeWitt</p></td>
+<td><p>1967</p></td>
+<td><p>quantised constraint</p></td>
+<td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">rk45_solve()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">airy_ai()</span></code></p></td>
+<td><p>Airy function</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The progression is one idea pursued to its end. Schrödinger quantises a
+particle. Dirac makes that relativistic and inherits antimatter.
+Maxwell–Aharonov–Bohm show the phase, not the field, is fundamental. ADM
+rewrites gravity as a constrained system. Wheeler–DeWitt quantises that
+constraint — and finds that time has dropped out of the equation.</p>
+</section>
+<section id="related-pages">
+<h2>Related pages<a class="headerlink" href="#related-pages" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="mathematical_foundations.html"><span class="doc">Mathematical Foundations</span></a> — the numerical principles underneath all of this</p></li>
+<li><p><a class="reference internal" href="../algorithms/pde.html"><span class="doc">PDE Solvers</span></a> — Schrödinger and Dirac solvers</p></li>
+<li><p><a class="reference internal" href="../algorithms/general_relativity.html"><span class="doc">General Relativity</span></a> — metrics, curvature, ADM</p></li>
+<li><p><a class="reference internal" href="../algorithms/topology.html"><span class="doc">Topology</span></a> — Berry phase, Chern and winding numbers</p></li>
+<li><p><a class="reference internal" href="../algorithms/special_functions.html"><span class="doc">Special Functions</span></a> — Airy, Bessel and the rest, now plotted</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../contributing.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Contributing</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="mathematical_foundations.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Mathematical Foundations</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, HFThot Research Lab
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/ThotDjehuty/pysic-rs" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
+                </svg>
+            </a>
+              <a class="muted-link " href="https://optimiz-rs.readthedocs.io/" aria-label="Optimiz-rs">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
+            </a>
+              <a class="muted-link " href="https://hfthot-lab.eu/thotbook-amenti.html" aria-label="HFThot Lab">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24">
+                    <path d="M12 2L1 21h22L12 2zm0 4.7l6.5 11.3H5.5L12 6.7z"/>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">From Quantisation to Quantum Gravity</a><ul>
+<li><a class="reference internal" href="#schrodinger-and-the-flaw-that-forced-dirac">1. Schrödinger, and the flaw that forced Dirac</a><ul>
+<li><a class="reference internal" href="#the-equation">1.1 The equation</a></li>
+<li><a class="reference internal" href="#splitting-the-propagator">1.2 Splitting the propagator</a></li>
+<li><a class="reference internal" href="#what-it-is-graded-against">1.3 What it is graded against</a></li>
+<li><a class="reference internal" href="#bound-states">1.4 Bound states</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dirac-relativity-forces-antimatter">2. Dirac: relativity forces antimatter</a><ul>
+<li><a class="reference internal" href="#the-clifford-algebra">2.1 The Clifford algebra</a></li>
+<li><a class="reference internal" href="#the-propagator-and-why-unitarity-is-the-test">2.2 The propagator, and why unitarity is the test</a></li>
+<li><a class="reference internal" href="#zitterbewegung-antimatter-you-can-measure">2.3 Zitterbewegung: antimatter you can measure</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#maxwell-and-aharonovbohm-the-potential-is-physical">3. Maxwell and Aharonov–Bohm: the potential is physical</a><ul>
+<li><a class="reference internal" href="#gauge-freedom">3.1 Gauge freedom</a></li>
+<li><a class="reference internal" href="#the-counterexample">3.2 The counterexample</a></li>
+<li><a class="reference internal" href="#geometric-phase">3.3 Geometric phase</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adm-general-relativity-as-a-constrained-system">4. ADM: general relativity as a constrained system</a><ul>
+<li><a class="reference internal" href="#the-3-1-split">4.1 The 3+1 split</a></li>
+<li><a class="reference internal" href="#the-constraints">4.2 The constraints</a></li>
+<li><a class="reference internal" href="#closed-forms-to-grade-against">4.3 Closed forms to grade against</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#wheelerdewitt-quantising-the-constraint">5. Wheeler–DeWitt: quantising the constraint</a><ul>
+<li><a class="reference internal" href="#the-equation-and-the-disappearance-of-time">5.1 The equation, and the disappearance of time</a></li>
+<li><a class="reference internal" href="#minisuperspace">5.2 Minisuperspace</a></li>
+<li><a class="reference internal" href="#the-airy-connection">5.3 The Airy connection</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#summary">6. Summary</a></li>
+<li><a class="reference internal" href="#related-pages">Related pages</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=38b66d78"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=30646c52"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>
