@@ -32,7 +32,6 @@ fn rk4_solve_py(
 
 #[pyfunction]
 fn rk45_solve_py(
-    py: Python,
     f: PyObject,
     y0: Vec<f64>,
     t_start: f64,
@@ -40,7 +39,7 @@ fn rk45_solve_py(
     rtol: Option<f64>,
     atol: Option<f64>,
     max_steps: Option<usize>,
-) -> PyResult<PyObject> {
+) -> PyResult<(Vec<f64>, Vec<Vec<f64>>)> {
     let f_ref = |t: f64, y: &[f64]| -> Vec<f64> {
         Python::with_gil(|py| {
             let args = (t, y.to_vec());
@@ -56,7 +55,7 @@ fn rk45_solve_py(
         atol.unwrap_or(1e-9),
         max_steps.unwrap_or(100_000),
     );
-    Ok(py.None()) // TODO: return a proper struct
+    Ok((sol.times, sol.trajectory))
 }
 
 #[pyfunction]

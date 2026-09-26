@@ -24,19 +24,19 @@ fn christoffel_from_metric_py(
     h: Option<f64>,
 ) -> PyResult<Vec<Vec<Vec<f64>>>> {
     // Use Schwarzschild as default metric
-    let metric = |c: &[f64]| super::metrics::schwarzschild_metric(c[1], 1.0);
+    let metric = |c: &[f64]| super::metrics::schwarzschild_metric_full(c[1], c[2], 1.0);
     Ok(super::christoffel::christoffel_from_metric(&metric, &coords, h.unwrap_or(1e-5)))
 }
 
 #[pyfunction]
 fn ricci_scalar_py(coords: Vec<f64>, h: Option<f64>) -> PyResult<f64> {
-    let metric = |c: &[f64]| super::metrics::schwarzschild_metric(c[1], 1.0);
+    let metric = |c: &[f64]| super::metrics::schwarzschild_metric_full(c[1], c[2], 1.0);
     Ok(super::christoffel::ricci_scalar(&metric, &coords, h.unwrap_or(1e-4)))
 }
 
 #[pyfunction]
 fn einstein_tensor_py(coords: Vec<f64>, h: Option<f64>) -> PyResult<Vec<Vec<f64>>> {
-    let metric = |c: &[f64]| super::metrics::schwarzschild_metric(c[1], 1.0);
+    let metric = |c: &[f64]| super::metrics::schwarzschild_metric_full(c[1], c[2], 1.0);
     let g = super::christoffel::einstein_tensor(&metric, &coords, h.unwrap_or(1e-4));
     Ok(g.rows().into_iter().map(|row| row.to_vec()).collect())
 }

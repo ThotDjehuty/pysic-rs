@@ -219,7 +219,7 @@ fn invert_metric(m: &Array2<f64>) -> Array2<f64> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::general_relativity::metrics::{schwarzschild_metric, minkowski_metric};
+    use crate::general_relativity::metrics::{schwarzschild_metric_full, minkowski_metric};
 
     #[test]
     fn test_minkowski_christoffel_zero() {
@@ -235,10 +235,46 @@ mod tests {
         }
     }
 
+    /// Schwarzschild is a vacuum solution, so R ≡ 0 everywhere outside the
+    /// horizon — at every radius *and* every polar angle.
+    ///
+    /// The metric closure must be a genuine function of the coordinates: a
+    /// closure that ignores its argument has zero derivatives and passes
+    /// trivially. It must also carry the `sin²θ` factor in `g_φφ`, otherwise
+    /// the angular terms fail to cancel and R comes out as -2/r².
     #[test]
     fn test_schwarzschild_ricci_flat() {
-        let rs = |_c: &[f64]| schwarzschild_metric(10.0, 1.0); // r=10, M=1
-        let r = ricci_scalar(&rs, &[0.0, 10.0, std::f64::consts::FRAC_PI_2, 0.0], 1e-4);
-        assert!(r.abs() < 0.1, "Ricci scalar should be ~0 for Schwarzschild, got {}", r);
+        let metric = |c: &[f64]| schwarzschild_metric_full(c[1], c[2], 1.0);
+
+        for &r in &[6.0_f64, 10.0, 25.0, 100.0] {
+            for &theta in &[
+                std::f64::consts::FRAC_PI_4,
+                std::f64::consts::FRAC_PI_2,
+                2.0,
+            ] {
+                let rs = ricci_scalar(&metric, &[0.0, r, theta, 0.0], 1e-3);
+                // Curvature scale at this radius is ~2M/r³; demand the vacuum
+                // residual sit far below it rather than below a fixed 0.1.
+                let scale = 2.0 / (r * r * r);
+                assert!(
+                    rs.abs() < 1e-3 * scale.max(1e-8),
+                    "R should vanish for Schwarzschild at r={r}, theta={theta}; got {rs:e}"
+                );
+            }
+        }
+    }
+
+    /// Guards the specific regression: freezing θ = π/2 in the metric (so that
+    /// ∂_θ g_φφ = 0) produces R = -2/r² on a vacuum solution.
+    #[test]
+    fn test_equatorial_only_metric_is_not_ricci_flat() {
+        use crate::general_relativity::metrics::schwarzschild_metric;
+        let frozen = |c: &[f64]| schwarzschild_metric(c[1], 1.0);
+        let r0 = 10.0_f64;
+        let rs = ricci_scalar(&frozen, &[0.0, r0, std::f64::consts::FRAC_PI_2, 0.0], 1e-3);
+        assert!(
+            (rs - (-2.0 / (r0 * r0))).abs() < 1e-4,
+            "expected the documented -2/r² artefact, got {rs:e}"
+        );
     }
 }

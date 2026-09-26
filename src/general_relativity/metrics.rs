@@ -33,6 +33,31 @@ pub fn schwarzschild_metric(r: f64, mass: f64) -> Array2<f64> {
     g
 }
 
+/// Schwarzschild metric on the **full** sphere, in coordinates (t, r, θ, φ).
+///
+/// Unlike [`schwarzschild_metric`], which freezes the equatorial slice
+/// θ = π/2, this keeps the `sin²θ` factor in `g_φφ`. That matters whenever the
+/// metric is differentiated with respect to θ — the curvature routines
+/// ([`crate::general_relativity::christoffel::ricci_scalar`] and friends) need
+/// those derivatives, and without them the angular terms no longer cancel,
+/// leaving a spurious `R = -2/r²` on a vacuum solution where `R` must vanish.
+///
+/// ```text
+/// ds² = -(1 - 2M/r) dt² + (1 - 2M/r)⁻¹ dr² + r² dθ² + r² sin²θ dφ²
+/// ```
+pub fn schwarzschild_metric_full(r: f64, theta: f64, mass: f64) -> Array2<f64> {
+    let rs = 2.0 * mass;
+    let f = 1.0 - rs / r;
+    let s = theta.sin();
+
+    let mut g = Array2::zeros((4, 4));
+    g[[0, 0]] = -f;
+    g[[1, 1]] = 1.0 / f;
+    g[[2, 2]] = r * r;
+    g[[3, 3]] = r * r * s * s;
+    g
+}
+
 /// Inverse Schwarzschild metric.
 pub fn schwarzschild_inverse(r: f64, mass: f64) -> Array2<f64> {
     let rs = 2.0 * mass;

@@ -71,24 +71,41 @@ where
 
         n_evals += 6;
 
-        // 5th order solution (for error estimation)
+        // 5th-order solution (the one we propagate).
         let y_new: Vec<f64> = y.iter().zip(k1.iter()).zip(k3.iter()).zip(k4.iter()).zip(k5.iter()).zip(k6.iter()).map(|(((((yi, ki), k3i), k4i), k5i), k6i)| yi + dt * (b1 * ki + b3 * k3i + b4 * k4i + b5 * k5i + b6 * k6i)).collect();
 
-        // Error estimate (difference between 4th and 5th order)
-        let err: f64 = y_new.iter().zip(y.iter()).zip(k1.iter()).zip(k3.iter()).zip(k4.iter()).zip(k5.iter()).zip(k6.iter()).map(|((((((yni, yi), ki), k3i), k4i), k5i), k6i)| {
-            let e = (yni - (yi + dt * (5179.0/57600.0 * ki + 7571.0/16695.0 * k3i + 393.0/640.0 * k4i + -92097.0/339200.0 * k5i + 187.0/2100.0 * k6i + 41.0/840.0 * f(t + dt, &y6)[0])));
-            e * e
-        }).sum::<f64>().sqrt();
+        // FSAL stage: k7 = f(t + dt, y_new). The embedded 4th-order solution
+        // needs it, so the local error is the weighted difference b - b*.
+        let k7 = f(t + dt, &y_new);
+        n_evals += 1;
 
-        // Step size control
-        let scale = y_new.iter().map(|yi| atol + rtol * yi.abs()).sum::<f64>() / n as f64;
-        let dt_new = if err > 0.0 {
-            dt * (0.9 * scale / err).powf(0.2).min(5.0).max(0.2)
+        // Dormand-Prince embedded 4th-order weights.
+        let d1 = b1 - 5179.0 / 57600.0;
+        let d3 = b3 - 7571.0 / 16695.0;
+        let d4 = b4 - 393.0 / 640.0;
+        let d5 = b5 + 92097.0 / 339200.0;
+        let d6 = b6 - 187.0 / 2100.0;
+        let d7 = -1.0 / 40.0;
+
+        // Scaled RMS error norm: accept when it is <= 1.
+        let mut err_sq = 0.0;
+        for i in 0..n {
+            let e = dt * (d1 * k1[i] + d3 * k3[i] + d4 * k4[i] + d5 * k5[i] + d6 * k6[i] + d7 * k7[i]);
+            let sc = atol + rtol * y[i].abs().max(y_new[i].abs());
+            let r = if sc > 0.0 { e / sc } else { 0.0 };
+            err_sq += r * r;
+        }
+        let err = (err_sq / n as f64).sqrt();
+
+        // PI-free step-size control with the usual safety factor and clamps.
+        let factor = if err > 0.0 {
+            (0.9 * err.powf(-0.2)).clamp(0.2, 5.0)
         } else {
-            dt * 5.0
+            5.0
         };
+        let dt_new = dt * factor;
 
-        if err <= scale || dt <= 1e-15 {
+        if err <= 1.0 || dt <= 1e-15 {
             // Accept step
             t += dt;
             y = y_new;
@@ -108,5 +125,44 @@ where
         trajectory,
         n_steps: n_steps_val,
         n_evals,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// dy/dt = -2y, y(0) = 1 has the closed form y(t) = e^{-2t}. The adaptive
+    /// controller should hit the requested tolerance.
+    #[test]
+    fn test_rk45_exponential_decay() {
+        let f = |_t: f64, y: &[f64]| vec![-2.0 * y[0]];
+        let sol = rk45_solve(&f, &[1.0], (0.0, 1.0), 1e-10, 1e-12, 100_000);
+
+        let y_end = *sol.trajectory.last().unwrap().first().unwrap();
+        let exact = (-2.0_f64).exp();
+        let rel = (y_end - exact).abs() / exact;
+        assert!(rel < 1e-8, "rk45 gave {y_end}, exact {exact}, rel err {rel:e}");
+
+        assert!(sol.times.len() >= 2, "no steps recorded");
+        assert!(
+            (*sol.times.last().unwrap() - 1.0).abs() < 1e-12,
+            "did not reach t = 1"
+        );
+        assert_eq!(sol.times.len(), sol.trajectory.len());
+    }
+
+    /// The harmonic oscillator conserves E = (y² + v²)/2; a good RK45 run
+    /// should hold it to the requested tolerance over several periods.
+    #[test]
+    fn test_rk45_harmonic_oscillator_conserves_energy() {
+        let f = |_t: f64, y: &[f64]| vec![y[1], -y[0]];
+        let sol = rk45_solve(&f, &[1.0, 0.0], (0.0, 20.0), 1e-10, 1e-12, 1_000_000);
+
+        let e0 = 0.5;
+        for state in &sol.trajectory {
+            let e = 0.5 * (state[0] * state[0] + state[1] * state[1]);
+            assert!((e - e0).abs() < 1e-6, "energy drifted to {e}");
+        }
     }
 }

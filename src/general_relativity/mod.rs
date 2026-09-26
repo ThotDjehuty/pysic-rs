@@ -6,7 +6,7 @@ pub mod geodesics;
 pub mod adm;
 pub mod stress_energy;
 
-pub use metrics::{schwarzschild_metric, kerr_metric, flrw_metric, minkowski_metric};
+pub use metrics::{schwarzschild_metric, schwarzschild_metric_full, kerr_metric, flrw_metric, minkowski_metric};
 pub use christoffel::{christoffel_from_metric, riemann_tensor, ricci_tensor, ricci_scalar, einstein_tensor};
 pub use geodesics::{geodesic_equation_rhs, integrate_geodesic};
 pub use adm::{MetricSlice, AdmMetric, evolve_metric, hamiltonian_constraint, momentum_constraint};

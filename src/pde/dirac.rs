@@ -64,13 +64,14 @@ pub fn dirac_split_step_1d(
             psi_r[i] *= pot_phase;
         }
 
-        // Mass rotation (mixing ψ_L and ψ_R)
+        // Half mass rotation: exp(-i σ_x m c² (dt/2) / ħ) = cos(θ/2) I - i sin(θ/2) σ_x.
+        // This is unitary by construction, so it conserves ∫|ψ|² exactly.
         let theta = mass * c_speed * c_speed * dt / hbar;
         let cos_half = (theta / 2.0).cos();
-        let sin_half = (theta / 2.0).sin();
+        let i_sin_half = Complex64::new(0.0, (theta / 2.0).sin());
         for i in 0..n_grid {
-            let new_l = cos_half * psi_l[i] - Complex64::new(0.0, sin_half).exp() * psi_r[i];
-            let new_r = -Complex64::new(0.0, sin_half).exp() * psi_l[i] + cos_half * psi_r[i];
+            let new_l = cos_half * psi_l[i] - i_sin_half * psi_r[i];
+            let new_r = -i_sin_half * psi_l[i] + cos_half * psi_r[i];
             psi_l[i] = new_l;
             psi_r[i] = new_r;
         }
@@ -99,6 +100,15 @@ pub fn dirac_split_step_1d(
         for i in 0..n_grid {
             psi_l[i] = buf_l[i] / n_grid as f64;
             psi_r[i] = buf_r[i] / n_grid as f64;
+        }
+
+        // Second half mass rotation, completing the Strang splitting
+        // V/2 · M/2 · K · M/2 · V/2, which is second-order accurate in dt.
+        for i in 0..n_grid {
+            let new_l = cos_half * psi_l[i] - i_sin_half * psi_r[i];
+            let new_r = -i_sin_half * psi_l[i] + cos_half * psi_r[i];
+            psi_l[i] = new_l;
+            psi_r[i] = new_r;
         }
 
         // Half potential step
