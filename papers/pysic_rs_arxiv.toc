@@ -1,0 +1,25 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Contributions}{2}{subsection.1.1}%
+\contentsline {section}{\numberline {2}Design}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Layering}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Binding surface}{3}{subsection.2.2}%
+\contentsline {section}{\numberline {3}Validation discipline}{3}{section.3}%
+\contentsline {paragraph}{Unitarity.}{4}{section*.3}%
+\contentsline {paragraph}{Vanishing on a known solution.}{4}{section*.4}%
+\contentsline {paragraph}{Integrality.}{4}{section*.5}%
+\contentsline {section}{\numberline {4}Physics and the invariants it supplies}{4}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Schr\"odinger and the asymmetry that forced Dirac}{4}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Dirac, and why unitarity is the whole test}{5}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Zitterbewegung as a closed form}{5}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Aharonov--Bohm: integrality as a test}{5}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}ADM: gravity as a constrained system}{5}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Wheeler--DeWitt and the disappearance of time}{5}{subsection.4.6}%
+\contentsline {section}{\numberline {5}Eight defects, and why the tests missed them}{6}{section.5}%
+\contentsline {subsection}{\numberline {5.1}The vacuous test}{6}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Tolerances chosen for convenience}{7}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Why $\Delta t$-independence was the tell}{7}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Distinguishing library defects from user error}{7}{subsection.5.4}%
+\contentsline {section}{\numberline {6}Measured accuracy}{8}{section.6}%
+\contentsline {section}{\numberline {7}Related work}{8}{section.7}%
+\contentsline {section}{\numberline {8}Limitations}{8}{section.8}%
+\contentsline {section}{\numberline {9}Conclusion}{9}{section.9}%

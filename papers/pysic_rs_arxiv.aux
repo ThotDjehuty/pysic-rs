@@ -1,0 +1,68 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{2}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Contributions}{2}{subsection.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Design}{3}{section.2}\protected@file@percent }
+\newlabel{sec:design}{{2}{3}{Design}{section.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Layering}{3}{subsection.2.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Layering. The grading reference (NumPy/SciPy) sits strictly outside the library, so a shared bug cannot mask itself. The test plane addresses the Rust core directly and does not go through Python.}}{3}{figure.caption.2}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:arch}{{1}{3}{Layering. The grading reference (NumPy/SciPy) sits strictly outside the library, so a shared bug cannot mask itself. The test plane addresses the Rust core directly and does not go through Python}{figure.caption.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Binding surface}{3}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Validation discipline}{3}{section.3}\protected@file@percent }
+\newlabel{sec:validation}{{3}{3}{Validation discipline}{section.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{Unitarity.}{4}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Vanishing on a known solution.}{4}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Integrality.}{4}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Physics and the invariants it supplies}{4}{section.4}\protected@file@percent }
+\newlabel{sec:physics}{{4}{4}{Physics and the invariants it supplies}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Schr\"odinger and the asymmetry that forced Dirac}{4}{subsection.4.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Left: the eigensolver converges at the expected second order. Right: Dirac norm drift grows linearly with step count, as accumulated round-off should. The dashed line marks where the same computation landed before the mass-rotation defect was corrected --- note that it is off the top of any sensible axis.}}{4}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:convergence}{{2}{4}{Left: the eigensolver converges at the expected second order. Right: Dirac norm drift grows linearly with step count, as accumulated round-off should. The dashed line marks where the same computation landed before the mass-rotation defect was corrected --- note that it is off the top of any sensible axis}{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Dirac, and why unitarity is the whole test}{5}{subsection.4.2}\protected@file@percent }
+\newlabel{eq:massrot}{{4}{5}{Dirac, and why unitarity is the whole test}{equation.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Zitterbewegung as a closed form}{5}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Aharonov--Bohm: integrality as a test}{5}{subsection.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}ADM: gravity as a constrained system}{5}{subsection.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Wheeler--DeWitt and the disappearance of time}{5}{subsection.4.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Left: the Hamiltonian constraint lands on $6c^2$ with zero deviation. Right: Schwarzschild Ricci scalar. A vacuum solution must give exactly zero; the dashed curve is what a metric frozen at $\theta =\pi /2$ produces once differentiated.}}{6}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:adm}{{3}{6}{Left: the Hamiltonian constraint lands on $6c^2$ with zero deviation. Right: Schwarzschild Ricci scalar. A vacuum solution must give exactly zero; the dashed curve is what a metric frozen at $\theta =\pi /2$ produces once differentiated}{figure.caption.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Eight defects, and why the tests missed them}{6}{section.5}\protected@file@percent }
+\newlabel{sec:bugs}{{5}{6}{Eight defects, and why the tests missed them}{section.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces The eight defects. All compiled cleanly and returned finite values.}}{6}{table.caption.8}\protected@file@percent }
+\newlabel{tab:bugs}{{1}{6}{The eight defects. All compiled cleanly and returned finite values}{table.caption.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}The vacuous test}{6}{subsection.5.1}\protected@file@percent }
+\citation{scipy2020}
+\citation{gsl}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Tolerances chosen for convenience}{7}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Why $\Delta t$-independence was the tell}{7}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Distinguishing library defects from user error}{7}{subsection.5.4}\protected@file@percent }
+\citation{abramowitz1964}
+\citation{numrecipes}
+\citation{eispack}
+\citation{dirac1928}
+\citation{ab1959}
+\citation{adm1959}
+\citation{dewitt1967}
+\citation{berry1984}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Measured against SciPy on a dense grid. Two entries are limited by their formula rather than the port: A\&S 7.1.26 is $1.5\times 10^{-7}$ by construction, and $\mathrm  {Ai}$ is machine-precision on $|x|\le 9$ where the series is used, the quoted figure coming from the asymptotic branch beyond.}}{8}{table.caption.9}\protected@file@percent }
+\newlabel{tab:accuracy}{{2}{8}{Measured against SciPy on a dense grid. Two entries are limited by their formula rather than the port: A\&S 7.1.26 is $1.5\times 10^{-7}$ by construction, and $\mathrm {Ai}$ is machine-precision on $|x|\le 9$ where the series is used, the quoted figure coming from the asymptotic branch beyond}{table.caption.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces $J_0$ with its $\pm \sqrt  {2/\pi x}$ envelope, and $\mathrm  {Ai}$ across the turning point. Both are smooth through the internal branch switches (at $|x|=8$ and $|x|=9$ respectively) --- the discontinuity such a switch can introduce is itself worth testing for.}}{8}{figure.caption.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Measured accuracy}{8}{section.6}\protected@file@percent }
+\newlabel{sec:accuracy}{{6}{8}{Measured accuracy}{section.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Related work}{8}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Limitations}{8}{section.8}\protected@file@percent }
+\bibcite{abramowitz1964}{{1}{1964}{{Abramowitz \& Stegun}}{{}}}
+\bibcite{ab1959}{{2}{1959}{{Aharonov \& Bohm}}{{}}}
+\bibcite{adm1959}{{3}{1959}{{Arnowitt et al.}}{{}}}
+\bibcite{berry1984}{{4}{1984}{{Berry}}{{}}}
+\bibcite{dewitt1967}{{5}{1967}{{DeWitt}}{{}}}
+\bibcite{dirac1928}{{6}{1928}{{Dirac}}{{}}}
+\bibcite{gsl}{{7}{2009}{{Galassi et al.}}{{}}}
+\bibcite{numrecipes}{{8}{2007}{{Press et al.}}{{}}}
+\bibcite{eispack}{{9}{1976}{{Smith et al.}}{{}}}
+\bibcite{scipy2020}{{10}{2020}{{Virtanen et al.}}{{}}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{9}{section.9}\protected@file@percent }
+\gdef \@abspage@last{9}

@@ -1,0 +1,685 @@
+% =====================================================================
+%  pysic-rs: A Validated Mathematical-Physics Engine in Rust
+%  arXiv preprint — HFThot Research Lab
+%  Compile: pdflatex -interaction=nonstopmode pysic_rs_arxiv.tex  (x2)
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{a4paper, left=2.6cm, right=2.6cm, top=2.6cm, bottom=2.6cm}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning,arrows.meta,fit,backgrounds,calc}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!60!black}
+
+\definecolor{rustorange}{RGB}{206,102,0}
+\definecolor{teal}{RGB}{42,157,143}
+\definecolor{gold}{RGB}{201,162,39}
+\definecolor{softred}{RGB}{192,57,43}
+
+\lstdefinelanguage{Rust}{
+  morekeywords={as,break,const,continue,crate,dyn,else,enum,extern,false,fn,for,
+    if,impl,in,let,loop,match,mod,move,mut,pub,ref,return,self,Self,static,struct,
+    super,trait,true,type,unsafe,use,where,while,f64,usize,i32,bool,Vec,Option,Result},
+  sensitive=true,
+  morecomment=[l]{//}, morecomment=[s]{/*}{*/},
+  morestring=[b]", morestring=[b]',
+}
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{rustorange}\bfseries,
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{teal},
+  breaklines=true, frame=single, rulecolor=\color{gray!40},
+  backgroundcolor=\color{gray!4}, showstringspaces=false,
+  xleftmargin=8pt, framexleftmargin=8pt,
+}
+
+\newtcolorbox{lesson}{colback=gold!6!white,colframe=gold!70!black,
+  title=\textbf{Lesson},fonttitle=\small\bfseries,breakable}
+\newtcolorbox{pitfall}{colback=softred!5!white,colframe=softred!65!black,
+  title=\textbf{Failure mode},fonttitle=\small\bfseries,breakable}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\input{measured_data}
+
+\title{\textbf{pysic-rs}: A Validated Mathematical-Physics Engine in Rust,\\
+and What Grading It Against Closed Forms Revealed}
+
+\author{Melvin Alvarez\\
+\small HFThot Research Lab\\
+\small \texttt{contact@hfthot-lab.eu}}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+We present \textbf{pysic-rs}, a CPU-only mathematical-physics library written in
+Rust and exposed to Python through PyO3. It covers special functions, linear
+algebra, ODE and PDE solvers, quantum mechanics, general relativity, gauge
+theory, topology and electromagnetism, and is designed around a single
+methodological commitment: every routine is \emph{graded} against a closed-form
+result or a tabulated reference value, rather than demonstrated on a plot that
+looks plausible.
+
+We then report what applying that commitment uncovered. Preparing a pedagogical
+walk-through of six equations connecting quantum mechanics to quantum gravity ---
+Schr\"odinger, Dirac, Maxwell/Aharonov--Bohm, the ADM constraints and
+Wheeler--DeWitt --- exposed \emph{eight} incorrect routines in the library's own
+code, including a Dirac propagator whose norm grew to $3.6\times10^{57}$, an
+eigensolver returning the matrix diagonal instead of its spectrum, Bessel
+functions returning $+50.6$ for a quantity bounded by $1$, and a vacuum
+spacetime reporting non-zero Ricci curvature.
+
+The interesting content is not the bugs but their survival. We show that in
+every case a test existed or could trivially have existed, and analyse why the
+tests that were written could not have failed --- most starkly a Ricci-flatness
+test that handed a \emph{constant} metric to a routine that differentiates its
+argument, so that every derivative vanished and the invariant held trivially.
+We argue that the discriminating property of a useful numerical test is not
+coverage but \emph{falsifiability against an independently known quantity}, and
+that oscillatory, unitary and gauge-invariant structures supply such quantities
+almost for free.
+
+All figures in this paper are generated from the library's own output. The
+measured accuracies, the reproduction scripts and the companion notebook are
+public.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% =====================================================================
+\section{Introduction}
+
+Scientific Python is typically a thin interpreted layer over a fast compiled
+kernel. The compiled part is well tested; the interpreted part --- the loop over
+modes, the boundary handling, the branch between a series and an asymptotic
+expansion --- frequently is not. That layer is where the wall-clock time goes,
+and it is also where silent numerical errors live, because it is the layer least
+likely to be exercised against a known answer.
+
+\textbf{pysic-rs} moves that layer into Rust. The performance argument is
+routine and we do not belabour it. The argument we do want to make is about
+correctness, and it has two parts.
+
+\begin{enumerate}
+\item \textbf{The type system removes a class of mistakes before run time.}
+      Ownership and affine types eliminate use-after-free and data races;
+      exhaustive matching eliminates unhandled branches; and the absence of
+      implicit numeric coercion makes unit and index errors visible at compile
+      time.
+\item \textbf{The type system removes none of the mistakes we actually made.}
+      Every defect reported in Section~\ref{sec:bugs} compiled cleanly, ran
+      without panicking, and returned finite plausible-looking numbers. Types
+      are necessary and radically insufficient.
+\end{enumerate}
+
+The second point is the subject of this paper. What caught these defects was not
+the compiler and not code review, but the discipline of writing a document in
+which every printed number had to be placed next to an independently known
+value.
+
+\subsection{Contributions}
+
+\begin{itemize}
+\item A description of the library's architecture and its validation
+      discipline (Sections~\ref{sec:design}--\ref{sec:validation}).
+\item The mathematical formulation of six equations it solves, each reduced to
+      an invariant that a correct implementation must preserve exactly
+      (Section~\ref{sec:physics}).
+\item A post-mortem of eight defects, with an analysis of why the existing tests
+      did not and structurally \emph{could} not detect them
+      (Section~\ref{sec:bugs}).
+\item Measured accuracy for the full special-function suite, replacing claims
+      that were previously asserted (Section~\ref{sec:accuracy}).
+\end{itemize}
+
+% =====================================================================
+\section{Design}\label{sec:design}
+
+\subsection{Layering}
+
+The crate is a pure-Rust core with an optional, feature-gated PyO3 binding
+layer. Nothing in the core depends on Python, on BLAS or LAPACK, or on a GPU
+runtime; the numerics are written out explicitly so that each algorithm's
+branch structure is legible and testable in isolation.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  box/.style={draw, rounded corners=2pt, minimum height=8mm, align=center, fill=white},
+  lane/.style={draw=gray!40, fill=gray!5, rounded corners=3pt},
+  arr/.style={-{Latex[length=2mm]}, gray!70},
+]
+\node[lane, minimum width=13.6cm, minimum height=1.5cm] (l1) at (0,0) {};
+\node[anchor=west, gray!70, font=\scriptsize\bfseries] at ([xshift=3pt]l1.west) {PYTHON};
+\node[box, fill=teal!12] (np) at (-4.2,0) {NumPy / SciPy\\\scriptsize grading reference};
+\node[box, fill=teal!12] (nb) at (-0.6,0) {Notebooks\\\scriptsize 15 executed};
+\node[box, fill=teal!12] (doc) at (3.2,0) {Sphinx docs\\\scriptsize plots from the library};
+
+\node[lane, minimum width=13.6cm, minimum height=1.3cm] (l2) at (0,-2.0) {};
+\node[anchor=west, gray!70, font=\scriptsize\bfseries] at ([xshift=3pt]l2.west) {BINDING};
+\node[box, fill=gold!18, minimum width=10cm] (pyo3) at (0.3,-2.0)
+  {\texttt{pysicrs.\_core} --- PyO3, abi3-py38, elementwise + broadcasting};
+
+\node[lane, minimum width=13.6cm, minimum height=2.5cm] (l3) at (0,-4.4) {};
+\node[anchor=west, gray!70, font=\scriptsize\bfseries] at ([xshift=3pt]l3.west) {RUST CORE};
+\node[box, fill=rustorange!14] (sf) at (-4.4,-3.8) {special\\functions};
+\node[box, fill=rustorange!14] (ode) at (-1.8,-3.8) {ODE / PDE};
+\node[box, fill=rustorange!14] (gr) at (0.8,-3.8) {GR / ADM};
+\node[box, fill=rustorange!14] (gt) at (3.4,-3.8) {gauge /\\topology};
+\node[box, fill=rustorange!14] (em) at (-4.4,-5.1) {EM / Casimir};
+\node[box, fill=rustorange!14] (qm) at (-1.8,-5.1) {quantum};
+\node[box, fill=rustorange!14] (la) at (0.8,-5.1) {linalg};
+\node[box, fill=rustorange!14] (ca) at (3.4,-5.1) {calculus};
+
+\draw[arr] (pyo3) -- (l1.south-|pyo3);
+\draw[arr] (l3.north-|pyo3) -- (pyo3);
+\node[draw, dashed, rounded corners=2pt, fill=softred!8, font=\scriptsize, align=center]
+  (test) at (5.9,-4.4) {58 tests\\against\\closed forms};
+\draw[arr, softred!70, dashed] (test) -- (l3.east|-test);
+\end{tikzpicture}
+\caption{Layering. The grading reference (NumPy/SciPy) sits strictly outside the
+library, so a shared bug cannot mask itself. The test plane addresses the Rust
+core directly and does not go through Python.}
+\label{fig:arch}
+\end{figure}
+
+\subsection{Binding surface}
+
+Scalar functions are elementwise and shape-preserving: a float returns a float,
+any sequence --- list, tuple, NumPy array --- returns a list. Two-argument
+functions broadcast, and a length mismatch raises rather than truncating.
+
+\begin{lstlisting}[language=Python]
+import numpy as np, pysicrs as ps
+
+x = np.linspace(0.1, 25, 800)
+ps.bessel_j0(x)        # -> list[float], one per grid point
+ps.bessel_j0(2.5)      # -> float
+ps.beta(x, 2.0)        # scalar broadcasts against the sequence
+\end{lstlisting}
+
+\begin{remark}
+This uniformity is not cosmetic. Two of the eighteen special functions
+originally accepted only scalars, which forced a Python-level loop in exactly
+the place --- plotting the function over a grid --- where a reader is most likely
+to notice that the curve is wrong. Awkward interfaces suppress the checks that
+would catch bugs.
+\end{remark}
+
+% =====================================================================
+\section{Validation discipline}\label{sec:validation}
+
+\begin{definition}[Graded routine]
+A routine is \emph{graded} if its output is compared, over a dense sample of its
+domain, against a quantity known independently of the routine: a closed form, a
+tabulated value, a conserved invariant, or an established external library.
+\end{definition}
+
+The emphasis is on \emph{independently}. Three classes of invariant do most of
+the work, and they are cheap because the physics supplies them.
+
+\paragraph{Unitarity.} Any propagator built as a product of exponentials of
+Hermitian operators is unitary, so $\int|\psi|^2$ is an exact invariant of the
+\emph{discrete} scheme --- not merely to truncation order. This is a binary test
+with no tolerance tuning: either the norm holds to round-off or the operator is
+wrong.
+
+\paragraph{Vanishing on a known solution.} Schwarzschild is a vacuum solution,
+so its Ricci scalar is identically zero at every radius and every polar angle.
+Any non-zero result is a defect, with no discretisation excuse available beyond
+the finite-difference residual.
+
+\paragraph{Integrality.} Topological invariants are integers. A winding number
+that returns $2.9997$ is not imprecise; it is broken.
+
+\begin{lesson}
+The three properties above share a feature: they are \emph{falsifiable without
+knowing the answer}. One need not know what $\psi(x,t)$ is to know that its norm
+must not change. Structural invariants are the cheapest tests to write and the
+hardest to satisfy by accident.
+\end{lesson}
+
+% =====================================================================
+\section{Physics and the invariants it supplies}\label{sec:physics}
+
+\subsection{Schr\"odinger and the asymmetry that forced Dirac}
+
+The Schr\"odinger equation is first order in $t$ and second order in $\bm x$;
+under a boost those derivatives transform differently, so it cannot be
+covariant. This is the defect that sent Dirac looking for an alternative.
+
+Writing $\hat H=\hat T+\hat V$ with $\hat T$ diagonal in momentum space and
+$\hat V$ in position space, Strang splitting gives
+\begin{equation}
+e^{-i\hat H\Delta t/\hbar}
+= e^{-i\hat V\Delta t/2\hbar}\,e^{-i\hat T\Delta t/\hbar}\,e^{-i\hat V\Delta t/2\hbar}
++ \mathcal O(\Delta t^3),
+\end{equation}
+each factor unitary. For $V=0$ a Gaussian stays Gaussian with
+$\sigma(t)=\sigma_0\sqrt{1+(\hbar t/m\sigma_0^2)^2}$, which the implementation
+reproduces to $1.6\times10^{-14}$.
+
+The stationary problem discretises to a symmetric tridiagonal matrix whose
+spectrum, for flat $V$, is exactly
+\begin{equation}
+E_k=\frac{2\hbar^2}{m\Delta x^2}\sin^2\!\Big(\frac{k\pi}{2(N+1)}\Big).
+\end{equation}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\begin{loglogaxis}[width=7.4cm,height=5.2cm,
+  xlabel={grid points $N$}, ylabel={relative error in $E_1$},
+  grid=both, grid style={gray!20}, tick label style={font=\footnotesize},
+  label style={font=\footnotesize}, legend style={font=\footnotesize, draw=none},
+  legend pos=north east]
+\addplot[teal, mark=*, thick] coordinates {\databoxconv};
+\addlegendentry{measured}
+\addplot[gray, dashed, domain=50:800, samples=2] {8.0/(x*x)};
+\addlegendentry{$\mathcal O(\Delta x^2)$}
+\end{loglogaxis}
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}
+\begin{loglogaxis}[width=7.4cm,height=5.2cm,
+  xlabel={steps}, ylabel={relative norm drift},
+  grid=both, grid style={gray!20}, tick label style={font=\footnotesize},
+  label style={font=\footnotesize}, legend style={font=\footnotesize, draw=none},
+  legend pos=north west]
+\addplot[teal, mark=*, thick] coordinates {\datadiracnorm};
+\addlegendentry{after fix}
+\addplot[softred, dashed, domain=10:5000, samples=2] {1e57};
+\addlegendentry{before fix ($\sim\!10^{57}$)}
+\end{loglogaxis}
+\end{tikzpicture}
+\caption{Left: the eigensolver converges at the expected second order. Right:
+Dirac norm drift grows linearly with step count, as accumulated round-off
+should. The dashed line marks where the same computation landed before the
+mass-rotation defect was corrected --- note that it is off the top of any
+sensible axis.}
+\label{fig:convergence}
+\end{figure}
+
+\subsection{Dirac, and why unitarity is the whole test}
+
+Requiring first-order derivatives in both $t$ and $\bm x$, together with
+$E^2=p^2c^2+m^2c^4$ on iteration, forces the Clifford algebra
+\begin{equation}
+\{\gamma^\mu,\gamma^\nu\}=2\eta^{\mu\nu}\mathbb 1 .
+\end{equation}
+Numbers commute, so the coefficients must be matrices and $\psi$ a spinor. Spin
+$\tfrac12$ and a negative-energy branch follow as consequences, not postulates;
+the latter is antimatter.
+
+In $1{+}1$ dimensions with $\alpha=\sigma_z$, $\beta=\sigma_x$, the mass factor
+of the split-step propagator is the rotation
+\begin{equation}
+e^{-i\sigma_x\theta/2}=\cos\tfrac{\theta}{2}\,\mathbb 1-i\sin\tfrac{\theta}{2}\,\sigma_x,
+\qquad \theta=\frac{mc^2\Delta t}{\hbar}.
+\label{eq:massrot}
+\end{equation}
+
+\subsection{Zitterbewegung as a closed form}
+
+At $p=0$ the Hamiltonian reduces to $mc^2\sigma_x$ and the evolution is exactly
+solvable:
+\begin{equation}
+\psi(t)=\begin{pmatrix}\cos(mc^2t/\hbar)\\ -i\sin(mc^2t/\hbar)\end{pmatrix}
+\ \Longrightarrow\
+|\psi_R(t)|^2=\frac{1-\cos(2mc^2t/\hbar)}{2},
+\end{equation}
+a beat at the Compton frequency $\omega_{\rm zb}=2mc^2/\hbar$ --- matter and
+antimatter interfering within one packet.
+
+\begin{pitfall}
+Our first measurement of $\omega_{\rm zb}$ integrated to $t=1.2$ when the period
+is $\pi$: less than half a cycle. The FFT returned a frequency wrong by
+$160\%$, with no error and no warning. A correct solver is no protection against
+an incorrect measurement protocol, and a spectral estimate must always be
+reported beside its resolution $2\pi/T$.
+\end{pitfall}
+
+\subsection{Aharonov--Bohm: integrality as a test}
+
+An electron encircling a solenoid acquires $\Delta\varphi=q\Phi/\hbar$ though
+$\bm B=0$ along its entire path. The observable is a geometric phase, and the
+associated invariant is an integer. The implementation returns the winding of
+$e^{in\theta}$ as exactly $n$ for $n=\pm1,\pm2,\pm3$, and the Berry phase of an
+equatorial spinor loop as $-\pi$ to $10^{-10}$.
+
+\subsection{ADM: gravity as a constrained system}
+
+The $3{+}1$ split yields six evolution equations and four constraints carrying
+no time derivative:
+\begin{align}
+\mathcal H &= {}^{(3)}\!R+K^2-K_{ij}K^{ij}-16\pi\rho = 0,\\
+\mathcal M^i &= D_j\big(K^{ij}-\gamma^{ij}K\big)-8\pi j^i = 0 .
+\end{align}
+The total Hamiltonian of general relativity \emph{is} a constraint. On a flat
+slice with $K_{ij}=c\,\delta_{ij}$ one has $\mathcal H=9c^2-3c^2=6c^2$ exactly.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=7.4cm,height=5cm,
+  xlabel={$c$}, ylabel={$\mathcal H$}, grid=both, grid style={gray!20},
+  tick label style={font=\footnotesize}, label style={font=\footnotesize},
+  legend style={font=\footnotesize, draw=none}, legend pos=north west]
+\addplot[only marks, mark=*, teal] coordinates {\dataadmH};
+\addlegendentry{measured}
+\addplot[gold, thick, domain=0:3.1, samples=50] {6*x^2};
+\addlegendentry{$6c^2$}
+\end{axis}
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}
+\begin{loglogaxis}[width=7.4cm,height=5cm,
+  xlabel={$r$ (units of $M$)}, ylabel={$|R|$}, grid=both, grid style={gray!20},
+  tick label style={font=\footnotesize}, label style={font=\footnotesize},
+  legend style={font=\footnotesize, draw=none}, legend pos=south west]
+\addplot[teal, mark=*, thick] coordinates {\dataricci};
+\addlegendentry{corrected (FD residual)}
+\addplot[softred, dashed, mark=square, thick] coordinates {\dataricciold};
+\addlegendentry{frozen-$\theta$ artefact $2/r^2$}
+\end{loglogaxis}
+\end{tikzpicture}
+\caption{Left: the Hamiltonian constraint lands on $6c^2$ with zero deviation.
+Right: Schwarzschild Ricci scalar. A vacuum solution must give exactly zero; the
+dashed curve is what a metric frozen at $\theta=\pi/2$ produces once
+differentiated.}
+\label{fig:adm}
+\end{figure}
+
+\subsection{Wheeler--DeWitt and the disappearance of time}
+
+Quantising the constraint gives $\hat{\mathcal H}\Psi=0$, an equation with no
+time derivative at all. In minisuperspace,
+\begin{equation}
+\frac{d^2\Psi}{da^2}+\frac{p}{a}\frac{d\Psi}{da}-U(a)\Psi=0,
+\qquad U(a)=a^2-\frac{\Lambda}{3}a^4,
+\end{equation}
+with a turning point at $a_t=\sqrt{3/\Lambda}$. Since
+$U'(a_t)=-2\sqrt{3/\Lambda}$, the substitution
+\begin{equation}
+z=-\big[2\sqrt{3/\Lambda}\,\big]^{1/3}(a-a_t)
+\end{equation}
+reduces the equation to $\Psi_{zz}=z\Psi$: the Airy equation. This converts an
+otherwise ungradable problem into one with an external reference.
+
+% =====================================================================
+\section{Eight defects, and why the tests missed them}\label{sec:bugs}
+
+Table~\ref{tab:bugs} summarises. We then analyse the failure of the tests,
+which we consider the more useful result.
+
+\begin{table}[h]
+\centering\footnotesize
+\begin{tabular}{@{}p{3.45cm}p{3.5cm}p{7.15cm}@{}}
+\toprule
+\textbf{Routine} & \textbf{Symptom} & \textbf{Cause} \\
+\midrule
+\texttt{dirac\_split\_step\_1d} & norm $1.77\to3.6\times10^{57}$, independent of $\Delta t$ &
+  \eqref{eq:massrot} coded as $\exp(i\sin\tfrac\theta2)$ --- modulus $1$ --- instead of $i\sin\tfrac\theta2$; the step matrix becomes $\approx\left(\begin{smallmatrix}1&-1\\-1&1\end{smallmatrix}\right)$, singular values $2$ and $0$ \\[2pt]
+\texttt{schrodinger\_eigen\_1d} & $32771$ where $4.93$ expected &
+  Jacobi sweep with a malformed rotation angle and self-referential off-diagonal updates; returned the matrix diagonal, which scales as $1/\Delta x^2$ \\[2pt]
+\texttt{rk45\_solve} & returned \texttt{None} &
+  \texttt{Ok(py.None())} behind a \texttt{TODO}; the error estimator also used non-Dormand--Prince weights and applied component $[0]$ to every component \\[2pt]
+\texttt{ricci\_scalar} & $R=-2/r^2$ in vacuum &
+  metric froze $g_{\varphi\varphi}=r^2$ at $\theta=\pi/2$, so $\partial_\theta g_{\varphi\varphi}=0$ and the angular terms stopped cancelling \\[2pt]
+\texttt{bessel\_j0/j1/y0/y1} & $J_0(7.98)=+50.6$ for $|J_0|\le1$ &
+  four-term Taylor series used to $|x|=8$; asymptotic branch applied \texttt{.sin()} to the coefficient polynomial rather than the phase \\[2pt]
+\texttt{airy\_ai} & \texttt{NaN} at $x=0$ &
+  large-$|x|$ asymptotic applied for all $x\ge-1$, including $\xi=0$ \\[2pt]
+\texttt{expint\_en} & wrong for all $n>1$ &
+  computed $e^{-(k-1)}$ where $e^{-x}$ was meant \\[2pt]
+\texttt{zeta} & $\zeta(2)$ to four digits; $\zeta(-1)$ wrong &
+  $+N^{-s}/2$ where $-N^{-s}/2$ was needed; rising factorial built from $\lfloor s\rfloor$; reflection used \texttt{powi(s as i32)}, truncating $s$ \\
+\bottomrule
+\end{tabular}
+\caption{The eight defects. All compiled cleanly and returned finite values.}
+\label{tab:bugs}
+\end{table}
+
+\subsection{The vacuous test}
+
+The most instructive case had a test. It read, in essence:
+
+\begin{lstlisting}[language=Rust]
+let rs = |_c: &[f64]| schwarzschild_metric(10.0, 1.0);   // ignores _c
+let r = ricci_scalar(&rs, &[0.0, 10.0, FRAC_PI_2, 0.0], 1e-4);
+assert!(r.abs() < 0.1);
+\end{lstlisting}
+
+The closure ignores its coordinate argument. \texttt{ricci\_scalar}
+differentiates the metric it is given, so every derivative of a constant is
+zero, $R$ vanishes identically, and the assertion holds for \emph{any}
+implementation --- including one returning zero unconditionally. The tolerance
+compounds it: $0.1$ would have admitted the $-0.02$ artefact even had the
+closure been correct.
+
+\begin{lesson}
+A test that cannot fail is worse than no test, because it converts absence of
+evidence into apparent evidence of absence. Before trusting an assertion, ask
+what the routine would have to do to violate it. If the answer is ``nothing
+plausible'', the test is measuring the harness.
+\end{lesson}
+
+\subsection{Tolerances chosen for convenience}
+
+Several accuracy claims in the documentation were round numbers rather than
+measurements: $\operatorname{erf}$ was listed at $10^{-14}$ though it implements
+a formula accurate to $1.5\times10^{-7}$ \emph{by construction}; $\zeta$ at
+$10^{-10}$ though it measured $1.3\times10^{-3}$. A tolerance should be derived
+from the method's error term, not chosen so the test passes.
+
+\subsection{Why $\Delta t$-independence was the tell}
+
+The Dirac defect is worth isolating. Norm growth in a PDE solver is usually read
+as instability, prompting a smaller step. Here the final norm was identical for
+$\Delta t=10^{-3}$ and $10^{-5}$. An unstable scheme improves as $\Delta t$
+shrinks; a \emph{non-unitary operator} does not, because the error is in the
+operator rather than in the discretisation of time.
+
+\begin{lesson}
+Sweep $\Delta t$ before diagnosing instability. If the error is invariant under
+the sweep, the defect is algebraic, and no step-size control will rescue it.
+\end{lesson}
+
+\subsection{Distinguishing library defects from user error}
+
+Not all the failures were in the library. The companion notebook's Dirac cell
+packed the spinor as two concatenated blocks when the binding expects
+interleaved $(\psi_L,\psi_R)$ pairs, and separately multiplied the reference
+norm by two ``for two components''. Another cell asserted that a wavepacket
+released outside an attractive well should end up bound with probability
+$\approx1$ --- which no unitary evolution can produce, since binding requires
+shedding energy. Both produced anomalies that looked like solver defects.
+
+\begin{lesson}
+Before reporting a numerical bug, verify that the invariant being tested is one
+the physics actually implies. Roughly a quarter of our ``findings'' were
+incorrect expectations.
+\end{lesson}
+
+% =====================================================================
+\section{Measured accuracy}\label{sec:accuracy}
+
+\begin{table}[h]
+\centering\footnotesize
+\begin{tabular}{@{}llrll@{}}
+\toprule
+\textbf{Function} & \textbf{Domain} & \textbf{Error} & & \textbf{Method}\\
+\midrule
+$\Gamma(x)$ & $(0,100]$ & $7\times10^{-14}$ & rel. & Lanczos\\
+$\ln\Gamma(x)$ & $(0,170]$ & $3\times10^{-13}$ & rel. & Lanczos\\
+$B(a,b)$ & $a,b\in[0.3,8]$ & $1\times10^{-14}$ & rel. & via $\Gamma$\\
+$\operatorname{erf},\operatorname{erfc}$ & $[-6,6]$ & $1\times10^{-7}$ & abs. & A\&S 7.1.26\\
+$J_0,J_1$ & $[-30,30]$ & $5\times10^{-9}$ & abs. & A\&S 9.4\\
+$Y_0,Y_1$ & $(0,30]$ & $2\times10^{-8}$ & abs. & A\&S 9.4\\
+$P_\ell,P_\ell^m$ & $[-1,1]$ & $6\times10^{-15}$ & abs. & recurrence\\
+$T_n,U_n$ & $[-1,1]$ & $3\times10^{-15}$ & abs. & recurrence\\
+$\mathrm{Ai}(x)$ & $[-15,10]$ & $1\times10^{-7}$ & abs. & series + asymptotic\\
+$E_n(x)$, $n\le6$ & $(0,20]$ & $1\times10^{-14}$ & rel. & series + Lentz CF\\
+$\zeta(s)$ & $(1,30]$ & $2\times10^{-15}$ & rel. & Euler--Maclaurin\\
+\bottomrule
+\end{tabular}
+\caption{Measured against SciPy on a dense grid. Two entries are limited by
+their formula rather than the port: A\&S 7.1.26 is $1.5\times10^{-7}$ by
+construction, and $\mathrm{Ai}$ is machine-precision on $|x|\le9$ where the
+series is used, the quoted figure coming from the asymptotic branch beyond.}
+\label{tab:accuracy}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=7.4cm,height=4.6cm, xlabel={$x$}, ylabel={$J_0(x)$},
+  grid=both, grid style={gray!20}, tick label style={font=\footnotesize},
+  label style={font=\footnotesize}, legend style={font=\footnotesize,draw=none}]
+\addplot[teal, thick] coordinates {\databesseljzero};
+\addplot[gray, dashed] coordinates {\databesselenv};
+\end{axis}
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}
+\begin{axis}[width=7.4cm,height=4.6cm, xlabel={$x$}, ylabel={$\mathrm{Ai}(x)$},
+  grid=both, grid style={gray!20}, tick label style={font=\footnotesize},
+  label style={font=\footnotesize}]
+\addplot[teal, thick] coordinates {\dataairy};
+\end{axis}
+\end{tikzpicture}
+\caption{$J_0$ with its $\pm\sqrt{2/\pi x}$ envelope, and $\mathrm{Ai}$ across
+the turning point. Both are smooth through the internal branch switches
+(at $|x|=8$ and $|x|=9$ respectively) --- the discontinuity such a switch can
+introduce is itself worth testing for.}
+\end{figure}
+
+% =====================================================================
+\section{Related work}
+
+General-purpose scientific stacks (SciPy \citep{scipy2020}, GSL
+\citep{gsl}) are far broader than pysic-rs and are the appropriate default.
+Our contribution is not coverage but the explicit pairing of each routine with
+a falsifiable reference, and the decision to publish the resulting failures.
+
+The algorithms themselves are standard: Abramowitz \& Stegun
+\citep{abramowitz1964} for the special-function approximations, Press et
+al.\ \citep{numrecipes} for Dormand--Prince and the modified Lentz continued
+fraction, and the EISPACK implicit QL algorithm \citep{eispack} for the
+symmetric tridiagonal eigenproblem. On the physics side we follow
+Dirac \citep{dirac1928}, Aharonov and Bohm \citep{ab1959}, Arnowitt, Deser and
+Misner \citep{adm1959}, DeWitt \citep{dewitt1967} and Berry
+\citep{berry1984}.
+
+% =====================================================================
+\section{Limitations}
+
+pysic-rs is CPU-only and single-node; there is no GPU backend and no distributed
+execution. Coverage is deliberately narrow --- the equations a graduate course
+in mathematical physics actually treats --- and several modules are
+one-dimensional only. \texttt{erf}/\texttt{erfc} are limited to
+$1.5\times10^{-7}$ by the formula they implement, and \texttt{Ai} to $10^{-7}$
+outside $|x|\le9$; both are documented rather than fixed. The
+$\mathcal O(n^3)$ eigenvector accumulation makes direct diagonalisation
+impractical beyond a few thousand grid points.
+
+Most importantly, Section~\ref{sec:bugs} is a report on the routines we
+examined. We have no basis for asserting that the modules not exercised by this
+work are correct, and the base rate we observed --- eight defects in the
+routines a single document happened to touch --- argues against optimism.
+
+% =====================================================================
+\section{Conclusion}
+
+Rust eliminated an entire class of defects and none of the defects we actually
+had. Every bug reported here was a piece of mathematics transcribed incorrectly
+into code that the compiler had no way to question: a sine exponentiated instead
+of multiplied, a floor applied to a real argument, a sign inverted on a
+correction term.
+
+What caught them was placing each number next to an independently known value.
+That discipline is inexpensive when the physics supplies the invariant, and
+unitarity, vacuum conditions and integrality supply a great many. Our
+recommendation is narrow and, we think, actionable: for each routine, write down
+the quantity it must preserve before writing the routine, and treat any test
+that cannot fail as a defect in its own right.
+
+\subsection*{Reproducibility}
+
+Source, tests, notebooks and the scripts generating every figure in this paper:
+\url{https://github.com/ThotDjehuty/pysic-rs}. Documentation:
+\url{https://pysic-rs.readthedocs.io/}. The companion notebook
+\texttt{14\_dirac\_adm\_wheeler\_dewitt.ipynb} reproduces every measured
+quantity quoted here.
+
+\begin{thebibliography}{99}\footnotesize
+\bibitem[Abramowitz \& Stegun(1964)]{abramowitz1964}
+M.~Abramowitz and I.~A. Stegun, \emph{Handbook of Mathematical Functions},
+National Bureau of Standards, 1964.
+
+\bibitem[Aharonov \& Bohm(1959)]{ab1959}
+Y.~Aharonov and D.~Bohm, ``Significance of Electromagnetic Potentials in the
+Quantum Theory'', \emph{Phys. Rev.} \textbf{115}, 485, 1959.
+
+\bibitem[Arnowitt et al.(1959)]{adm1959}
+R.~Arnowitt, S.~Deser and C.~W. Misner, ``Dynamical Structure and Definition of
+Energy in General Relativity'', \emph{Phys. Rev.} \textbf{116}, 1322, 1959.
+
+\bibitem[Berry(1984)]{berry1984}
+M.~V. Berry, ``Quantal Phase Factors Accompanying Adiabatic Changes'',
+\emph{Proc. R. Soc. Lond. A} \textbf{392}, 45, 1984.
+
+\bibitem[DeWitt(1967)]{dewitt1967}
+B.~S. DeWitt, ``Quantum Theory of Gravity. I. The Canonical Theory'',
+\emph{Phys. Rev.} \textbf{160}, 1113, 1967.
+
+\bibitem[Dirac(1928)]{dirac1928}
+P.~A.~M. Dirac, ``The Quantum Theory of the Electron'', \emph{Proc. R. Soc.
+Lond. A} \textbf{117}, 610, 1928.
+
+\bibitem[Galassi et al.(2009)]{gsl}
+M.~Galassi et al., \emph{GNU Scientific Library Reference Manual}, 3rd ed.,
+Network Theory Ltd., 2009.
+
+\bibitem[Press et al.(2007)]{numrecipes}
+W.~H. Press, S.~A. Teukolsky, W.~T. Vetterling and B.~P. Flannery,
+\emph{Numerical Recipes: The Art of Scientific Computing}, 3rd ed.,
+Cambridge University Press, 2007.
+
+\bibitem[Smith et al.(1976)]{eispack}
+B.~T. Smith et al., \emph{Matrix Eigensystem Routines --- EISPACK Guide},
+Springer, 1976.
+
+\bibitem[Virtanen et al.(2020)]{scipy2020}
+P.~Virtanen et al., ``SciPy 1.0: Fundamental Algorithms for Scientific Computing
+in Python'', \emph{Nature Methods} \textbf{17}, 261, 2020.
+\end{thebibliography}
+
+\end{document}
