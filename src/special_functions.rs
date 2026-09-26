@@ -107,75 +107,135 @@ pub fn erf(x: f64) -> f64 {
 // ============================================================================
 
 /// Bessel function of the first kind, order 0: J_0(x).
+///
+/// Rational minimax approximations (Abramowitz & Stegun 9.4.1/9.4.3), accurate
+/// to about 1e-8 absolute. A short Taylor series is not usable here: it is only
+/// good for |x| of order 1, and the oscillation must be carried by an explicit
+/// phase for larger arguments.
 pub fn bessel_j0(x: f64) -> f64 {
-    if x.abs() < 8.0 {
+    let ax = x.abs();
+    if ax < 1e-3 {
+        // The rational fit carries ~1e-9 of error at the origin; near zero the
+        // Taylor series is exact to machine precision and gives J_0(0) = 1.
         let y = x * x;
-        1.0 + y * (-0.25 + y * (0.015625 + y * (-0.0004340277777777778 + y * 6.944444444444445e-6)))
+        return 1.0 + y * (-0.25 + y / 64.0);
+    }
+    if ax < 8.0 {
+        let y = x * x;
+        let p1 = 57568490574.0
+            + y * (-13362590354.0
+                + y * (651619640.7 + y * (-11214424.18 + y * (77392.33017 + y * -184.9052456))));
+        let p2 = 57568490411.0
+            + y * (1029532985.0 + y * (9494680.718 + y * (59272.64853 + y * (267.8532712 + y))));
+        p1 / p2
     } else {
-        let z = 8.0 / x.abs();
+        let z = 8.0 / ax;
         let y = z * z;
-        let xx = x.abs() - std::f64::consts::FRAC_PI_4;
-        let factor = (0.7978845608028654 + y * 0.00000156).sqrt() / x.abs().sqrt();
-        factor * (xx.cos() + z * (0.1875 + y * (-0.0019444444444444444)).sin())
+        let xx = ax - 0.785398164;
+        let p1 = 1.0
+            + y * (-0.1098628627e-2
+                + y * (0.2734510407e-4 + y * (-0.2073370639e-5 + y * 0.2093887211e-6)));
+        let p2 = -0.1562499995e-1
+            + y * (0.1430488765e-3
+                + y * (-0.6911147651e-5 + y * (0.7621095161e-6 + y * -0.934935152e-7)));
+        (0.636619772 / ax).sqrt() * (xx.cos() * p1 - z * xx.sin() * p2)
     }
 }
 
 /// Bessel function of the first kind, order 1: J_1(x).
 pub fn bessel_j1(x: f64) -> f64 {
-    if x.abs() < 8.0 {
+    let ax = x.abs();
+    if ax < 1e-3 {
         let y = x * x;
-        x * 0.5 * (1.0 + y * (-0.125 + y * (0.005208333333333333 + y * (-0.00010011574074074074))))
+        return 0.5 * x * (1.0 + y * (-0.125 + y / 192.0));
+    }
+    let ans = if ax < 8.0 {
+        let y = x * x;
+        let p1 = ax
+            * (72362614232.0
+                + y * (-7895059235.0
+                    + y * (242396853.1
+                        + y * (-2972611.439 + y * (15704.48260 + y * -30.16036606)))));
+        let p2 = 144725228442.0
+            + y * (2300535178.0 + y * (18583304.74 + y * (99447.43394 + y * (376.9991397 + y))));
+        p1 / p2
     } else {
-        let z = 8.0 / x.abs();
+        let z = 8.0 / ax;
         let y = z * z;
-        let xx = x.abs() - 3.0 * std::f64::consts::FRAC_PI_4;
-        let sign = if x > 0.0 { 1.0 } else { -1.0 };
-        let factor = sign * (0.7978845608028654 + y * 0.00000156).sqrt() / x.abs().sqrt();
-        factor * (xx.cos() + z * (-0.4375 + y * (0.004799152777777778)).sin())
+        let xx = ax - 2.356194491;
+        let p1 = 1.0
+            + y * (0.183105e-2
+                + y * (-0.3516396496e-4 + y * (0.2457520174e-5 + y * -0.240337019e-6)));
+        let p2 = 0.04687499995
+            + y * (-0.2002690873e-3
+                + y * (0.8449199096e-5 + y * (-0.88228987e-6 + y * 0.105787412e-6)));
+        (0.636619772 / ax).sqrt() * (xx.cos() * p1 - z * xx.sin() * p2)
+    };
+    if x < 0.0 {
+        -ans
+    } else {
+        ans
     }
 }
 
-/// Bessel function of the second kind, order 0: Y_0(x) for x > 0.
+/// Bessel function of the second kind, order 0: Y_0(x), for x > 0.
+///
+/// Singular at the origin: `Y_0(x) ~ (2/pi) ln x` as `x -> 0+`. Returns NaN for
+/// non-positive arguments.
 pub fn bessel_y0(x: f64) -> f64 {
     if x <= 0.0 {
         return f64::NAN;
     }
     if x < 8.0 {
         let y = x * x;
-        let j0 = bessel_j0(x);
-        let factor = 2.0 / std::f64::consts::PI;
-        let t = x * 0.5;
-        let euler = 0.5772156649015329;
-        let ln_term = if t > 0.0 { t.ln() } else { f64::NEG_INFINITY };
-        factor * (j0 * (euler + ln_term) - 1.0 - 0.25 * y + y * (0.015625 - y * 0.0004340277777777778))
+        let p1 = -2957821389.0
+            + y * (7062834065.0
+                + y * (-512359803.6 + y * (10879881.29 + y * (-86327.92757 + y * 228.4622733))));
+        let p2 = 40076544269.0
+            + y * (745249964.8 + y * (7189466.438 + y * (47447.26470 + y * (226.1030244 + y))));
+        p1 / p2 + 0.636619772 * bessel_j0(x) * x.ln()
     } else {
         let z = 8.0 / x;
         let y = z * z;
-        let xx = x - std::f64::consts::FRAC_PI_4;
-        let factor = (0.7978845608028654 + y * 0.00000156).sqrt() / x.sqrt();
-        factor * (xx.sin() - z * (0.1875 + y * (-0.0019444444444444444)).cos())
+        let xx = x - 0.785398164;
+        let p1 = 1.0
+            + y * (-0.1098628627e-2
+                + y * (0.2734510407e-4 + y * (-0.2073370639e-5 + y * 0.2093887211e-6)));
+        let p2 = -0.1562499995e-1
+            + y * (0.1430488765e-3
+                + y * (-0.6911147651e-5 + y * (0.7621095161e-6 + y * -0.934935152e-7)));
+        (0.636619772 / x).sqrt() * (xx.sin() * p1 + z * xx.cos() * p2)
     }
 }
 
-/// Bessel function of the second kind, order 1: Y_1(x) for x > 0.
+/// Bessel function of the second kind, order 1: Y_1(x), for x > 0.
 pub fn bessel_y1(x: f64) -> f64 {
     if x <= 0.0 {
         return f64::NAN;
     }
     if x < 8.0 {
         let y = x * x;
-        let j1 = bessel_j1(x);
-        let factor = 2.0 / std::f64::consts::PI;
-        let t = x * 0.5;
-        let euler = 0.5772156649015329;
-        let ln_term = if t > 0.0 { t.ln() } else { f64::NEG_INFINITY };
-        factor * (j1 * (euler + ln_term) - 1.0 / x - 0.5 * x * (1.0 + 0.125 * y * (-1.0 + 0.020833333333333332 * y)))
+        let p1 = x
+            * (-4900604943000.0
+                + y * (1275274390000.0
+                    + y * (-51534381390.0
+                        + y * (734926455.1 + y * (-4237922.726 + y * 8511.937935)))));
+        let p2 = 24995805700000.0
+            + y * (424441966400.0
+                + y * (3733650367.0
+                    + y * (22459040.02 + y * (102042.605 + y * (354.9632885 + y)))));
+        p1 / p2 + 0.636619772 * (bessel_j1(x) * x.ln() - 1.0 / x)
     } else {
         let z = 8.0 / x;
         let y = z * z;
-        let xx = x - 3.0 * std::f64::consts::FRAC_PI_4;
-        let factor = (0.7978845608028654 + y * 0.00000156).sqrt() / x.sqrt();
-        factor * (xx.cos() + z * (0.4375 + y * (-0.004799152777777778)).sin())
+        let xx = x - 2.356194491;
+        let p1 = 1.0
+            + y * (0.183105e-2
+                + y * (-0.3516396496e-4 + y * (0.2457520174e-5 + y * -0.240337019e-6)));
+        let p2 = 0.04687499995
+            + y * (-0.2002690873e-3
+                + y * (0.8449199096e-5 + y * (-0.88228987e-6 + y * 0.105787412e-6)));
+        (0.636619772 / x).sqrt() * (xx.sin() * p1 + z * xx.cos() * p2)
     }
 }
 
@@ -325,24 +385,52 @@ pub fn chebyshev_u(n: usize, x: f64) -> f64 {
 
 /// Airy function Ai(x) via series expansion.
 pub fn airy_ai(x: f64) -> f64 {
-    let x3 = x * x * x / 9.0;
-    let mut sum = 0.0;
-    let mut term = 1.0;
-    // Ai(x) = Σ_{k=0}^∞ x^(3k) / (9^k k! Γ(2k/3 + 1))  ... actually use the standard series
-    // Ai(x) = c1 f(x) - c2 g(x) where f,g are the two linearly independent solutions
-    // For simplicity, use a Padé-like approximation for moderate |x|
-    if x >= -1.0 {
-        // Use the asymptotic for large positive x
-        let xi = 2.0 * x.abs().powf(1.5) / 3.0;
-        let ai = 0.5 * (-xi).exp() / (std::f64::consts::PI * x.abs().sqrt()).sqrt();
-        let series = 1.0 - 5.0 / (72.0 * xi) + 385.0 / (10368.0 * xi * xi);
-        ai * series
+    // Maclaurin series Ai(x) = c1 f(x) - c2 g(x). Ai is entire, so the series
+    // converges everywhere; past |x| ~ 7 cancellation eats the precision and we
+    // switch to the asymptotic expansions instead.
+    const C1: f64 = 0.355028053887817239; //  Ai(0)  = 3^(-2/3)/Gamma(2/3)
+    const C2: f64 = 0.258819403792806798; // -Ai'(0) = 3^(-1/3)/Gamma(1/3)
+    const U1: f64 = 5.0 / 72.0;
+    const U2: f64 = 385.0 / 10368.0;
+    const U3: f64 = 85085.0 / 2239488.0;
+
+    if x.abs() <= 9.0 {
+        let x3 = x * x * x;
+        // f = sum_k t_k with t_0 = 1 and t_{k+1}/t_k = x^3 / ((3k+2)(3k+3))
+        let mut f = 1.0;
+        let mut tf = 1.0;
+        // g = sum_k u_k with u_0 = x and u_{k+1}/u_k = x^3 / ((3k+3)(3k+4))
+        let mut g = x;
+        let mut tg = x;
+        for k in 0..60 {
+            let kf = k as f64;
+            tf *= x3 / ((3.0 * kf + 2.0) * (3.0 * kf + 3.0));
+            tg *= x3 / ((3.0 * kf + 3.0) * (3.0 * kf + 4.0));
+            f += tf;
+            g += tg;
+            if tf.abs() < 1e-18 * f.abs().max(1e-300)
+                && tg.abs() < 1e-18 * g.abs().max(1e-300)
+            {
+                break;
+            }
+        }
+        C1 * f - C2 * g
+    } else if x > 0.0 {
+        // Ai(x) ~ exp(-xi) / (2 sqrt(pi) x^(1/4)) * sum (-1)^k u_k / xi^k
+        let xi = 2.0 * x.powf(1.5) / 3.0;
+        // u_k coefficients of the Airy asymptotic expansion.
+        let series = 1.0 - U1 / xi + U2 / (xi * xi) - U3 / (xi * xi * xi);
+        (-xi).exp() / (2.0 * std::f64::consts::PI.sqrt() * x.powf(0.25)) * series
     } else {
-        // For negative x, use the oscillatory form
-        let phi = 2.0 * (-x).powf(1.5) / 3.0;
-        let ai = 1.0 / (std::f64::consts::PI * (-x).sqrt()).sqrt()
-            * (phi.sin() + 0.25 / phi * (-phi).cos());
-        ai
+        // Ai(-z) ~ sin(xi + pi/4) / (sqrt(pi) z^(1/4)), oscillatory branch
+        let z = -x;
+        let xi = 2.0 * z.powf(1.5) / 3.0;
+        let ph = xi + std::f64::consts::FRAC_PI_4;
+        // Even u_k ride the sine, odd u_k the cosine.
+        let sin_part = 1.0 - U2 / (xi * xi);
+        let cos_part = U1 / xi - U3 / (xi * xi * xi);
+        (ph.sin() * sin_part - ph.cos() * cos_part)
+            / (std::f64::consts::PI.sqrt() * z.powf(0.25))
     }
 }
 
@@ -350,59 +438,77 @@ pub fn airy_ai(x: f64) -> f64 {
 // Exponential integral
 // ============================================================================
 
-/// Exponential integral E_1(x) = ∫_x^∞ e^(-t)/t dt for x > 0.
-pub fn expint_e1(x: f64) -> f64 {
-    if x <= 0.0 {
+/// Generalized exponential integral `E_n(x) = \int_1^\infty e^{-xt}/t^n dt`,
+/// for `x > 0` (and `x >= 0` when `n > 1`).
+///
+/// Series for small `x`, modified-Lentz continued fraction otherwise
+/// (Numerical Recipes 6.3). Returns NaN on arguments outside the domain.
+pub fn expint_en(n: usize, x: f64) -> f64 {
+    const EULER: f64 = 0.5772156649015329;
+    const MAXIT: usize = 200;
+    const EPS: f64 = 1e-15;
+    const FPMIN: f64 = 1e-300;
+
+    if x < 0.0 || (x == 0.0 && (n == 0 || n == 1)) {
         return f64::NAN;
     }
-    if x < 1.0 {
-        let euler = 0.5772156649015329;
-        let mut sum = -euler - x.ln();
-        let mut term = -x;
-        for k in 1..100 {
-            sum += term / k as f64;
-            term *= -x / (k + 1) as f64;
-            if term.abs() < 1e-15 * sum.abs() {
-                break;
+    if n == 0 {
+        return (-x).exp() / x;
+    }
+    if x == 0.0 {
+        return 1.0 / (n as f64 - 1.0);
+    }
+
+    let nm1 = n - 1;
+    if x > 1.0 {
+        // Continued fraction, evaluated by modified Lentz.
+        let mut b = x + n as f64;
+        let mut c = 1.0 / FPMIN;
+        let mut d = 1.0 / b;
+        let mut h = d;
+        for i in 1..=MAXIT {
+            let a = -((i * (nm1 + i)) as f64);
+            b += 2.0;
+            d = 1.0 / (a * d + b);
+            c = b + a / c;
+            let del = c * d;
+            h *= del;
+            if (del - 1.0).abs() < EPS {
+                return h * (-x).exp();
             }
         }
-        sum
+        h * (-x).exp()
     } else {
-        // Continued fraction
-        let mut f = 1.0 / x;
-        let mut c = 1.0 / (x + 1.0);
-        f += c;
-        for n in 1..200 {
-            let an = n as f64;
-            let bn = x + 2.0 * an + 1.0;
-            c = 1.0 / (bn - an * an * c);
-            f += c * (an * an / (bn - an * an * c) - 1.0);
-            if (c * (an * an / (bn - an * an * c) - 1.0)).abs() < 1e-15 * f.abs() {
-                break;
+        // Power series about the origin.
+        let mut ans = if nm1 != 0 {
+            1.0 / nm1 as f64
+        } else {
+            -x.ln() - EULER
+        };
+        let mut fact = 1.0;
+        for i in 1..=MAXIT {
+            fact *= -x / i as f64;
+            let del = if i != nm1 {
+                -fact / (i as f64 - nm1 as f64)
+            } else {
+                let mut psi = -EULER;
+                for ii in 1..=nm1 {
+                    psi += 1.0 / ii as f64;
+                }
+                fact * (-x.ln() + psi)
+            };
+            ans += del;
+            if del.abs() < ans.abs() * EPS {
+                return ans;
             }
         }
-        f * (-x).exp()
+        ans
     }
 }
 
-/// Generalized exponential integral E_n(x) for integer n >= 0.
-pub fn expint_en(n: usize, x: f64) -> f64 {
-    if x <= 0.0 {
-        return f64::NAN;
-    }
-    match n {
-        0 => (-x).exp() / x,
-        1 => expint_e1(x),
-        _ => {
-            // E_n(x) = (1/(n-1)) * (e^(-x) - x * E_{n-1}(x))
-            let mut prev = expint_e1(x);
-            for k in 2..=n {
-                let curr = ((-(k as f64 - 1.0)).exp() - x * prev) / (k as f64 - 1.0);
-                prev = curr;
-            }
-            prev
-        }
-    }
+/// Exponential integral `E_1(x) = \int_x^\infty e^{-t}/t\,dt` for `x > 0`.
+pub fn expint_e1(x: f64) -> f64 {
+    expint_en(1, x)
 }
 
 // ============================================================================
@@ -501,5 +607,109 @@ mod tests {
     fn test_zeta() {
         assert_relative_eq!(zeta(2.0), std::f64::consts::PI * std::f64::consts::PI / 6.0, epsilon = 1e-3);
         assert_relative_eq!(zeta(4.0), std::f64::consts::PI.powi(4) / 90.0, epsilon = 1e-3);
+    }
+
+    /// Bessel functions are bounded by 1 (J) or grow only logarithmically at the
+    /// origin (Y); they must also hit their tabulated zeros. Before the rewrite
+    /// J_0(7.98) returned +50.6 instead of +0.176, because a four-term Taylor
+    /// series was being used all the way out to |x| = 8.
+    #[test]
+    fn test_bessel_reference_values() {
+        // Abramowitz & Stegun table 9.1
+        for &(x, j0v, j1v) in &[
+            (1.0_f64, 0.7651976866, 0.4400505857),
+            (2.0, 0.2238907791, 0.5767248078),
+            (5.0, -0.1775967713, -0.3275791376),
+            (8.0, 0.1716508071, 0.2346363469),
+            (10.0, -0.2459357645, 0.0434727462),
+            (15.0, -0.0142244728, 0.2051040386),
+        ] {
+            assert!((bessel_j0(x) - j0v).abs() < 1e-7, "J0({x}) = {}", bessel_j0(x));
+            assert!((bessel_j1(x) - j1v).abs() < 1e-7, "J1({x}) = {}", bessel_j1(x));
+        }
+        for &(x, y0v, y1v) in &[
+            (1.0_f64, 0.0882569642, -0.7812128213),
+            (5.0, -0.3085176252, 0.1478631434),
+            (10.0, 0.0556711673, 0.2490154242),
+        ] {
+            assert!((bessel_y0(x) - y0v).abs() < 1e-7, "Y0({x}) = {}", bessel_y0(x));
+            assert!((bessel_y1(x) - y1v).abs() < 1e-7, "Y1({x}) = {}", bessel_y1(x));
+        }
+        // Boundedness and parity, including across the 8.0 branch switch.
+        let mut x = -25.0;
+        while x <= 25.0 {
+            assert!(bessel_j0(x).abs() <= 1.0 + 1e-9, "J0({x}) = {}", bessel_j0(x));
+            assert!(bessel_j1(x).abs() <= 0.6, "J1({x}) = {}", bessel_j1(x));
+            assert!((bessel_j0(x) - bessel_j0(-x)).abs() < 1e-12, "J0 not even at {x}");
+            assert!((bessel_j1(x) + bessel_j1(-x)).abs() < 1e-12, "J1 not odd at {x}");
+            x += 0.05;
+        }
+        // First zeros of J0 and J1.
+        assert!(bessel_j0(2.404825558).abs() < 1e-7);
+        assert!(bessel_j1(3.831705970).abs() < 1e-7);
+    }
+
+    /// Ai(0) and Ai'(0) are known in closed form, and Ai must stay finite
+    /// everywhere. The previous implementation applied the large-|x| asymptotic
+    /// at x = 0, where xi = 0, and returned NaN.
+    #[test]
+    fn test_airy_reference_values() {
+        assert!((airy_ai(0.0) - 0.3550280538878172).abs() < 1e-12, "Ai(0) = {}", airy_ai(0.0));
+        // A&S table 10.11
+        for &(x, v) in &[
+            (1.0_f64, 0.1352924163),
+            (2.0, 0.0349241304),
+            (5.0, 1.0834442e-4),
+            (-1.0, 0.5355608833),
+            (-2.0, 0.2274074282),
+            (-5.0, 0.3507610090),
+        ] {
+            assert!((airy_ai(x) - v).abs() < 1e-8, "Ai({x}) = {}", airy_ai(x));
+        }
+        // Finite and bounded across the series/asymptotic switch at |x| = 9.
+        let mut x = -15.0;
+        while x <= 12.0 {
+            let a = airy_ai(x);
+            assert!(a.is_finite(), "Ai({x}) is not finite");
+            assert!(a.abs() < 1.0, "Ai({x}) = {a} out of range");
+            x += 0.05;
+        }
+        // First zero of Ai.
+        assert!(airy_ai(-2.338107410).abs() < 1e-8);
+    }
+
+    /// E_n satisfies the recurrence n E_{n+1}(x) = e^{-x} - x E_n(x), and
+    /// E_1 has known values. The old code wrote exp(-(k-1)) where exp(-x) was
+    /// meant, so E_n was wrong for every n > 1.
+    #[test]
+    fn test_expint_reference_values() {
+        // A&S table 5.1
+        for &(x, v) in &[
+            (0.5_f64, 0.5597735947),
+            (1.0, 0.2193839344),
+            (2.0, 0.0489005107),
+            (5.0, 1.1482955e-3),
+        ] {
+            assert!((expint_e1(x) - v).abs() < 1e-9, "E1({x}) = {}", expint_e1(x));
+        }
+        // E_n(0) = 1/(n-1) for n > 1.
+        for n in 2..8 {
+            assert!(
+                (expint_en(n, 0.0) - 1.0 / (n as f64 - 1.0)).abs() < 1e-12,
+                "E_{n}(0) = {}",
+                expint_en(n, 0.0)
+            );
+        }
+        // Recurrence, across both the series and continued-fraction branches.
+        for &x in &[0.1_f64, 0.5, 0.9, 1.1, 2.0, 5.0, 10.0] {
+            for n in 1..6 {
+                let lhs = n as f64 * expint_en(n + 1, x);
+                let rhs = (-x).exp() - x * expint_en(n, x);
+                assert!(
+                    (lhs - rhs).abs() < 1e-10 * lhs.abs().max(1e-10),
+                    "recurrence broken at n={n}, x={x}: {lhs} vs {rhs}"
+                );
+            }
+        }
     }
 }

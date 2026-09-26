@@ -30,6 +30,8 @@ pub mod constants;
 
 // Foundational modules
 pub mod special_functions;
+#[cfg(feature = "python")]
+pub mod special_functions_bindings;
 pub mod linalg;
 pub mod calculus;
 
@@ -81,6 +83,9 @@ fn _core(_py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     // Casimir
     casimir::python_bindings::register_python_functions(m)?;
+
+    // Special functions
+    special_functions_bindings::register_python_functions(m)?;
 
     Ok(())
 }
