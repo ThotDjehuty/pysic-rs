@@ -2,13 +2,18 @@
 
 use num_complex::Complex64;
 
-/// Static Green's function for the Laplacian in 3D:
-/// G(r) = -1/(4π|r|)
+/// Static Green's function for the Laplacian in 3D, in the convention
+/// ∇²G = -δ³(r):
+/// G(r) = 1/(4π|r|)
+///
+/// This is the standard electromagnetic convention, so that the potential of a
+/// positive charge comes out positive via φ = ∫G ρ/ε₀ d³r'. It matches
+/// `green_fn_retarded` below, which likewise carries a positive 1/(4πr).
 pub fn green_fn_static(r: f64) -> f64 {
     if r < 1e-15 {
         0.0
     } else {
-        -1.0 / (4.0 * std::f64::consts::PI * r)
+        1.0 / (4.0 * std::f64::consts::PI * r)
     }
 }
 
@@ -76,7 +81,20 @@ mod tests {
     #[test]
     fn test_static_gfn() {
         let g = green_fn_static(1.0);
-        assert!((g - (-1.0 / (4.0 * std::f64::consts::PI))).abs() < 1e-10);
+        assert!((g - 1.0 / (4.0 * std::f64::consts::PI)).abs() < 1e-10);
+    }
+
+    /// Gauss's law fixes the coefficient: for ∇²G = -δ³, the flux of ∇G through
+    /// any enclosing sphere is exactly -1.
+    #[test]
+    fn static_gfn_satisfies_gauss_law() {
+        for r in [0.3, 1.0, 7.0] {
+            // G = 1/(4πr) ⇒ ∂_r G = -1/(4πr²) ⇒ flux = ∂_r G · 4πr² = -1.
+            let dr = 1e-6;
+            let dgdr = (green_fn_static(r + dr) - green_fn_static(r - dr)) / (2.0 * dr);
+            let flux = dgdr * 4.0 * std::f64::consts::PI * r * r;
+            assert!((flux + 1.0).abs() < 1e-6, "flux at r={r} was {flux}, expected -1");
+        }
     }
 
     #[test]

@@ -35,11 +35,48 @@ fn winding_number_py(f1: Vec<f64>, f2: Vec<f64>) -> PyResult<f64> {
     Ok(super::winding::winding_number_real(&f1, &f2))
 }
 
+/// Skyrmion number Q = (1/4π) ∫ n̂ · (∂_x n̂ × ∂_y n̂) d²x.
+///
+/// `n_field` is indexed `[ix][iy][component]` with exactly 3 components per
+/// grid point. Central differences are used, so the grid must be at least
+/// 3 × 3.
 #[pyfunction]
 fn skyrmion_number_py(n_field: Vec<Vec<Vec<f64>>>, dx: f64, dy: f64) -> PyResult<f64> {
+    use pyo3::exceptions::PyValueError;
+
     let nx = n_field.len();
+    if nx < 3 {
+        return Err(PyValueError::new_err(format!(
+            "n_field must have at least 3 rows for central differences, got {nx}"
+        )));
+    }
     let ny = n_field[0].len();
-    let mut field = vec![[[0.0f64; 3]; 3]; 3]; // Placeholder
-    // In practice, reshape properly
-    Ok(0.0)
+    if ny < 3 {
+        return Err(PyValueError::new_err(format!(
+            "n_field must have at least 3 columns for central differences, got {ny}"
+        )));
+    }
+
+    let mut field: Vec<Vec<[f64; 3]>> = Vec::with_capacity(nx);
+    for (ix, row) in n_field.iter().enumerate() {
+        if row.len() != ny {
+            return Err(PyValueError::new_err(format!(
+                "n_field is ragged: row {ix} has {} entries, expected {ny}",
+                row.len()
+            )));
+        }
+        let mut out_row: Vec<[f64; 3]> = Vec::with_capacity(ny);
+        for (iy, v) in row.iter().enumerate() {
+            if v.len() != 3 {
+                return Err(PyValueError::new_err(format!(
+                    "n_field[{ix}][{iy}] has {} components, expected 3",
+                    v.len()
+                )));
+            }
+            out_row.push([v[0], v[1], v[2]]);
+        }
+        field.push(out_row);
+    }
+
+    Ok(super::winding::skyrmion_number(&field, dx, dy))
 }

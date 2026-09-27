@@ -12,8 +12,13 @@ pub fn larmor_formula(
         / (4.0 * std::f64::consts::PI * eps0 * c * c * c)
 }
 
-/// Dipole radiation power: P = (μ₀ ω⁴ |p|²)/(12π c³)
-/// where p is the electric dipole moment.
+/// Time-averaged power radiated by an oscillating electric dipole:
+/// P = (μ₀ ω⁴ |p|²)/(12π c)
+///
+/// Equivalently P = ω⁴|p|²/(12π ε₀ c³), since μ₀ = 1/(ε₀c²). Note the single
+/// power of c: an electric dipole moment carries units of C·m, so
+/// [μ₀p²ω⁴/c] = W. (The magnetic-dipole result below keeps c³ because a
+/// magnetic moment has different dimensions — the two must not be confused.)
 pub fn dipole_radiation(
     dipole_moment: f64,
     omega: f64,
@@ -21,7 +26,7 @@ pub fn dipole_radiation(
     c: f64,
 ) -> f64 {
     mu0 * omega.powi(4) * dipole_moment * dipole_moment
-        / (12.0 * std::f64::consts::PI * c * c * c)
+        / (12.0 * std::f64::consts::PI * c)
 }
 
 /// Radiation power for an oscillating dipole: p(t) = p₀ cos(ωt).
@@ -34,8 +39,11 @@ pub fn radiation_power_oscillating(
     dipole_radiation(p0, omega, mu0, c)
 }
 
-/// Angular distribution of dipole radiation:
-/// dP/dΩ = (μ₀ ω⁴ |p|²)/(32π² c³) sin²θ
+/// Angular distribution of electric-dipole radiation:
+/// dP/dΩ = (μ₀ ω⁴ |p|²)/(32π² c) sin²θ
+///
+/// Consistent with `dipole_radiation` by construction: ∫sin²θ dΩ = 8π/3, so
+/// integrating this over the sphere returns μ₀ω⁴|p|²/(12πc).
 pub fn dipole_angular_distribution(
     theta: f64,
     dipole_moment: f64,
@@ -44,7 +52,7 @@ pub fn dipole_angular_distribution(
     c: f64,
 ) -> f64 {
     let prefactor = mu0 * omega.powi(4) * dipole_moment * dipole_moment
-        / (32.0 * std::f64::consts::PI * std::f64::consts::PI * c * c * c);
+        / (32.0 * std::f64::consts::PI * std::f64::consts::PI * c);
     prefactor * theta.sin().powi(2)
 }
 

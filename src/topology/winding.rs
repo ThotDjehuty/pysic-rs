@@ -56,8 +56,13 @@ pub fn winding_number_real(
 /// Topological charge (skyrmion number) for a 2D field:
 /// Q = (1/4π) ∫ n̂ · (∂_x n̂ × ∂_y n̂) d²x
 /// where n̂ is a unit vector field.
+///
+/// `n_field` is indexed `[ix][iy]` and each entry is the 3-component unit
+/// vector n̂ at that grid point, so the grid may be any nx × ny. (The previous
+/// signature was `&[[[f64; 3]; 3]]`, which pinned the second axis to exactly
+/// three columns and made the function uncallable for a real grid.)
 pub fn skyrmion_number(
-    n_field: &[[[f64; 3]; 3]],  // n̂(x, y) unit vectors on grid
+    n_field: &[Vec<[f64; 3]>],  // n̂(x, y) unit vectors on an nx × ny grid
     dx: f64,
     dy: f64,
 ) -> f64 {

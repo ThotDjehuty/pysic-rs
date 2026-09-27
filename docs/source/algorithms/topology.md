@@ -8,9 +8,25 @@ discrete (lattice) evaluations.
 > `winding_number`, and `skyrmion_number` are bound. `berry_curvature`, the discrete
 > variants, and the TKNN helpers are Rust-only. See the [API page](../api/topology.md).
 
+**Every figure on this page was produced by calling these functions** — see
+`docs/make_topology_figures.py`. Nothing is plotted from another library's
+topological invariants; where a closed form appears it is a dashed reference
+line, labelled as such.
+
 ---
 
 ## 1. Berry Phase
+
+```{figure} ../_static/figures/topo_berry_phase.svg
+:alt: Berry phase on the Bloch sphere, closed form against the discrete Wilson loop
+:width: 100%
+
+Left: the closed form $\gamma=-\pi(1-\cos\theta)$ from `berry_phase_bloch`, with circles
+showing the discrete estimator `berry_phase` applied to the explicit spin-½ states
+$|n\rangle=(\cos\tfrac\theta2,\ \sin\tfrac\theta2 e^{i\varphi})$ carried once around
+$\varphi\colon0\to2\pi$. The two agree to $2.5\times10^{-5}$ rad. Right: the phase is
+exactly half the enclosed solid angle — the geometric content of the result.
+```
 
 ### 1.1 Adiabatic Evolution & Geometric Phase
 
@@ -93,6 +109,29 @@ loop.
 
 ## 2. Chern Number (TKNN Invariant)
 
+```{figure} ../_static/figures/topo_chern_qwz.svg
+:alt: Quantized Chern plateaus of the Qi-Wu-Zhang model
+:width: 100%
+
+For a two-band Hamiltonian $H=\mathbf d(\mathbf k)\cdot\boldsymbol\sigma$ the Chern number
+*is* the skyrmion number of $\hat{\mathbf d}$ over the Brillouin zone, so `skyrmion_number`
+computes it directly. Left: sweeping the Qi–Wu–Zhang mass $m$ with
+$\mathbf d=(\sin k_x,\ \sin k_y,\ m+\cos k_x+\cos k_y)$ gives the plateaus
+$C=0,+1,-1,0$ with transitions at $m=0,\pm2$ (dashed) where the gap closes and the
+invariant is undefined. Right: the plateaus approach exact integers as the $k$-grid is
+refined — quantization is recovered numerically, not imposed.
+```
+
+```{figure} ../_static/figures/topo_chern_integrator.svg
+:alt: chern_number recovers the prescribed Chern number from a curvature grid
+:width: 70%
+:align: center
+
+`chern_number` performs the $\frac1{2\pi}\int\Omega\,d^2k$ integration. Feeding it a
+constant curvature $\Omega=2\pi C/L^2$ returns $C$ to within $2\times10^{-13}$ across
+$C=-3\ldots3$.
+```
+
 ### 2.1 Definition
 
 For a 2D parameter space (e.g. the Brillouin zone), the **first Chern number** of band $n$
@@ -143,6 +182,15 @@ This is the lattice Berry flux method implemented by `chern_number_discrete`.
 
 ## 3. Winding Number
 
+```{figure} ../_static/figures/topo_winding.svg
+:alt: Curves winding 1, 2, 3 and -2 times about the origin
+:width: 100%
+
+Closed curves $z(t)=(1+0.3\cos t)e^{int}$ carried once around, with the winding number
+returned by `winding_number` in each title. The radial modulation keeps $|z|>0$ while
+separating the loops visually; the sign tracks orientation.
+```
+
 ### 3.1 Definition
 
 For a map $g: S^1\to S^1$ (a closed curve in the complex plane avoiding the origin), the
@@ -179,6 +227,18 @@ winding.
 ---
 
 ## 4. Skyrmion Number
+
+```{figure} ../_static/figures/topo_skyrmion.svg
+:alt: Belavin-Polyakov hedgehog texture and convergence of its topological charge
+:width: 100%
+
+Left: the Belavin–Polyakov profile $\hat{\mathbf n}=(2x,\,2y,\,r^2-1)/(r^2+1)$, with the
+in-plane components as arrows and $n_z$ shaded — the texture wraps the target sphere
+exactly once. Right: `skyrmion_number` converges to $|Q|=1$ as the domain grows. The
+charge density is $q(r)=4/(1+r^2)^2$, so a domain of half-width $R$ necessarily omits
+$1/(1+R^2)$ of the total; the error follows that analytic tail until the fixed
+$h=0.05$ spacing becomes the limiting factor near $R\approx20$.
+```
 
 ### 4.1 Definition
 
@@ -219,34 +279,99 @@ degree of the map. For a compact manifold without boundary, this must be an inte
 
 ## 6. Usage Examples
 
-### Discrete Chern number of a Landau-level band
+All of the following run against the bound API and reproduce the printed values.
+
+### Berry phase around a loop
 
 ```python
-from pysicrs import chern_number_discrete
+import math
+from pysicrs import berry_phase, berry_phase_bloch
 
-# Lattice Berry flux per plaquette on a 12×12 BZ sample
-C = chern_number_discrete(plaq_flux)
-print(int(round(C)))   # 1 for lowest Landau level
+theta = math.pi / 3                      # cone half-angle
+phis = [2 * math.pi * i / 400 for i in range(400)]
+# |n(θ,φ)⟩ = (cos θ/2, sin θ/2 · e^{iφ}), passed as separate re/im parts
+re = [[math.cos(theta / 2), math.sin(theta / 2) * math.cos(p)] for p in phis]
+im = [[0.0,                 math.sin(theta / 2) * math.sin(p)] for p in phis]
+
+gamma = berry_phase(re, im)              # discrete Wilson loop
+gamma = gamma - 2 * math.pi if gamma > 0 else gamma   # onto the closed-form branch
+print(f"discrete    γ = {gamma:+.6f} rad")            # -1.570772
+print(f"closed form γ = {berry_phase_bloch(theta):+.6f} rad")  # -1.570796
 ```
 
 ### Winding number of a closed curve
 
 ```python
-from pysicrs import winding_number_discrete
-import math, cmath
+import math
+from pysicrs import winding_number
 
-# z(t) = e^{i·2t}: winds twice around the origin
-points = [cmath.exp(2j*t) for t in (i/100*2*math.pi for i in range(101))]
-w = winding_number_discrete([p.real for p in points], [p.imag for p in points])
-print(w)   # 2
+for n in (1, 2, -3):
+    ts = [2 * math.pi * i / 2000 for i in range(2000)]
+    f1 = [math.cos(n * t) for t in ts]
+    f2 = [math.sin(n * t) for t in ts]
+    print(n, "->", winding_number(f1, f2))   # 1 -> 1,  2 -> 2,  -3 -> -3
 ```
 
-### Berry phase around a loop
+### Chern number of a two-band model
+
+For $H=\mathbf d(\mathbf k)\cdot\boldsymbol\sigma$ the Chern number is precisely the
+skyrmion number of $\hat{\mathbf d}$ over the Brillouin zone, so one routine covers both:
 
 ```python
-from pysicrs import berry_phase
-# Spin-1/2 in a varying magnetic field: loop that encloses a monopole
-# gives γ = 2π × (solid angle)/4π
+import math
+from pysicrs import skyrmion_number
+
+def qwz_chern(m, nk=64):
+    dk = 2 * math.pi / nk
+    ks = [-math.pi + (i - 1) * dk for i in range(nk + 2)]  # padded for the stencil
+    grid = []
+    for kx in ks:
+        row = []
+        for ky in ks:
+            dx, dy = math.sin(kx), math.sin(ky)
+            dz = m + math.cos(kx) + math.cos(ky)
+            nrm = math.sqrt(dx*dx + dy*dy + dz*dz)         # ≠ 0 unless m = 0, ±2
+            row.append([dx / nrm, dy / nrm, dz / nrm])
+        grid.append(row)
+    return skyrmion_number(grid, dk, dk)
+
+for m in (-3.0, -1.0, 1.0, 3.0):
+    print(f"m={m:+.1f}  C={qwz_chern(m):+.4f}")
+# m=-3.0  C=+0.0001   m=-1.0  C=+0.9958
+# m=+1.0  C=-0.9958   m=+3.0  C=-0.0001
+```
+
+```{note}
+At $m=0$ and $m=\pm2$ the gap closes, $\mathbf d(\mathbf k)=0$ somewhere in the zone, and
+the Chern number is genuinely undefined — not a numerical failure but the physics of a
+topological transition.
+```
+
+### Chern number from a Berry-curvature grid
+
+```python
+import math
+from pysicrs import chern_number
+
+n, L = 64, 1.0
+for target in (0, 1, -2):
+    curvature = [[2 * math.pi * target / (L * L)] * n for _ in range(n)]
+    print(target, "->", round(chern_number(curvature, L / n), 6))
+# 0 -> 0.0,  1 -> 1.0,  -2 -> -2.0
+```
+
+### Skyrmion number of a hedgehog texture
+
+```python
+from pysicrs import skyrmion_number
+
+span, npts = 16.0, 641
+coords = [-span + 2 * span * i / (npts - 1) for i in range(npts)]
+h = coords[1] - coords[0]
+field = [[[2*x/(x*x+y*y+1), 2*y/(x*x+y*y+1), (x*x+y*y-1)/(x*x+y*y+1)]
+          for y in coords] for x in coords]
+
+print(f"|Q| = {abs(skyrmion_number(field, h, h)):.4f}")   # 0.9951  (exact: 1)
 ```
 
 ---

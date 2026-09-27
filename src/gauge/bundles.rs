@@ -1,36 +1,58 @@
 //! Lie algebras and gauge group structures.
 
+/// Fill every permutation of (a,b,c) with the parity-correct sign.
+///
+/// The structure constants of a compact simple Lie algebra in an orthonormal
+/// basis are **totally antisymmetric**, so one independent value determines all
+/// six orderings: even permutations get `+v`, odd permutations get `-v`. Writing
+/// them out by hand invites sign slips and duplicate assignments, so the table
+/// below lists only the independent entries and this helper does the rest.
+fn set_antisymmetric<const N: usize>(f: &mut [[[f64; N]; N]; N], a: usize, b: usize, c: usize, v: f64) {
+    f[a][b][c] = v;
+    f[b][c][a] = v;
+    f[c][a][b] = v;
+    f[a][c][b] = -v;
+    f[c][b][a] = -v;
+    f[b][a][c] = -v;
+}
+
 /// Structure constants f^{abc} for SU(2): f^{abc} = ε^{abc}.
 pub fn su2_structure_constants() -> [[[f64; 3]; 3]; 3] {
     let mut f = [[[0.0; 3]; 3]; 3];
-    f[0][1][2] = 1.0; f[1][2][0] = 1.0; f[2][0][1] = 1.0;
-    f[0][2][1] = -1.0; f[2][1][0] = -1.0; f[1][0][2] = -1.0;
+    set_antisymmetric(&mut f, 0, 1, 2, 1.0);
     f
 }
 
-/// Structure constants f^{abc} for SU(3) (Gell-Mann basis).
+/// Structure constants f^{abc} for SU(3) in the Gell-Mann basis.
+///
+/// Convention: T^a = λ^a/2 with [T^a, T^b] = i f^{abc} T^c. The independent
+/// non-zero values (1-indexed, as they are usually tabulated) are
+///
+/// ```text
+/// f^{123} = 1
+/// f^{147} = 1/2    f^{156} = -1/2
+/// f^{246} = 1/2    f^{257} =  1/2
+/// f^{345} = 1/2    f^{367} = -1/2
+/// f^{458} = √3/2   f^{678} =  √3/2
+/// ```
+///
+/// with every other non-zero component fixed by total antisymmetry. That gives
+/// 9 × 3! = 54 non-zero entries out of 8³ = 512.
 pub fn su3_structure_constants() -> [[[f64; 8]; 8]; 8] {
     let mut f = [[[0.0; 8]; 8]; 8];
+    let h = 0.5;
+    let s = 3.0_f64.sqrt() / 2.0;
 
-    // Non-zero structure constants for SU(3)
-    // f^{123} = 1
-    f[0][1][2] = 1.0; f[1][2][0] = 1.0; f[2][0][1] = 1.0;
-    f[0][2][1] = -1.0; f[2][1][0] = -1.0; f[1][0][2] = -1.0;
-
-    // f^{147} = f^{246} = f^{257} = f^{345} = 1/2
-    f[0][3][6] = 0.5; f[0][6][3] = 0.5; f[6][3][0] = 0.5;
-    f[0][6][3] = -0.5; f[6][0][3] = -0.5; f[3][0][6] = -0.5;
-    f[3][6][0] = -0.5; f[6][0][3] = 0.5; f[0][3][6] = -0.5;
-
-    // More non-zero components...
-    f[1][3][5] = 0.5; f[1][5][3] = 0.5; f[5][3][1] = 0.5;
-    f[1][4][6] = 0.5; f[1][6][4] = 0.5; f[6][4][1] = 0.5;
-    f[2][3][4] = 0.5; f[2][4][3] = 0.5; f[4][3][2] = 0.5;
-
-    // f^{458} = f^{678} = √3/2
-    let sqrt3_2 = 3.0_f64.sqrt() / 2.0;
-    f[3][4][7] = sqrt3_2; f[4][7][3] = sqrt3_2; f[7][3][4] = sqrt3_2;
-    f[5][6][7] = sqrt3_2; f[6][7][5] = sqrt3_2; f[7][5][6] = sqrt3_2;
+    // Indices below are 0-based: subtract one from the tabulated values above.
+    set_antisymmetric(&mut f, 0, 1, 2, 1.0); // f^{123}
+    set_antisymmetric(&mut f, 0, 3, 6, h); //  f^{147}
+    set_antisymmetric(&mut f, 0, 4, 5, -h); // f^{156}
+    set_antisymmetric(&mut f, 1, 3, 5, h); //  f^{246}
+    set_antisymmetric(&mut f, 1, 4, 6, h); //  f^{257}
+    set_antisymmetric(&mut f, 2, 3, 4, h); //  f^{345}
+    set_antisymmetric(&mut f, 2, 5, 6, -h); // f^{367}
+    set_antisymmetric(&mut f, 3, 4, 7, s); //  f^{458}
+    set_antisymmetric(&mut f, 5, 6, 7, s); //  f^{678}
 
     f
 }

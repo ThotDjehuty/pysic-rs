@@ -4,13 +4,27 @@ Pysic-rs implements the classical results of electrodynamics — Green's functio
 canonical radiation-formula family — in natural SI units with explicit physical constants.
 
 > **Python binding status:** `green_fn_static`, `larmor_formula`, `dipole_radiation`,
-> `field_strength_point_charge`, and `compton_wavelength_shift` are bound. The retarded/
-> advanced Green's functions and the angular-distribution helpers are Rust-only. See the
-> [API page](../api/em.md).
+> `dipole_angular_distribution`, `field_strength_point_charge`, and
+> `compton_wavelength_shift` are bound. The retarded/advanced Green's functions and the
+> remaining multipole helpers are Rust-only. See the [API page](../api/em.md).
+
+**Every figure on this page was produced by calling these functions** — see
+`docs/make_em_figures.py`. Closed forms, where shown, are dashed reference lines and
+are labelled as such; the fitted log–log slopes are measured from the library's own
+output.
 
 ---
 
 ## 1. Maxwell's Equations
+
+```{figure} ../_static/figures/em_point_charge.svg
+:alt: Coulomb field of a point charge, linear and log-log
+:width: 100%
+
+The canonical solution of Gauss's law, from `field_strength_point_charge`. The fitted
+log–log slope is $-2.0000$, recovering $E_r\propto r^{-2}$ from the returned values
+rather than asserting it.
+```
 
 ### 1.1 Differential Form
 
@@ -61,6 +75,16 @@ since partial derivatives commute. The physics is invariant — only gauge-varia
 
 ## 2. Green's Functions
 
+```{figure} ../_static/figures/em_green_static.svg
+:alt: Static Green's function and its inverse-r slope
+:width: 100%
+
+`green_fn_static` in the convention $\nabla^2G=-\delta^3(\mathbf r)$, so
+$G=+1/(4\pi r)$ and a positive charge yields a positive potential — the same sign
+convention as the retarded Green's function below. The measured log–log slope is
+$-1.0000$.
+```
+
 ### 2.1 Helmholtz/Poisson Operator
 
 The Green function $G(\mathbf{r},\mathbf{r}')$ solves
@@ -79,11 +103,13 @@ $$
 }
 $$
 
-*Proof.* In spherical coordinates centered at $\mathbf{r}'$, $G = G(r)$. The equation
-becomes $\frac{1}{r^2}\partial_r(r^2\partial_r G) = -\delta^3(\mathbf{r})/r^2$, so
-$r^2\partial_r G = -1$ for $r>0$, giving $G = 1/(4\pi r) + C$. The constant $C$ is fixed
-by requiring the total flux through a sphere to equal 1: $\oint\nabla G\cdot d\mathbf{S}
-= -1$. $\square$
+*Proof.* In spherical coordinates centered at $\mathbf{r}'$, $G = G(r)$, and away from
+the origin $\nabla^2 G = \frac{1}{r^2}\partial_r(r^2\partial_r G) = 0$, so
+$r^2\partial_r G$ is a constant and $G = A/r + C$. Integrating $\nabla^2 G =
+-\delta^3(\mathbf{r})$ over a ball of radius $r$ and applying the divergence theorem
+gives $\oint\nabla G\cdot d\mathbf{S} = -1$; with $\nabla G = -(A/r^2)\hat{\mathbf r}$
+this is $-4\pi A = -1$, hence $A = 1/(4\pi)$. Requiring $G\to0$ as $r\to\infty$ sets
+$C = 0$. $\square$
 
 ### 2.3 Retarded Green's Function (Causal)
 
@@ -126,6 +152,15 @@ where $t_{\rm ret} = t - |\mathbf{r}-\mathbf{r}'|/c$ is the retarded time.
 
 ### 3.1 Larmor Formula
 
+```{figure} ../_static/figures/em_larmor.svg
+:alt: Larmor power scaling quadratically in acceleration and in charge
+:width: 100%
+
+`larmor_formula` is quadratic in both arguments: the fitted log–log slopes are $2.000$
+against acceleration and $2.000$ against charge. The dotted marker locates the
+elementary charge.
+```
+
 **Theorem (Larmor).** A point charge $q$ with acceleration $a$ radiates total power
 
 $$
@@ -141,11 +176,29 @@ $\mathbf{S}\cdot\hat{n}$ over the sphere and using the dipole pattern $\langle\s
 
 ### 3.2 Dipole Radiation
 
+```{figure} ../_static/figures/em_dipole.svg
+:alt: Dipole power against frequency and the sin-squared angular pattern
+:width: 100%
+
+Left: `dipole_radiation` gives a fitted slope of $4.000$, the $\omega^4$ law that makes
+the sky blue. Right: `dipole_angular_distribution` traces the $\sin^2\theta$ torus with
+its null along the dipole axis. The two are mutually consistent — integrating the
+angular pattern over the sphere reproduces the total power to a relative
+$5\times10^{-15}$, since $\int\sin^2\theta\,d\Omega=8\pi/3$.
+```
+
 For an oscillating electric dipole $\mathbf{p}(t) = p_0\cos(\omega t)\,\hat{z}$:
 
 $$
-\boxed{P = \frac{\mu_0\omega^4 p_0^2}{12\pi c^3}}
+\boxed{P = \frac{\mu_0\omega^4 p_0^2}{12\pi c}
+      = \frac{\omega^4 p_0^2}{12\pi\varepsilon_0 c^3}}
 $$
+
+Both forms are the same number, since $\mu_0=1/(\varepsilon_0c^2)$. Note the **single**
+power of $c$ alongside $\mu_0$: an electric dipole moment carries units of
+$\mathrm{C\,m}$, and $[\mu_0p_0^2\omega^4/c]=\mathrm{W}$. The magnetic-dipole result in
+§3.3 keeps $c^3$ because a magnetic moment has different dimensions — the two must not be
+conflated.
 
 The $\omega^4$ dependence is the **Rayleigh scattering law** — small particles scatter
 shorter wavelengths much more efficiently (explaining the blue sky).
@@ -153,8 +206,12 @@ shorter wavelengths much more efficiently (explaining the blue sky).
 **Angular distribution:**
 
 $$
-\frac{dP}{d\Omega} = \frac{\mu_0\omega^4 p_0^2}{32\pi^2 c^3}\sin^2\theta
+\frac{dP}{d\Omega} = \frac{\mu_0\omega^4 p_0^2}{32\pi^2 c}\sin^2\theta
 $$
+
+This integrates to the boxed total power by construction, because
+$\int\sin^2\theta\,d\Omega = 8\pi/3$ and $\tfrac{8\pi}{3}\cdot\tfrac1{32\pi^2}
+= \tfrac1{12\pi}$.
 
 The $\sin^2\theta$ pattern is the classic **dipole lobe** — maximum radiation perpendicular
 to the dipole axis, zero along it.
@@ -182,6 +239,16 @@ regime for $\lambda \gg r_e$).
 
 ### 3.5 Compton Scattering
 
+```{figure} ../_static/figures/em_compton.svg
+:alt: Compton wavelength shift against scattering angle
+:width: 70%
+:align: center
+
+`compton_wavelength_shift` normalised by the Compton wavelength
+$\lambda_C=h/m_ec=2.4263$ pm: no shift in the forward direction, and exactly
+$2\lambda_C$ on backscatter.
+```
+
 The wavelength shift in Compton scattering (photon off free electron) is
 
 $$
@@ -201,7 +268,7 @@ This is the `compton_wavelength_shift` function.
 | `green_fn_retarded(r, t)` | causal $\delta$-propagator |
 | `green_fn_advanced(r, t)` | anti-causal |
 | `larmor_formula(q, a, eps0, c)` | $\frac{2}{3}\frac{q^2a^2}{4\pi\varepsilon_0c^3}$ |
-| `dipole_radiation(p0, omega, mu0, c)` | $\frac{\mu_0\omega^4p_0^2}{12\pi c^3}$ |
+| `dipole_radiation(p0, omega, mu0, c)` | $\frac{\mu_0\omega^4p_0^2}{12\pi c}$ |
 | `radiation_power_oscillating(p0, omega, ...)` | dipole with cosine time dependence |
 | `dipole_angular_distribution(theta, p0, ...)` | $dP/d\Omega$ |
 | `magnetic_dipole_radiation(m, omega, ...)` | $\frac{\mu_0 m^2\omega^4}{12\pi c^3}$ |
