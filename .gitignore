@@ -26,3 +26,4 @@ dist/
 # build logs from the notebook builders
 notebooks/*.log
 dist/
+dist_manylinux/
