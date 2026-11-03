@@ -1,6 +1,6 @@
 [package]
 name = "pysic-rs"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 authors = ["HFThot Research Lab <contact@hfthot-lab.eu>"]
 description = "High-performance mathematical physics engine with Python bindings"
@@ -9,16 +9,24 @@ repository = "https://github.com/ThotDjehuty/pysic-rs"
 keywords = ["physics", "general-relativity", "quantum", "pde", "numerical"]
 categories = ["science", "algorithms", "mathematics"]
 readme = "README.md"
+# Keep the published crate lean: library sources, the Python shim, licence and
+# README only. Notebooks, build logs, docs config and CI live in the repository.
 exclude = [
+    ".cargo/*",
+    ".github/*",
     "docs/*",
     "tests/*",
     "examples/*",
+    "notebooks/*",
     "wheels/*",
+    "dist/*",
     "target/*",
-    ".github/*",
     "*.ipynb",
+    "*.log",
     "*.gif",
     "*.png",
+    "*.pdf",
+    ".readthedocs.yaml",
 ]
 
 [lib]
@@ -26,7 +34,6 @@ name = "pysic"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-optimizr = { version = "2.0.0", package = "optimiz-rs", default-features = false }
 pyo3 = { version = "0.22", features = ["extension-module", "abi3-py38"], optional = true }
 numpy = { version = "0.22", optional = true }
 ndarray = "0.15"
@@ -46,9 +53,6 @@ parallel = ["rayon"]
 [dev-dependencies]
 criterion = "0.5"
 approx = "0.5"
-
-[patch.crates-io]
-optimiz-rs = { path = "../optimiz-rs" }
 
 [profile.release]
 opt-level = 3

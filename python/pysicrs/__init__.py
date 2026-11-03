@@ -18,5 +18,5 @@ for _name in dir(_core):
         _alias = _name[:-3]
         globals().setdefault(_alias, getattr(_core, _name))
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __author__ = "HFThot Research Lab <contact@hfthot-lab.eu>"

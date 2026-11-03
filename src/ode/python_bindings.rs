@@ -56,7 +56,10 @@ fn rk45_solve_py(
         atol.unwrap_or(1e-9),
         max_steps.unwrap_or(100_000),
     );
-    Ok(py.None()) // TODO: return a proper struct
+    // Previously `Ok(py.None())` behind a TODO: the solve ran and the result
+    // was discarded, so every caller received None. Return (t, y) like the
+    // other integrators in this module.
+    Ok((sol.times, sol.trajectory).into_py(py))
 }
 
 #[pyfunction]

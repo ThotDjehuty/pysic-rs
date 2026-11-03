@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "pysic-rs"
-version = "0.1.0"
+version = "0.2.0"
 description = "High-performance mathematical physics engine with Python bindings"
 authors = [
     {name = "HFThot Research Lab", email = "contact@hfthot-lab.eu"}

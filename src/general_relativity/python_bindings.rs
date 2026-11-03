@@ -30,7 +30,10 @@ fn christoffel_from_metric_py(
 
 #[pyfunction]
 fn ricci_scalar_py(coords: Vec<f64>, h: Option<f64>) -> PyResult<f64> {
-    let metric = |c: &[f64]| super::metrics::schwarzschild_metric(c[1], 1.0);
+    // The closure must depend on theta (c[2]) as well as r (c[1]): ricci_scalar
+    // differentiates the metric it is given, and a metric frozen at theta = pi/2
+    // makes every angular derivative vanish, which is the reported defect.
+    let metric = |c: &[f64]| super::metrics::schwarzschild_metric_at(c[1], c[2], 1.0);
     Ok(super::christoffel::ricci_scalar(&metric, &coords, h.unwrap_or(1e-4)))
 }
 

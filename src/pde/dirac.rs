@@ -68,9 +68,18 @@ pub fn dirac_split_step_1d(
         let theta = mass * c_speed * c_speed * dt / hbar;
         let cos_half = (theta / 2.0).cos();
         let sin_half = (theta / 2.0).sin();
+        // e^{-i theta sigma_x / 2} = cos(theta/2) 1 - i sin(theta/2) sigma_x.
+        //
+        // This was previously coded with `Complex64::new(0.0, sin_half).exp()`,
+        // i.e. exp(i sin(theta/2)), whose modulus is 1 rather than sin(theta/2).
+        // The step matrix then degenerated to [[-1,-1],[-1,1]] (singular values
+        // 2 and 0), so the norm grew by a fixed factor per step *independently
+        // of dt* — the Dirac defect reported in the paper, and the reason a
+        // dt sweep rather than a smaller dt was the diagnostic.
+        let minus_i_sin = Complex64::new(0.0, -sin_half);
         for i in 0..n_grid {
-            let new_l = cos_half * psi_l[i] - Complex64::new(0.0, sin_half).exp() * psi_r[i];
-            let new_r = -Complex64::new(0.0, sin_half).exp() * psi_l[i] + cos_half * psi_r[i];
+            let new_l = cos_half * psi_l[i] + minus_i_sin * psi_r[i];
+            let new_r = minus_i_sin * psi_l[i] + cos_half * psi_r[i];
             psi_l[i] = new_l;
             psi_r[i] = new_r;
         }

@@ -97,83 +97,125 @@ pub fn schrodinger_eigen_1d(
     let n = v.len();
     let coeff = hbar * hbar / (2.0 * mass * dx * dx);
 
-    // Build Hamiltonian matrix (tridiagonal)
-    let mut h_diag = vec![0.0; n];
-    let mut h_off = vec![0.0; n - 1];
+    // Symmetric tridiagonal Hamiltonian: diag 2*coeff + V_i, offdiag -coeff.
+    let mut d: Vec<f64> = (0..n).map(|i| 2.0 * coeff + v[i]).collect();
+    let mut e: Vec<f64> = vec![0.0; n];
+    for i in 0..n.saturating_sub(1) {
+        e[i] = -coeff;
+    }
 
+    // Accumulate eigenvectors in z (columns are eigenvectors).
+    let mut z = vec![vec![0.0f64; n]; n];
     for i in 0..n {
-        h_diag[i] = 2.0 * coeff + v[i];
-    }
-    for i in 0..n - 1 {
-        h_off[i] = -coeff;
+        z[i][i] = 1.0;
     }
 
-    // Jacobi eigenvalue algorithm (for symmetric tridiagonal)
-    let mut eigenvalues = h_diag.clone();
-    let mut eigenvectors = vec![vec![0.0; n]; n];
-    for i in 0..n {
-        eigenvectors[i][i] = 1.0;
-    }
+    tridiagonal_ql_implicit(&mut d, &mut e, &mut z);
 
-    for _iter in 0..200 {
-        // Find largest off-diagonal
-        let mut max_val = 0.0;
-        let mut max_idx = 0;
-        for i in 0..n - 1 {
-            if h_off[i].abs() > max_val {
-                max_val = h_off[i].abs();
-                max_idx = i;
+    // Sort ascending by eigenvalue and take the lowest n_states.
+    let mut idx: Vec<usize> = (0..n).collect();
+    idx.sort_by(|&a, &b| d[a].partial_cmp(&d[b]).unwrap());
+
+    let take = n_states.min(n);
+    let eigenvalues: Vec<f64> = idx.iter().take(take).map(|&i| d[i]).collect();
+    let eigenvectors: Vec<Vec<f64>> = idx
+        .iter()
+        .take(take)
+        .map(|&col| {
+            let mut vec_col: Vec<f64> = (0..n).map(|row| z[row][col]).collect();
+            let norm: f64 = vec_col.iter().map(|x| x * x).sum::<f64>().sqrt();
+            if norm > 1e-300 {
+                vec_col.iter_mut().for_each(|x| *x /= norm);
             }
-        }
-        if max_val < 1e-12 {
-            break;
-        }
+            vec_col
+        })
+        .collect();
 
-        // Givens rotation to zero out h_off[max_idx]
-        let p = max_idx;
-        let q = p + 1;
-        let theta = 0.5 * (2.0 * eigenvalues[p] * h_off[p] - (eigenvalues[p] - eigenvalues[q]).hypot(2.0 * h_off[p])).atan2(eigenvalues[p] - eigenvalues[q] + 2.0 * eigenvalues[p] * h_off[p] / (eigenvalues[p] - eigenvalues[q]).max(1e-15));
-        let c = theta.cos();
-        let s = theta.sin();
+    (eigenvalues, eigenvectors)
+}
 
-        // Apply rotation to eigenvalues and off-diagonals
-        let dp = eigenvalues[p];
-        let dq = eigenvalues[q];
-        eigenvalues[p] = c * c * dp + s * s * dq - 2.0 * s * c * h_off[p];
-        eigenvalues[q] = s * s * dp + c * c * dq + 2.0 * s * c * h_off[p];
-
-        if p > 0 {
-            h_off[p - 1] = c * h_off[p - 1] - s * if p > 0 { h_off[p - 1] } else { 0.0 };
-        }
-        if q < n - 1 {
-            h_off[q] = c * h_off[q] - s * if q < n - 1 { h_off[q] } else { 0.0 };
-        }
-        h_off[p] = 0.0;
-
-        // Apply rotation to eigenvectors
-        for i in 0..n {
-            let vp = eigenvectors[i][p];
-            let vq = eigenvectors[i][q];
-            eigenvectors[i][p] = c * vp - s * vq;
-            eigenvectors[i][q] = s * vp + c * vq;
-        }
+/// QL with implicit shifts for a symmetric tridiagonal matrix (EISPACK
+/// `imtql2` / Numerical Recipes `tqli`). `d` holds the diagonal and is
+/// overwritten with the eigenvalues; `e` holds the subdiagonal in
+/// `e[0..n-1]` and is destroyed; the columns of `z` are rotated into the
+/// eigenvectors.
+///
+/// This replaces a "Jacobi sweep" that computed a malformed rotation angle and
+/// updated the off-diagonals from themselves
+/// (`h_off[p-1] = c*h_off[p-1] - s*h_off[p-1]`), so it never deflated and
+/// returned values on the order of the matrix diagonal — i.e. `O(1/dx^2)`
+/// rather than the physical spectrum. A plane-rotation sweep is in any case
+/// the wrong shape for a tridiagonal, because each rotation creates fill-in
+/// that has to be chased back onto the band.
+fn tridiagonal_ql_implicit(d: &mut [f64], e: &mut [f64], z: &mut [Vec<f64>]) {
+    let n = d.len();
+    if n == 0 {
+        return;
+    }
+    if n > 0 {
+        e[n - 1] = 0.0;
     }
 
-    // Sort by eigenvalue
-    let mut indices: Vec<usize> = (0..n).collect();
-    indices.sort_by(|&a, &b| eigenvalues[a].partial_cmp(&eigenvalues[b]).unwrap());
+    let sign = |a: f64, b: f64| if b >= 0.0 { a.abs() } else { -a.abs() };
 
-    let sorted_eigenvalues: Vec<f64> = indices.iter().map(|&i| eigenvalues[i]).take(n_states).collect();
-    let sorted_eigenvectors: Vec<Vec<f64>> = indices.iter().map(|&i| {
-        let mut v = eigenvectors[i].clone();
-        let norm: f64 = v.iter().map(|x| x * x).sum::<f64>().sqrt();
-        if norm > 1e-15 {
-            v.iter_mut().for_each(|x| *x /= norm);
+    for l in 0..n {
+        let mut iter = 0;
+        loop {
+            // Look for a negligible subdiagonal element to split on.
+            let mut m = l;
+            while m + 1 < n {
+                let dd = d[m].abs() + d[m + 1].abs();
+                if e[m].abs() <= f64::EPSILON * dd {
+                    break;
+                }
+                m += 1;
+            }
+            if m == l {
+                break;
+            }
+            iter += 1;
+            if iter > 50 {
+                break; // refuse to spin forever
+            }
+
+            let mut g = (d[l + 1] - d[l]) / (2.0 * e[l]);
+            let mut r = g.hypot(1.0);
+            g = d[m] - d[l] + e[l] / (g + sign(r, g));
+            let mut s = 1.0f64;
+            let mut c = 1.0f64;
+            let mut p = 0.0f64;
+
+            let mut i = m;
+            while i > l {
+                i -= 1;
+                let mut f = s * e[i];
+                let b = c * e[i];
+                r = f.hypot(g);
+                e[i + 1] = r;
+                if r == 0.0 {
+                    d[i + 1] -= p;
+                    e[m] = 0.0;
+                    break;
+                }
+                s = f / r;
+                c = g / r;
+                g = d[i + 1] - p;
+                r = (d[i] - g) * s + 2.0 * c * b;
+                p = s * r;
+                d[i + 1] = g + p;
+                g = c * r - b;
+
+                for k in 0..n {
+                    f = z[k][i + 1];
+                    z[k][i + 1] = s * z[k][i] + c * f;
+                    z[k][i] = c * z[k][i] - s * f;
+                }
+            }
+            d[l] -= p;
+            e[l] = g;
+            e[m] = 0.0;
         }
-        v
-    }).take(n_states).collect();
-
-    (sorted_eigenvalues, sorted_eigenvectors)
+    }
 }
 
 #[cfg(test)]

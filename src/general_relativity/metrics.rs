@@ -29,7 +29,28 @@ pub fn schwarzschild_metric(r: f64, mass: f64) -> Array2<f64> {
     g[[0, 0]] = -f;
     g[[1, 1]] = 1.0 / f;
     g[[2, 2]] = r * r;
-    g[[3, 3]] = r * r; // assuming θ = π/2
+    g[[3, 3]] = r * r; // equatorial slice, θ = π/2; see schwarzschild_metric_at
+    g
+}
+
+/// Schwarzschild metric at a general polar angle, `g_phiphi = r^2 sin^2(theta)`.
+///
+/// [`schwarzschild_metric`] freezes `theta = pi/2`, so `d(g_phiphi)/d(theta) = 0`
+/// identically. Any routine that *differentiates* the metric it is handed —
+/// `ricci_scalar` does — then loses the angular cancellation and reports a
+/// vacuum Ricci scalar of `-2/r^2` instead of zero. That is the `ricci_scalar`
+/// defect reported in the paper, and it lives here rather than in the
+/// curvature code.
+pub fn schwarzschild_metric_at(r: f64, theta: f64, mass: f64) -> Array2<f64> {
+    let rs = 2.0 * mass;
+    let f = 1.0 - rs / r;
+    let st = theta.sin();
+
+    let mut g = Array2::zeros((4, 4));
+    g[[0, 0]] = -f;
+    g[[1, 1]] = 1.0 / f;
+    g[[2, 2]] = r * r;
+    g[[3, 3]] = r * r * st * st;
     g
 }
 

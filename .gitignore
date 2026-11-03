@@ -22,3 +22,7 @@ docs/build/
 # Local wheels
 wheels/
 dist/
+
+# build logs from the notebook builders
+notebooks/*.log
+dist/
