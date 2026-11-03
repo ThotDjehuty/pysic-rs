@@ -16,10 +16,9 @@ Pysic-rs Documentation
 Pysic-rs provides CPU-only, textbook-validated implementations of standard mathematical
 physics, built entirely in Rust and exposed to Python through PyO3. Every algorithm is a
 canonical result from the established literature — nothing experimental, nothing
-research-pending. This is the physics companion to
-`Optimiz-rs <https://optimiz-rs.readthedocs.io/>`_, which supplies the probabilistic and
-statistical machinery (MCMC, HMM, SDE, Kalman filtering). Where you need physics *and*
-statistics, the two libraries interoperate.
+research-pending. Every routine is graded against a quantity known
+independently of it: a closed form, a tabulated value, or a conserved
+invariant. Measured accuracy is published per function rather than asserted.
 
 **🗂 Module Map** — Pysic-rs covers thirteen foundational areas:
 

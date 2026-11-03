@@ -1,6 +1,6 @@
 # pysic-rs — Companion Notebooks
 
-Generic suite of 14 notebooks (kernel `rhftlab`), executed end-to-end
+Suite of 15 notebooks, executed end-to-end
 (0 errors, ≥1 figure per code cell), covering the entire `pysicrs` API (~48 functions).
 
 Each code cell follows the pedagogical sandwich structure:
@@ -53,7 +53,7 @@ Total: **179 cells, 0 errors, 41 figures**.
 ## Execution
 
 ```bash
-conda activate rhftlab
+pip install pysic-rs numpy scipy matplotlib jupyter
 jupyter nbconvert --to notebook --inplace --execute notebooks/*.ipynb
 ```
 

@@ -76,16 +76,19 @@ cargo test                  # 57 tests: 45 unit + 12 integration
 
 ---
 
-## Jupyter note (workspace convention)
+## Jupyter note
 
-If you develop inside companion notebooks, use the `rhftlab` kernel
-(Python 3.11 + hft_lab_core + polars + ccxt) and verify the kernel before executing:
+The companion notebooks need only `pysic-rs`, NumPy, SciPy and Matplotlib.
+Confirm which build you imported before trusting a number from it:
 
 ```python
 # inside the notebook — always confirm the imported build
 import pysicrs
-assert pysicrs.__version__ == "0.1.0", pysicrs.__version__
+assert pysicrs.__version__ >= "0.2.0", pysicrs.__version__
 ```
+
+Releases before 0.2.0 contain eight incorrect numerical routines; see the
+changelog.
 
 ---
 

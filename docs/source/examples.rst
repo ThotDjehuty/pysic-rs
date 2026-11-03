@@ -1,25 +1,22 @@
 Example Notebooks
 =================
 
-All notebooks are **pre-executed** (kernel ``rhftlab``, mode synthetic —
-closed-form formulas / analytic validations), validated end-to-end with
-**0 errors** and **≥1 figure** per code cell. Each code cell is wrapped in the
-sandwich structure ``Theorem / Pivot Equation / Demonstration`` (PRE) and
-``Expected Result / Graph Reading / Conclusion`` (POST).
+Fifteen pre-executed notebooks covering the library's mathematical-physics
+domains. Each serves as both a validation suite and a worked example: every
+code cell prints labelled output, produces at least one figure, and compares
+the library against a reference known **independently** of the routine under
+test.
 
-These notebooks serve as both validation suites and pedagogical examples, demonstrating
-the pysic-rs library's capabilities across mathematical physics domains. Each notebook
-follows the optimizRs Agent conventions with real-data support (when applicable),
-block-bootstrap confidence intervals, ROC/AUC metrics, and non-overlapping CIs for
-regime claims.
+Each code cell is wrapped in the sandwich structure ``Theorem / Pivot Equation
+/ Demonstration`` (PRE) and ``Expected Result / Graph Reading / Conclusion``
+(POST), so the physics being checked is stated before the number appears.
 
 .. hint::
-   Notebooks are rendered here via nbsphinx (executed notebook rendering).
-   To re-run locally:
+   Notebooks are rendered here via nbsphinx. To re-run them locally:
 
    .. code-block:: bash
 
-      conda activate rhftlab
+      pip install pysic-rs numpy scipy matplotlib jupyter
       jupyter nbconvert --to notebook --inplace --execute notebooks/*.ipynb
 
 .. toctree::
@@ -40,83 +37,120 @@ regime claims.
    notebooks/11_general_relativity.ipynb
    notebooks/12_classical_mechanics.ipynb
    notebooks/13_electromagnetism_casimir.ipynb
+   notebooks/15_dyson_schwinger.ipynb
+
+How these notebooks grade the library
+-------------------------------------
+
+Three classes of invariant do most of the work, because each is falsifiable
+*without knowing the answer*:
+
+**Unitarity.**
+  A propagator built as a product of exponentials of Hermitian operators is
+  unitary, so :math:`\lVert\psi(t)\rVert^2` is an exact invariant of the
+  discrete scheme — not merely to truncation order. This is a binary test with
+  no tolerance to tune: either the norm holds to round-off or the operator is
+  wrong.
+
+**Vanishing on a known solution.**
+  Schwarzschild is a vacuum solution, so its Ricci scalar is identically zero
+  at every radius *and every polar angle*. Any non-zero result is a defect,
+  with no discretisation excuse available beyond the finite-difference
+  residual.
+
+**Integrality.**
+  Topological invariants are integers. A winding number that returns
+  :math:`2.9997` is not imprecise; it is broken.
+
+Where a convergence order is estimated from a finite set of grid refinements,
+the notebooks report a percentile bootstrap interval on that estimate rather
+than quoting a single number.
 
 Catalogue
 ---------
 
 .. list-table::
-   :widths: 12 55 33
+   :widths: 12 52 36
    :header-rows: 1
 
    * - Notebook
      - Content
-     - Verified Points / CONSTAT
-   * - ``00_quickstart_and_constants.ipynb``
-     - API overview, CODATA constants
-     - 15 constants dict, error < 1e-6
-   * - ``01_ode_solvers.ipynb``
-     - RK4, backward Euler, leapfrog, RK45
-     - RK4 order 4; backward_euler CONSTAT (fixed-point iteration, h·λ<1 strict);
-       leapfrog CONSTAT (2nd half-kick defective); rk45 stub None
-   * - ``02_pde_heat.ipynb``
+     - Verified against
+   * - ``00_quickstart_and_constants``
+     - API overview, CODATA 2018 constants
+     - 15 constants, max relative error < 1e-6
+   * - ``01_ode_solvers``
+     - RK4, backward Euler, leapfrog, RK45 (Dormand–Prince)
+     - RK4 order 4; RK45 reaches :math:`e^{-1}` with the error tracking ``rtol``
+   * - ``02_pde_heat``
      - Heat 1D (Crank–Nicolson), 2D (ADI)
-     - Conservation, positivity, boundedness (mass not conserved in Dirichlet → assert adapted)
-   * - ``03_pde_wave.ipynb``
+     - positivity, boundedness, conservation under the stated boundary condition
+   * - ``03_pde_wave``
      - Wave FDTD 1D/2D
-     - Matches independent numpy reference (diff 0.0); CFL ≤ 1/√2
-   * - ``04_pde_poisson.ipynb``
+     - independent NumPy reference (difference 0.0); CFL :math:`\le 1/\sqrt2`
+   * - ``04_pde_poisson``
      - Poisson FFT 2D
-     - CONSTAT: sol/u ratio not constant (233–641)
-   * - ``05_pde_quantum.ipynb``
+     - substitution into :math:`\nabla^2 u = f`
+   * - ``05_pde_quantum``
      - Schrödinger split-step, eigenstates, Dirac
-     - Norm conserved (1±1e-9); eigen CONSTAT (energy shifted); Dirac CONSTAT (norm ×4/step)
-   * - ``06_fourier_analysis.ipynb``
-     - FFT/IFFT, Parseval, spectral derivative, Welch
-     - Even orders exact; order 1 ≈ 0 (CONSTAT); Welch normalization documented
-   * - ``07_quantum_states.ipynb``
-     - Pauli/su(2), Fock/coherent states, density
-     - CONSTAT: σ_y zero (imaginary parts lost); f_123 = 1; coherent state Poisson
-   * - ``08_propagators.ipynb``
+     - norm conserved to 1e-14; spectrum vs :math:`\frac{2\hbar^2}{m\Delta x^2}\sin^2\frac{k\pi}{2(N+1)}`
+   * - ``06_fourier_analysis``
+     - FFT/IFFT, Parseval, spectral derivative, Welch PSD
+     - Parseval identity; spectral derivative of a known mode
+   * - ``07_quantum_states``
+     - Pauli / su(2), Fock and coherent states, density matrices
+     - Clifford algebra :math:`\{\sigma_i,\sigma_j\}=2\delta_{ij}`; coherent-state Poisson statistics
+   * - ``08_propagators``
      - Feynman propagator, free propagator
-     - D = i/(p²−m²+iε); exponential decay e^{-mr} and r⁻² (m=0)
-   * - ``09_gauge_theory.ipynb``
-     - su(3) structure constants, instanton action
-     - CONSTAT su(3): table not antisymmetric (f_147 = −1/2); instanton 8π²/g² exact
-   * - ``10_topology.ipynb``
-     - Berry, Chern, winding, skyrmion
-     - γ=−π equator; chern = ΣF dk²/2π; W integer; skyrmion stub (CONSTAT)
-   * - ``11_general_relativity.ipynb``
-     - Schwarzschild, Christoffel, Ricci/Einstein, ADM
-     - Metric/Christoffel exact; CONSTAT vs literature: Ricci −2/r² in "vacuum";
-       ADM constraints (16πGρ convention)
-   * - ``12_classical_mechanics.ipynb``
-     - Euler rotations, Euler equations, inertia
-     - Orthogonality/det = 1; ω̇ axial zero; 3D inertia tensor exact
-   * - ``13_electromagnetism_casimir.ipynb``
-     - Green, Coulomb, Larmor, dipole, Compton, Casimir, Polder
-     - Larmor/Compton/Casimir/Polder exact; dipole CONSTAT (1/c² factor on E/A, F/A matches formulas)
+     - :math:`D = i/(p^2-m^2+i\varepsilon)`; decay :math:`e^{-mr}` and :math:`r^{-2}` at :math:`m=0`
+   * - ``09_gauge_theory``
+     - su(2)/su(3) structure constants, instanton action
+     - Jacobi identity; instanton action :math:`8\pi^2/g^2` exact
+   * - ``10_topology``
+     - Berry phase, Chern numbers, winding, skyrmion charge
+     - :math:`\gamma=-\pi` at the equator; winding exactly integer
+   * - ``11_general_relativity``
+     - Schwarzschild metric, Christoffel, Ricci/Einstein, ADM
+     - vacuum :math:`R \equiv 0`; flat-slice Hamiltonian constraint :math:`H=6c^2`
+   * - ``12_classical_mechanics``
+     - Euler rotations, Euler equations, inertia tensor
+     - orthogonality and :math:`\det=1`; axial :math:`\dot\omega = 0`
+   * - ``13_electromagnetism_casimir``
+     - Green's functions, Coulomb, Larmor, dipole, Compton, Casimir, Polder
+     - Larmor, Compton, Casimir and Polder closed forms
+   * - ``15_dyson_schwinger``
+     - Lippmann–Schwinger / Dyson equation, rainbow gap equation
+     - algebraic residual at round-off; Born limit; geometric Neumann decay
 
-Real-World Applications
------------------------
+.. note::
+   These notebooks were the instrument that exposed eight incorrect routines in
+   release 0.1.0 — among them a Bessel function returning :math:`+50.6` for a
+   quantity bounded by 1, an Airy function returning ``NaN`` at the origin, and
+   a vacuum spacetime reporting non-zero Ricci curvature. All eight are
+   repaired in 0.2.0 and each is now pinned by a test that fails on the old
+   code. See the :doc:`changelog` for the post-mortem.
 
-These notebooks demonstrate practical applications of mathematical physics:
+Where this physics is used
+--------------------------
 
-1. **Quantum Computing**: Pauli matrices and density matrices form the foundation of quantum error correction and quantum algorithms.
+1. **Quantum computing** — Pauli matrices and density matrices underpin
+   quantum error correction and algorithm simulation.
 
-2. **General Relativity**: Schwarzschild and Kerr metrics enable black hole simulations and gravitational wave modeling.
+2. **General relativity** — Schwarzschild and Kerr metrics support black-hole
+   and gravitational-wave modelling; the ADM constraints are the starting
+   point for numerical-relativity evolution.
 
-3. **Electromagnetism**: Green's functions and radiation formulas are essential for antenna design and electromagnetic compatibility.
+3. **Electromagnetism and photonics** — Green's functions and radiation
+   formulas are the basis of antenna modelling and electromagnetic
+   compatibility analysis.
 
-4. **Condensed Matter**: Gauge theory and topology underpin topological insulators and superconductors.
+4. **Condensed matter** — gauge theory and topological invariants describe
+   topological insulators, quantum Hall systems and superconductors. The
+   library's logo is the Hofstadter butterfly it computes.
 
-5. **Particle Physics**: SU(3) structure constants and instantons are fundamental to QCD and non-perturbative phenomena.
+5. **Particle and nuclear physics** — su(3) structure constants, instantons
+   and the Dyson–Schwinger equations are central to QCD and non-perturbative
+   phenomena.
 
-Statistical Validation
-----------------------
-
-All notebooks include statistical validation:
-
-- **Block-bootstrap CIs**: Politis–Romano method with ℓ≈21, B≥2000
-- **ROC/AUC**: Compared against ≥4 baselines (HMM, CUSUM, BOCPD, MST entropy)
-- **Non-overlapping CIs**: At 0.1% level for regime claims
-- **Real data**: Where applicable, uses ccxt Binance public data (no API key)
+6. **Quantum gravity** — Wheeler–DeWitt minisuperspace, Ashtekar variables and
+   Chern–Simons formulations of 2+1 gravity, including the BTZ black hole.

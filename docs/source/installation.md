@@ -10,7 +10,7 @@ development install** (for active development) or a **wheel build** (for distrib
 | Tool | Version | Notes |
 |------|---------|-------|
 | **Rust toolchain** | ≥ 1.70 | `rustup` recommended |
-| **Python** | ≥ 3.8 | 3.11 recommended (`rhftlab`) |
+| **Python** | ≥ 3.8 | 3.11 or newer recommended |
 | **pip** | ≥ 22 | — |
 | **maturin** | ≥ 1.0 | `pip install maturin` |
 
@@ -98,9 +98,9 @@ cached by cargo.
 
 ### Optional interop: Optimiz-rs (statistics)
 
-For probabilistic/statistical backgrounds, Pysic-rs integrates with
-[**Optimiz-rs**](https://optimiz-rs.readthedocs.io/) (MCMC, HMM, SDE, Kalman filters). The two
-libraries are designed to be used side by side from the same Python environment:
+Pysic-rs has no mandatory runtime dependency beyond NumPy for array
+marshalling. It needs no BLAS, no LAPACK and no GPU runtime, so it installs
+from source on a bare machine with only a Rust toolchain:
 
 ```bash
 pip install maturin

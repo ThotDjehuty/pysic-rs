@@ -27,7 +27,7 @@ extensions = [
     'nbsphinx',
 ]
 
-# Notebook rendering: notebooks are shipped pre-executed (kernel rhftlab);
+# Notebook rendering: notebooks are shipped pre-executed;
 # readthedocs must never re-execute them (pysicrs isn't installed there).
 nbsphinx_execute = 'never'
 nbsphinx_allow_errors = False
@@ -82,7 +82,7 @@ html_theme_options = {
     "source_repository": "https://github.com/ThotDjehuty/pysic-rs",
     "source_branch": "main",
     "source_directory": "docs/source/",
-    "announcement": "🚀 <strong>Pysic-rs v0.1.0</strong> — Mathematical physics engine in Rust + Python • textbook-validated • <a href=\"changelog.html\">View Changelog</a> • <a href=\"https://optimiz-rs.readthedocs.io/\">Optimiz-rs Docs</a> • <a href=\"https://hfthot-lab.eu/thotbook-amenti.html\">HFThot Research Lab</a>",
+    "announcement": "🚀 <strong>Pysic-rs v0.2.0</strong> — Mathematical physics engine in Rust + Python • graded against closed forms • <a href=\"changelog.html\">View Changelog</a> • <a href=\"https://optimiz-rs.readthedocs.io/\">Optimiz-rs Docs</a> • <a href=\"https://hfthot-lab.eu/thotbook-amenti.html\">HFThot Research Lab</a>",
     "footer_icons": [
         {
             "name": "GitHub",
